@@ -1,0 +1,16 @@
+{
+  "html_load": true,
+  "overall_rate": "7.95%",
+  "digital_sentences": 2567,
+  "sentence_candidates": 3507,
+  "units": 13985,
+  "chapters_and_sections": true,
+  "status_filter": true,
+  "code_reference_viewer": true,
+  "page_text_viewer": true,
+  "embedded_pdf": true,
+  "csv_export": true,
+  "table_context": true,
+  "mobile_layout": true,
+  "page_errors": []
+}

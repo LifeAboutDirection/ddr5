@@ -1,0 +1,26 @@
+PASS: write landed in the array
+PASS: injected bit error is present in the array
+PASS: read returns ECC-corrected data despite the flipped bit
+PASS: the correction was counted
+PASS: read did NOT scrub the array (4.35)
+1276560000 [U_DRAM] PROTOCOL ERROR: Manual ECS MPC issued with MR14 OP[7]=0 (manual ECS disabled) (ck=3054)
+PASS: manual ECS rejected while MR14 OP[7]=0
+PASS: manual ECS accepted with manual mode enabled
+PASS: ECS scrubbed the corrupted bit out of the array
+1434490000 [U_DRAM] TIMING VIOLATION tECSc: ECS -> ECS: need 264 nCK, saw 22 (ck=3433)
+PASS: second ECS inside tECSc rejected
+PASS: correct write CRC is silent
+PASS: CRC-protected write still landed in the array
+1808582000 [U_DRAM] WRITE CRC ERROR nibble 0: expected fa got fb
+1808582000 [U_DRAM] WRITE CRC ERROR nibble 1: expected 00 got 01
+1808582000 [U_DRAM] WRITE CRC ERROR nibble 2: expected 4d got 4c
+1808582000 [U_DRAM] WRITE CRC ERROR nibble 3: expected 9a got 9b
+PASS: corrupted write CRC is reported
+PASS: ALERT_n pulsed low on the CRC error
+PASS: MR50 OP[3] write CRC error status set
+=== tb_ddr5_ecc: 0 failures ===
+=== ECC/ECS/CRC DEVICE TEST PASSED ===
+- tb/tb_ddr5_ecc.sv:275: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 2us; walltime 0.002 s; speed 874.582 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 6 MB

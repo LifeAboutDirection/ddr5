@@ -1,0 +1,19 @@
+{
+  "all_item_ids_unique": true,
+  "pages": 502,
+  "all_items_have_known_chapter_and_section": true,
+  "csv_matches_json": true,
+  "embedded_pdf_hash_matches": true,
+  "source_zip_byte_comparison": true,
+  "code_line_references_valid": true,
+  "counts": {
+    "E": 940,
+    "X": 179,
+    "P": 353,
+    "F": 204,
+    "N": 1693,
+    "S": 82,
+    "U": 56
+  },
+  "digital_denominator": 2567
+}

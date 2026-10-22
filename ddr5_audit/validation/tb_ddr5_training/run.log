@@ -1,0 +1,27 @@
+PASS: MPC Set 2N sets MR2 OP[2]
+PASS: CATM loops back XOR(CA)=1 for a single set bit
+PASS: CATM loops back XOR(CA)=0 for two set bits
+PASS: CATM loops back XOR(CA) for an arbitrary pattern
+1154884000 [U_DRAM] PROTOCOL ERROR: RFU command encoding CA=0x0001 (ck=2760)
+PASS: CATM rejects CS_n assertions closer than 4 tCK
+1164051000 [U_DRAM] PROTOCOL ERROR: ACT aborted: CS_n low on 2nd cycle (ck=2779)
+PASS: CATM exits on 2 consecutive CS_n assertions and restores state
+PASS: CSTM drives 0 for the sample sequence 0,1,0,1
+PASS: CSTM drives 1 when CS_n stays high
+PASS: CSTM exit restores the previous state
+PASS: write levelling reports CK_t high
+PASS: write levelling reports CK_t low
+PASS: MRR to MR31 returns the serial read training pattern
+PASS: PDA enumerate ID programmed
+PASS: MRW ignored while another PDA ID is selected
+PASS: MRW applied once this device's PDA ID is selected
+PASS: VrefCA sits in the shadow register until applied
+PASS: MPC Apply commits VrefCA into MR11
+1386569000 [U_DRAM] TIMING VIOLATION tWPRE: DQS was driven for 1 nCK before the burst, MR8 asks for 2 (ck=3276)
+PASS: short write preamble reported as tWPRE
+=== tb_ddr5_training: 0 failures ===
+=== TRAINING TEST PASSED ===
+- tb/tb_ddr5_training.sv:321: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 1us; walltime 0.002 s; speed 912.143 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 6 MB

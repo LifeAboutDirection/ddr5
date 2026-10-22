@@ -1,0 +1,418 @@
+P042-008 3.2 reviewed-statement: Operation begins with the registration of an ACTIVATE Command, which is then followed by a Read or Write command.
+  ACT로 bank를 열고 check_cas가 ACTIVE 상태의 bank에만 정상 RD/WR를 허용/진단한다.
+P043-028 3.3.1 reviewed-statement: The device outputs remain disabled while RESET_n is held LOW.
+  do_reset이 read/training drive를 해제하고 RESET_n=0인 동안 CK 및 DQS 데이터 동작을 gate한다. RESET_n low의 상한 timer는 없다. ALERT_n은 deasserted HIGH다.
+P043-044 3.3.1 reviewed-statement: The DRAM shall support the ability for RESET_n to be held indefinitely.
+  do_reset이 read/training drive를 해제하고 RESET_n=0인 동안 CK 및 DQS 데이터 동작을 gate한다. RESET_n low의 상한 timer는 없다. ALERT_n은 deasserted HIGH다.
+P045-006 3.3.1 reviewed-statement: 8. Between (Tk to Tz), any number of legal configuration commands are allowed.
+  DS_INIT에서 configuration command class를 허용하며 DLL RESET 후에도 MRW/MRR 경로가 활성이다. wire mapping 정확도는 별도 항목이다.
+P046-122 3.3.2 reviewed-statement: 11. MRR is legal after DLL_reset.
+  DS_INIT에서 configuration command class를 허용하며 DLL RESET 후에도 MRW/MRR 경로가 활성이다. wire mapping 정확도는 별도 항목이다.
+P048-002 3.4.1 statement-rule: The MRR command is initiated with CS_n and CA[13:0] in the proper state as defined by the Command Truth Table.
+  CS_n=0인 첫 CK에서 CMD_MRR를 decode하고 두 번째 CK에서 do_mrr를 호출한다. 일반 1N command-start 절차가 존재한다.
+P048-003 3.4.1 statement-rule: The mode register address operands (MA[7:0]) allow the user to select one of 256 registers.
+  MRA_BITS=8/N_MR=256와 c1_ca[5+:8]가 mr[] 주소를 선택한다. 이 판정은 주소 선택만을 평가하며 MRR wire encoding은 별도 불일치다.
+P048-010 3.4.1 statement-rule: The MRR has a command burst length 16 regardless of the MR0 setting, the training mode or the mode register address.
+  MR31 분기와 정상 분기 모두 nbeats=16이며 MR0 BL과 독립이다. CRC 확장은 다음 문장의 별도 미구현 항목이다.
+P052-001 3.4.2 statement-rule: The Mode Register Write (MRW) command is used to write configuration data to the mode registers.
+  do_mrw가 선택된 mr[d.mra]에 d.op를 저장하고 refresh_mr_views를 호출한다. 이 문장의 일반 write 기능만 판정한다. 접근 속성은 별도 불일치다.
+P052-002 3.4.2 statement-rule: The MRW command is initiated with CS_n and CA[13:0] in the proper state as defined by the Command Truth Table.
+  first CA[12:5]에서 MRA, second CA[7:0]에서 OP를 취하고 CW=0일 때 do_mrw를 실행한다.
+P052-003 3.4.2 statement-rule: The mode register address and the data written to the mode registers is contained in CA[13:0] according to the Command Truth Table.
+  first CA[12:5]에서 MRA, second CA[7:0]에서 OP를 취하고 CW=0일 때 do_mrw를 실행한다.
+P052-004 3.4.2 statement-rule: The MRW command period is defined by tMRW.
+  do_mrw가 직전 t_mrw와 현재 cur_ck의 차이를 T.tMRW와 비교한다. speed별 tMRW 값 완전성은 13장의 별도 항목이다.
+P056-001 3.5 reviewed-statement: With DDR5, the utilization and programming method shall change from the traditional addressing scheme found in DDR3 and DDR4, and shall move to the method used by LPDDR, where the Mode Register Addresses (MRA) and Payload placed in Op Codes (OP) are all packeted in the command bus encoding method.
+  8bit MRA와 8bit OP를 두 CA cycle에서 각각 복원하여 256×8bit mr[]에 접근한다.
+P056-003 3.5 reviewed-statement: For DDR5, the SDRAM shall support up to 8 MRA’s, each with a byte-wide payload.
+  8bit MRA와 8bit OP를 두 CA cycle에서 각각 복원하여 256×8bit mr[]에 접근한다.
+P056-017 3.5.1 reviewed-statement: A Mode Register Write command is used to write a mode register
+  MRW가 지정 주소의 OP 8bit를 mr[]에 저장한다.
+P065-012 3.5.4 reviewed-statement: NOTE 1 To enter WL Training Mode the MR field must be programmed to 1.
+  wl_training_on이 MR2[1]을 읽어 DQ feedback mux를 제어한다.
+P065-014 3.5.4 reviewed-statement: NOTE 2 To exit WL Training Mode the MR field must be programmed to 0.
+  wl_training_on이 MR2[1]을 읽어 DQ feedback mux를 제어한다.
+P075-007 3.5.13 reviewed-statement: NOTE 2 Since the state of CA12 is used to differentiate the VrefCA vs VrefCS command, the MR11/12 OP[7] value is defined as valid.
+  decode_cmd1이 ca[12]로 VrefCA와 VrefCS를 구분하고 OP[6:0]만 전달한다.
+P076-007 3.5.14 reviewed-statement: NOTE 2 Since the state of CA12 is used to differentiate the VrefCA vs VrefCS command, the MR11/12 OP[7] value is defined as valid.
+  decode_cmd1이 ca[12]로 VrefCA와 VrefCS를 구분하고 OP[6:0]만 전달한다.
+P086-012 3.5.28 reviewed-statement: The default value for the Read Training Pattern Data0/LFSR0 register setting is: 0x5A.
+  do_reset의 MR26=5A, MR27=3C, MR28/29=00, MR30=FE 초기화와 일치한다.
+P086-025 3.5.29 reviewed-statement: NOTE 1 The default value for the Read Training Pattern Data1/LFSR1 register setting is: 0x3C.
+  do_reset의 MR26=5A, MR27=3C, MR28/29=00, MR30=FE 초기화와 일치한다.
+P087-012 3.5.30 reviewed-statement: The default value for the Read Training Pattern Invert DQL7:0 (DQ7:0) register setting is: 0x00.
+  do_reset의 MR26=5A, MR27=3C, MR28/29=00, MR30=FE 초기화와 일치한다.
+P088-012 3.5.31 reviewed-statement: The default value for the Read Training Pattern Invert DQU7:0 (DQ15:8) register setting is: 0x00.
+  do_reset의 MR26=5A, MR27=3C, MR28/29=00, MR30=FE 초기화와 일치한다.
+P089-012 3.5.32 reviewed-statement: The default value for the Read LFSR Assignments register setting is: 0xFE.
+  do_reset의 MR26=5A, MR27=3C, MR28/29=00, MR30=FE 초기화와 일치한다.
+P118-008 3.5.64 reviewed-statement: NOTE 1 The contents of this register have no function in the DRAM.
+  MR63을 소비하는 functional view/command branch가 없어 scratch value가 다른 DRAM 동작에 영향을 주지 않는다.
+P151-010 4.1 statement-rule: NOTE 2 Bank group addresses BG[2:0] and Bank addresses BA[1:0] determine which bank is to be operated upon in a specific bank group.
+  BG/BA를 추출하여 bank_of(bg,ba)=bg*N_BA+ba로 bank 배열을 선택한다. CID 및 밀도 예외는 별도 항목이다.
+P151-011 4.1 reviewed-statement: NOTE 3 The Refresh All and Refresh Management All commands are applied to all banks in all bank groups.
+  decode한 BA/BG를 bank_of에 넣고 all-bank 경로는 N_BANKS를 순회한다.
+P151-014 4.1 reviewed-statement: The bank bits, BA0 and BA1 on CA6 and CA7, respectively, specify the bank within each bank group.
+  decode한 BA/BG를 bank_of에 넣고 all-bank 경로는 N_BANKS를 순회한다.
+P151-015 4.1 statement-rule: NOTE 5 The Precharge All command applies to all open banks in all bank groups.
+  do_precharge에서 PREab는 모든 active bank, PREsb는 각 BG의 동일 BA, PREpb는 지정 bank를 닫는다. 이 문장의 대상 선택 규칙을 구현한다.
+P151-016 4.1 statement-rule: NOTE 6 The Precharge Same Bank command applies to the same bank in all bank groups.
+  do_precharge에서 PREab는 모든 active bank, PREsb는 각 BG의 동일 BA, PREpb는 지정 bank를 닫는다. 이 문장의 대상 선택 규칙을 구현한다.
+P151-017 4.1 reviewed-statement: The bank bits specify the bank within each bank group.
+  decode한 BA/BG를 bank_of에 넣고 all-bank 경로는 N_BANKS를 순회한다.
+P151-018 4.1 statement-rule: NOTE 7 The Precharge command applies to a single bank as specified by bank address and bank group bits.
+  do_precharge에서 PREab는 모든 active bank, PREsb는 각 BG의 동일 BA, PREpb는 지정 bank를 닫는다. 이 문장의 대상 선택 규칙을 구현한다.
+P151-026 4.1 statement-rule: NOTE 13 If CW=Low during the MRW command then DRAM should execute the command, Mode Register will be written.
+  MRW 두 번째 cycle에서 CA[10]==0일 때만 do_mrw를 호출하고 HIGH면 쓰지 않는다.
+P151-027 4.1 statement-rule: If CW=HIGH then DRAM ignores the MRW command, and the Mode Register is not changed.
+  MRW 두 번째 cycle에서 CA[10]==0일 때만 do_mrw를 호출하고 HIGH면 쓰지 않는다.
+P151-028 4.1 statement-rule: If CW=Low, DRAM should execute the MRR command.
+  MRR은 CW와 무관하게 do_mrr를 호출한다. CW=HIGH일 때 실행 여부가 허용 선택인 해당 문장을 충족한다.
+P151-029 4.1 statement-rule: If CW=High, DRAM may or may not execute MRR command.
+  MRR은 CW와 무관하게 do_mrr를 호출한다. CW=HIGH일 때 실행 여부가 허용 선택인 해당 문장을 충족한다.
+P151-042 4.1 reviewed-statement: If MR58 OP[0]=1, a REF command requires CA9=H.
+  RFM-required=1에서 CA9=H는 REF, CA9=L은 RFM으로 decode된다.
+P152-001 4.1.1 reviewed-statement: DDR5 DRAM commands ACT, WRP, WRPA and MRW are 2-cycle commands without associated ODT control requirements.
+  ACT/WRP/MRW opcode를 is_two_cycle에 포함하고 두 번째 CA cycle에서 operand를 완료한다. 취소 timing은 별도 부족하다.
+P153-001 4.2 statement-rule: Accesses within a given burst is currently limited to only sequential, interleaved is not supported.
+  burst_offset_rd/wr는 SEQ 순서만 생성하며 interleaved 선택 경로가 없다.
+P155-001 4.3 statement-rule: The PRECHARGE command is used to deactivate the open row in a particular bank or the open row in all banks.
+  do_precharge가 지정 bank들의 bank_st를 IDLE, open_row를 -1로 바꾼다.
+P155-003 4.3 statement-rule: Once a bank has been precharged, it is in the idle state and must be activated prior to any READ or WRITE commands being issued to that bank.
+  close_bank가 IDLE로 바꾸고 check_cas가 ACTIVE가 아닌 bank의 RD/WR를 protocol error로 진단한다.
+P155-006 4.3 statement-rule: If CA10 on the 2nd pulse of a Read or Write command is LOW, (shown as AP=L in the command truth table) then the auto-precharge function is engaged.
+  RD/WR second-cycle CA[10]==0을 d.ap로 만들고 auto-precharge 분기를 수행한다. 실행 시점 정확도는 별도 불일치다.
+P155-009 4.3 reviewed-statement: Auto-precharge is also implemented during Write commands.
+  do_write에서 d.ap이면 BS_PRECHARGING 및 t_pre를 설정한다. 정확한 tRAS 보장은 별도 불일치다.
+P155-015 4.3.1 statement-rule: DDR5 supports three different types of precharge commands: Precharge, Precharge All and Precharge Same Bank The Precharge Command (PREpb) applies precharge to a specific bank defined by BA[1:0] {if applicable} in a specific bank group defined by BG[2:0], while a Precharge All (PREab) applies precharge to all banks in all bank groups and a Precharge Same Bank (PREsb) applies precharge to a specific bank defined by BA[1:0] in all bank groups.
+  CMD_PREpb/CMD_PREab/CMD_PREsb가 선언되고 세 개 모두 do_precharge에서 실행된다.
+P165-001 4.6 statement-rule: The ACTIVATE command is used to open (or activate) a row in a particular bank for a subsequent access.
+  do_act가 decode된 bank/row로 open_bank를 실행한다.
+P165-004 4.6 statement-rule: This row remains active (or open) for accesses until a precharge command is issued to that bank or a precharge all command is issued.
+  open_bank가 ACTIVE/open_row를 유지하며 PRE 및 auto-PRE에서 close_bank한다. 일반 정상 command sequence에서 해당 상태 유지가 구현된다.
+P165-005 4.6 statement-rule: A bank must be precharged before opening a different row in the same bank.
+  check_act가 bank_st!=BS_IDLE이면 prot로 진단한다. verification model이므로 불법 입력 후 데이터값까지 규정된 것으로 간주하지 않는다.
+P165-006 4.6 statement-rule: Bank-to-bank command timing for ACTIVATE commands uses two different timing parameters, depending on whether the banks are in the same or different bank group.
+  ACT 경로가 t_act_bg/t_act_any로 tRRD_L/S를 검사하며 마지막 4개 ACT의 rolling tFAW window에 5번째가 들어오는지 검사한다.
+P165-007 4.6 statement-rule: tRRD_S (short) is used for timing between banks located in different bank groups.
+  ACT 경로가 t_act_bg/t_act_any로 tRRD_L/S를 검사하며 마지막 4개 ACT의 rolling tFAW window에 5번째가 들어오는지 검사한다.
+P165-008 4.6 statement-rule: tRRD_L (long) is used for timing between banks located in the same bank group.
+  ACT 경로가 t_act_bg/t_act_any로 tRRD_L/S를 검사하며 마지막 4개 ACT의 rolling tFAW window에 5번째가 들어오는지 검사한다.
+P165-009 4.6 statement-rule: Consecutive ACTIVATE commands, allowed to be issued at tRRDmin, are restricted to a maximum of four within the time period tFAW (four activate window).
+  ACT 경로가 t_act_bg/t_act_any로 tRRD_L/S를 검사하며 마지막 4개 ACT의 rolling tFAW window에 5번째가 들어오는지 검사한다.
+P166-001 4.7 reviewed-statement: The Read Operation causes the DRAM to retrieve and output data stored in its array.
+  do_read가 bank/open_row/column으로 sparse mem을 읽고 rd_data에 준비하여 출력한다. 단일 정상 BL16 transaction의 기능이며 pipeline 조건은 별도 실패다.
+P166-002 4.7 reviewed-statement: The Read Operation is initiated by the Read Command during which the beginning column address and bank/group address for the data to be retrieved from the array is provided.
+  do_read가 bank/open_row/column으로 sparse mem을 읽고 rd_data에 준비하여 출력한다. 단일 정상 BL16 transaction의 기능이며 pipeline 조건은 별도 실패다.
+P168-001 4.7.2 reviewed-statement: The minimum external Read command to Precharge command spacing to the same bank is equal to tRTP with tRTP being the Internal Read Command to Precharge Command Delay.
+  external PRE에서 tRTP/tRAS, 후속 ACT에서 tRP/tRC를 각각 chk로 검사한다. auto-PRE 오류와 구별한 external command timing 판정이다.
+P168-002 4.7.2 reviewed-statement: Note that the minimum ACT to PRE timing, tRAS, must be satisfied as well.
+  external PRE에서 tRTP/tRAS, 후속 ACT에서 tRP/tRC를 각각 chk로 검사한다. auto-PRE 오류와 구별한 external command timing 판정이다.
+P168-004 4.7.2 reviewed-statement: 1. The minimum RAS precharge time (tRP.MIN) has been satisfied from the clock at which the precharge begins.
+  external PRE에서 tRTP/tRAS, 후속 ACT에서 tRP/tRC를 각각 chk로 검사한다. auto-PRE 오류와 구별한 external command timing 판정이다.
+P168-005 4.7.2 reviewed-statement: 2. The minimum RAS cycle time (tRC.MIN) from the previous bank activation has been satisfied.
+  external PRE에서 tRTP/tRAS, 후속 ACT에서 tRP/tRC를 각각 chk로 검사한다. auto-PRE 오류와 구별한 external command timing 판정이다.
+P179-014 4.8 reviewed-statement: The Write Operation stores data to the DRAM.
+  CA의 bank/column을 wr_pend에 저장하고 DQS edge에서 DQ를 sparse mem에 기록한다. 단일 정상 full-write 기본 동작이다.
+P179-015 4.8 reviewed-statement: It is initiated by the Write command during which the beginning column address and bank/group address for the data to be written to the array is provided.
+  CA의 bank/column을 wr_pend에 저장하고 DQS edge에서 DQ를 sparse mem에 기록한다. 단일 정상 full-write 기본 동작이다.
+P194-001 4.10 reviewed-statement: DDR5’s Power-Down mode is new to the DDR family, as it no longer has a CKE pin to control entry and exit.
+  모듈에 CKE 핀이 없고 PDE/PDX command/state로 power-down을 제어한다.
+P194-005 4.10.1 reviewed-statement: Power-Down is entered when the command is registered.
+  CMD_PDE가 decode되면 DS_POWER_DOWN을 설정한다.
+P194-013 4.10.1 reviewed-statement: If CA11=H during the PDE command, only the PDX command, qualified by CS_n, is legal during Power-Down.
+  DS_POWER_DOWN의 legal gate는 CMD_PDX만 허용한다. CA11=H라는 문장의 한정 조건에서는 맞으며 CA11=L의 NT 예외는 별도 미구현이다.
+P194-050 4.10.1 reviewed-statement: 1-cycle valid commands are also legal.
+  PDX 이후 tXP checker와 공통 1/2cycle decode를 사용해 정상 1cycle command도 처리한다.
+P195-002 4.10.1 reviewed-statement: (If RESET_n goes low during Power-Down, the DRAM will be out of PD mode and into reset state).
+  negedge RESET_n에서 do_reset을 호출해 PD 여부와 무관하게 DS_RESET으로 바뀐다.
+P200-001 4.13 reviewed-statement: The Refresh command (REF) is used during normal operation of the DDR5 SDRAMs.
+  각 REF command마다 do_refresh가 한 번 실행되며 반복 refresh는 별도 command가 필요하다.
+P200-002 4.13 reviewed-statement: This command is non persistent, so it must be issued each time a refresh is required.
+  각 REF command마다 do_refresh가 한 번 실행되며 반복 refresh는 별도 command가 필요하다.
+P200-004 4.13 reviewed-statement: There are three types of refresh operations supported by DDR5 SDRAMs.
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P201-001 4.13.1 reviewed-statement: The DDR5 SDRAM has two different Refresh modes with two different refresh cycle time (tRFC) settings.
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P201-002 4.13.1 reviewed-statement: There is a Normal Refresh mode setting and a Fine Granularity Refresh (FGR) mode setting.
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P201-004 4.13.1 reviewed-statement: The Refresh mode setting is programed by MRW command as shown in Table 69.
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P201-005 4.13.1 reviewed-statement: The Refresh Modes are fixed until changed by MRW command to MR4 OP[4].
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P201-006 4.13.1 reviewed-statement: No on-the-fly Refresh mode change is supported.
+  REFab/REFsb decode와 MR4[4] FGR 선택이 있으며 MR4를 쓸 때 refresh_mr_views로 모드를 갱신한다. 각 mode timing 상세는 별도 판정한다.
+P204-001 4.13.3 reviewed-statement: Same Bank Refresh command (REFsb) allows the DDR5 DRAM to apply the refresh process to a specific bank in each bank group unlike the All Bank Refresh command (REFab) which applies the refresh process to all banks in every bank group.
+  REFsb는 모든 BG의 d.ba를 순회하며 BA 순서에 대한 불필요한 제한은 없다. REF row 동기화는 별도 미구현이다.
+P204-002 4.13.3 reviewed-statement: The determination whether a Same Bank Refresh or an All Bank Refresh is executed by the DRAM depends on whether REFsb or REFab command is issued, as shown in the command truth table.
+  REFsb는 모든 BG의 d.ba를 순회하며 BA 순서에 대한 불필요한 제한은 없다. REF row 동기화는 별도 미구현이다.
+P204-006 4.13.3 reviewed-statement: A REFsb command can be issued to any bank and in any bank order.
+  REFsb는 모든 BG의 d.ba를 순회하며 BA 순서에 대한 불필요한 제한은 없다. REF row 동기화는 별도 미구현이다.
+P208-006 4.13.7 reviewed-statement: DDR5 SDRAM can enter Self Refresh mode anytime in Normal Refresh and FGR mode without any restriction on the number of Refresh commands that have been issued during the mode before the Self Refresh entry.
+  REF command 수와 무관하게 SRE는 bank-idle/tRFC 일부 조건 후 진입한다. refresh parity 의무는 별도 미구현이다.
+P214-002 4.15.1 reviewed-statement: The MPC command is initiated with CS_n, and CA[4:0] asserted to the proper state at the rising edge of CK, as defined by the Command Truth Table.
+  CS_n LOW의 CK rising에서 MPC opcode를 decode하고 CA[12:5] 8bit OP를 do_mpc에 전달한다.
+P214-003 4.15.1 reviewed-statement: The MPC command has eight operands (OP[7:0]) that are decoded to execute specific commands in the SDRAM.
+  CS_n LOW의 CK rising에서 MPC opcode를 decode하고 CA[12:5] 8bit OP를 do_mpc에 전달한다.
+P214-004 4.15.1 reviewed-statement: The MPC command uses an encoding that includes the command encoding and the opcode payload in a single clock cycle.
+  CS_n LOW의 CK rising에서 MPC opcode를 decode하고 CA[12:5] 8bit OP를 do_mpc에 전달한다.
+P215-012 4.15.2 reviewed-statement: Until this “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command is sent, the values are in a shadow register.
+  Vref/RTT용 shadow 변수는 apply가 실행돼도 지워지지 않으며 새 command가 오기 전 값이 유지된다. RTT_CS commit 누락은 별도 불일치다.
+P215-014 4.15.2 reviewed-statement: The shadow register shall retain the previously set value, so that any time the “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command is sent, there is no change in the applied value unless a new VrefCA , VrefCS or RTT_CA/CS/CK value was sent to the shadow register since the previous “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command.
+  Vref/RTT용 shadow 변수는 apply가 실행돼도 지워지지 않으며 새 command가 오기 전 값이 유지된다. RTT_CS commit 누락은 별도 불일치다.
+P215-015 4.15.2 reviewed-statement: NOTE 9 The PDA Enumerate ID and PDA Select ID opcodes include a 4-bit value, designated by xxxxB in the table.
+  enumerate/select low4bit를 저장하고 pda_enum_mode가 false면 enumerate 변경을 거부한다.
+P215-017 4.15.2 reviewed-statement: The PDA Enumerate ID can only be changed while in PDA Enumerate Programming Mode.
+  enumerate/select low4bit를 저장하고 pda_enum_mode가 false면 enumerate 변경을 거부한다.
+P217-027 4.15.3 reviewed-statement: MR2:OP[4] defaults to “0” upon a reset.
+  do_reset에서 MR2 전체를 0으로 초기화하므로 CS assertion duration bit default는 0이다. 실제 bit 소비는 별도 미구현이다.
+P217-048 4.15.3 reviewed-statement: Default value for the CS Assertion Duration is 0, which allows for Multi-Cycle CS assertions during training.
+  do_reset에서 MR2 전체를 0으로 초기화하므로 CS assertion duration bit default는 0이다. 실제 bit 소비는 별도 미구현이다.
+P219-009 4.16 statement-rule: The PDA Enumerate ID is a 4-bit field, and the PDA Select ID is also a 4-bit field.
+  pda_enum_id와 pda_sel_id를 logic[3:0]으로 선언하고 해당 MPC low4bit를 저장한다.
+P219-012 4.16 reviewed-statement: Among these MPC commands that do not use the PDA Select ID are the MPC opcodes to set the PDA Enumerate ID and the opcode to set the PDA Select ID.
+  ID enumerate/select 및 일반 MPC는 PDA selection gate 없이 처리한다. PDA-dependent RTT/Vref까지 gate하지 않는 오류는 별도 항목이다.
+P220-005 4.16.1 reviewed-statement: 1. PDA Enumerate Programming Mode is enabled by sending one or more MPC command cycles with OP[7:0]=0000 1011B.
+  MPC_ENTER/EXIT_PDA_ENUM가 mode bit를 제어하고 enumerate ID는 mode가 켜졌을 때만 변경한다. exit는 DQ를 검사하지 않는다.
+P221-025 4.16.1 reviewed-statement: The Exit PDA Enumerate Programming Mode MPC command is never qualified by the DQ settings and is applied to all DRAMs in the rank.
+  MPC_ENTER/EXIT_PDA_ENUM가 mode bit를 제어하고 enumerate ID는 mode가 켜졌을 때만 변경한다. exit는 DQ를 검사하지 않는다.
+P221-027 4.16.1 reviewed-statement: Once the PDA Enumerate ID is programmed, any change for the PDA Enumerate ID requires DRAM to enter into PDA Enumerate ID Programming mode.
+  MPC_ENTER/EXIT_PDA_ENUM가 mode bit를 제어하고 enumerate ID는 mode가 켜졌을 때만 변경한다. exit는 DQ를 검사하지 않는다.
+P231-002 4.16.2 reviewed-statement: If the PDA Select ID is set to 1111B, all DRAMs will execute the command.
+  pda_selected가 select=4hF이면 true이고 MRW를 broadcast로 허용한다. MPC/Vref도 execute하므로 all-selected 경우는 맞다.
+P231-004 4.16.2 reviewed-statement: For all other MPC commands (i.e. not the RTT_CA/CS/CK and RTT_PARK opcodes), the DRAM will execute the command regardless of the PDA Select ID value.
+  ID enumerate/select 및 일반 MPC는 PDA selection gate 없이 처리한다. PDA-dependent RTT/Vref까지 gate하지 않는 오류는 별도 항목이다.
+P235-004 4.17.1 statement-rule: The read training pattern is accessed when the host issues an MRR command to the MR31 address, and CRC must be disabled prior to issue this command.
+  do_mrr가 MR31을 따로 처리하여 gen_read_training_pattern을 호출하고 read CRC enable이면 prot로 진단한다.
+P235-005 4.17.1 statement-rule: In this case, the returned data will be a pattern instead of the contents of a mode register.
+  do_mrr가 MR31을 따로 처리하여 gen_read_training_pattern을 호출하고 read CRC enable이면 prot로 진단한다.
+P235-023 4.17.1 statement-rule: The default value for the Read Pattern Data0/LFSR0 (MR26) register setting is: 0x5A and the default value for the Read Pattern Data1/LFSR1 (MR27) register setting is: 0x3C.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P235-024 4.17.1 statement-rule: The Read Pattern Invert (MR28, MR29) register settings default to 0.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P235-025 4.17.1 statement-rule: The Read LFSR Assignments (MR30) register setting default is 0xFE.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P235-032 4.17.1 reviewed-statement: The Read Training Pattern is a full BL16 pattern for each MRR command issued to the Read Training Pattern address.
+  MR31 경로는 nbeats=MAX_BL(16)을 고정하고 ACT는 rd_data/rd_pend를 수정하지 않는다. 다른 MRR overlap은 별도 실패다.
+P235-033 4.17.1 reviewed-statement: The Read Training Pattern has a command burst length 16 regardless of the MR0 setting, and it should not be disturbed by an ACT command until the completion of training.
+  MR31 경로는 nbeats=MAX_BL(16)을 고정하고 ACT는 rd_data/rd_pend를 수정하지 않는다. 다른 MRR overlap은 별도 실패다.
+P236-007 4.17.1 statement-rule: The default value for the Read Training Pattern Format register setting is: 0x0.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P236-009 4.17.1 reviewed-statement: There are two 8-bit registers to provide a 16 UI pattern length and two 8-bit registers to provide up to x16 data width for per-DQ-lane inversion.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P236-010 4.17.1 reviewed-statement: The LFSR mode requires an 8-bit Mode Register to program the seed for the 8-bit LFSR.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P236-012 4.17.1 reviewed-statement: The Read Pattern Data0/LFSR0 and Read Pattern Data1/LFSR1 registers are re-purposed to program the LFSR seed when the Read Training Pattern Format is set to LFSR.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P236-015 4.17.1 statement-rule: The default value for the Read Pattern Data0/LFSR0 register setting is: 0x5A.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P236-018 4.17.1 statement-rule: The default value for the Read Pattern Data1/LFSR1 register setting is: 0x3C.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P236-023 4.17.1 statement-rule: In both cases, when the Read Training Pattern Format is set to Serial mode or LFSR mode, the Read Pattern Invert - Lower DQ Bits and Read Pattern Invert - Upper DQ Bits settings will additionally invert the pattern, per DQ bit.
+  rd_data[beat][d] = v ^ inv[d]이며 inv는 {MR29,MR28}이다. bit0은 유지, bit1은 반전한다.
+P236-025 4.17.1 reviewed-statement: The Read Pattern Invert - Upper DQ Bits register only applies to x16 devices, for the upper byte.
+  {MR29,MR28}를 DQ_BITS로 cast하여 x16 upper byte만 MR29를 사용한다.
+P236-028 4.17.1 statement-rule: The default value for the Read Pattern Invert - Lower DQ Bits register setting is: 0x00.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P237-003 4.17.1 statement-rule: The default value for the Read Pattern Invert - Upper DQ Bits register setting is: 0x00.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P237-009 4.17.1 statement-rule: A value of 0 in any bit location of the Read Pattern Invert - Lower DQ Bits or Read Pattern Invert - Upper DQ Bits registers will leave the pattern un-inverted for the associated DQ.
+  rd_data[beat][d] = v ^ inv[d]이며 inv는 {MR29,MR28}이다. bit0은 유지, bit1은 반전한다.
+P237-010 4.17.1 statement-rule: A value of 1 in any bit location of the Read Pattern Invert - Lower DQ Bits or Read Pattern Invert - Upper DQ Bits registers will invert the pattern for the associated DQ.
+  rd_data[beat][d] = v ^ inv[d]이며 inv는 {MR29,MR28}이다. bit0은 유지, bit1은 반전한다.
+P237-011 4.17.2 statement-rule: The LFSR is an 8-bit Galois LFSR.
+  8bit l0/l1 두 상태에 Galois next-state function을 적용한다. 0xB8 feedback은 x8+x6+x5+x4+1이다. 지속 상태 요구는 별도 불일치다.
+P237-012 4.17.2 statement-rule: The polynomial for the Galois LFSR is x8+x6+x5+x4+1.
+  8bit l0/l1 두 상태에 Galois next-state function을 적용한다. 0xB8 feedback은 x8+x6+x5+x4+1이다. 지속 상태 요구는 별도 불일치다.
+P237-015 4.17.2 statement-rule: There are two instances of the same LFSR polynomial.
+  8bit l0/l1 두 상태에 Galois next-state function을 적용한다. 0xB8 feedback은 x8+x6+x5+x4+1이다. 지속 상태 요구는 별도 불일치다.
+P237-016 4.17.2 reviewed-statement: These two instances will have unique seeds/states and supply patterns to any of the DQ outputs.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P238-002 4.17.2 reviewed-statement: The LFSR output is directed to any number of the DQ outputs, depending on the LFSR assignment programming.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P238-004 4.17.2 reviewed-statement: The LFSR assignments are programmed according to Table 99.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P238-014 4.17.2 statement-rule: The default value for the Read LFSR Assignments register setting is: 0xFE.
+  do_reset에서 MR25=0, MR26=5Ah, MR27=3Ch, MR28/29=00h, MR30=FEh로 초기화한다. 명시된 training default와 일치한다.
+P238-023 4.17.2 reviewed-statement: The BL for the LFSR data will always be BL16.
+  MR31 경로는 nbeats=MAX_BL(16)을 고정하고 ACT는 rd_data/rd_pend를 수정하지 않는다. 다른 MRR overlap은 별도 실패다.
+P238-025 4.17.2 statement-rule: A setting of 0x00 in either of the LFSR seed registers (MR26 and MR27) will not produce a pattern with any transitions to 1.
+  zero seed는 lfsr8_next에서 계속 zero이며 MSB output도 0이다. 문장의 LFSR source 특성만 판정한다. inversion은 별도 MR 기능이다.
+P238-026 4.17.2 statement-rule: When set to this value the LFSR will produce a constant 0 pattern.
+  zero seed는 lfsr8_next에서 계속 zero이며 MSB output도 0이다. 문장의 LFSR source 특성만 판정한다. inversion은 별도 MR 기능이다.
+P238-028 4.17.2 reviewed-statement: This clock pattern is sent only to the DQ signals that have a setting of 0 in the corresponding DQ Opcode location in the Read LFSR Assignments register.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P238-029 4.17.2 statement-rule: The first UI of the pattern will have a value of 0.
+  clock pattern 선택 시 bit0/bit1=beat[0]이므로 UI0=0, UI1=1로 반복된다.
+P238-030 4.17.2 statement-rule: The second UI will have a value of 1, and this will continue to toggle for each subsequent UI.
+  clock pattern 선택 시 bit0/bit1=beat[0]이므로 UI0=0, UI1=1로 반복된다.
+P238-032 4.17.2 reviewed-statement: This clock pattern is sent only to the DQ signals that have a setting of 1 in the corresponding DQ Opcode location in the Read LFSR Assignments register.
+  MR26/MR27 seed와 MR30 per-DQ select 및 MR28/29 inversion을 gen_read_training_pattern에서 사용한다. state continuation 요구는 별도 항목이다.
+P238-033 4.17.2 statement-rule: The first UI of the pattern will have a value of 0.
+  clock pattern 선택 시 bit0/bit1=beat[0]이므로 UI0=0, UI1=1로 반복된다.
+P238-034 4.17.2 statement-rule: The second UI will have a value of 1, and this will continue to toggle for each subsequent UI.
+  clock pattern 선택 시 bit0/bit1=beat[0]이므로 UI0=0, UI1=1로 반복된다.
+P242-002 4.17.4 reviewed-statement: The timing of the Read Training Pattern will be similar to the MRR operation, with the exception that the MRR to the address that invokes the Read Training Pattern will be a full BL16 pattern.
+  MR31 경로는 nbeats=MAX_BL(16)을 고정하고 ACT는 rd_data/rd_pend를 수정하지 않는다. 다른 MRR overlap은 별도 실패다.
+P245-026 4.19.1 reviewed-statement: The CA Training Mode is a method to facilitate the loopback of a logical combination of the sampled CA[13:0] signals.
+  CS_n LOW의 fresh sample에서 ^CA를 latch하고 train_val을 모든 DQ에 복제한다.
+P245-027 4.19.1 reviewed-statement: In this mode, the CK is running, and the CS_n qualifies when the CK samples the CA signals.
+  CS_n LOW의 fresh sample에서 ^CA를 latch하고 train_val을 모든 DQ에 복제한다.
+P245-028 4.19.1 reviewed-statement: A loopback equation that includes all the CA signals results in an output value that is sent asynchronously on the DQ signals back to the host memory controller.
+  CS_n LOW의 fresh sample에서 ^CA를 latch하고 train_val을 모든 DQ에 복제한다.
+P245-035 4.19.2 statement-rule: The CA Training Mode is enabled through an MPC command, with the opcode designated for CA Training Mode Entry.
+  MPC_ENTER_CA_TRAIN dispatch가 DS_CA_TRAINING을 설정한다.
+P245-037 4.19.2 reviewed-statement: Only the sampling of the CA signals, evaluation of the XOR result, and loop back to the DQ’s will occur.
+  CS_n LOW의 fresh sample에서 ^CA를 latch하고 train_val을 모든 DQ에 복제한다.
+P245-039 4.19.2 statement-rule: The maximum sampling rate on the CA signals will be every 4tCK.
+  fresh CS assertion마다 chk(tCATM_CS,last,4)를 호출해 4CK 미만 간격을 진단한다.
+P246-001 4.19.3 statement-rule: In CA Training Mode, the CA values are sampled in the same way as for functional operation, where the CS_n qualifies which cycle the sampling occurs, and the sample is captured by the rising CK edge.
+  training_ck_edge에서 CS_n LOW의 첫 cycle에 ^CA를 train_val에 latch하고 DQ 전체에 복제해 다음 sample까지 유지한다.
+P246-002 4.19.3 reviewed-statement: Unlike functional operation, there is no concept of multiple cycle commands in CA Training Mode.
+  CATM에서는 CA를 opcode가 아니라 XOR sample로 취급하고 wait2를 새로 arm하지 않는다.
+P246-003 4.19.3 statement-rule: Sampling of the CA signals ONLY occurs when CS_n is asserted.
+  training_ck_edge에서 CS_n LOW의 첫 cycle에 ^CA를 train_val에 latch하고 DQ 전체에 복제해 다음 sample까지 유지한다.
+P246-004 4.19.3 statement-rule: Once the CA signals are sampled, the values are XOR’d to produce an output value.
+  training_ck_edge에서 CS_n LOW의 첫 cycle에 ^CA를 train_val에 latch하고 DQ 전체에 복제해 다음 sample까지 유지한다.
+P246-005 4.19.3 statement-rule: This output value is driven on all the DQ pins, as a pseudo-static value.
+  training_ck_edge에서 CS_n LOW의 첫 cycle에 ^CA를 train_val에 latch하고 DQ 전체에 복제해 다음 sample까지 유지한다.
+P246-006 4.19.3 statement-rule: These output values will be held until the next sample is captured on the CA bus, according to the CS_n assertion.
+  training_ck_edge에서 CS_n LOW의 첫 cycle에 ^CA를 train_val에 latch하고 DQ 전체에 복제해 다음 sample까지 유지한다.
+P246-011 4.19.3 statement-rule: CS_n shall be asserted every 4tCK or with greater than 4tCK separation between assertions, and thus the CA XOR output shall transition every 4tCK or greater.
+  fresh CS assertion마다 chk(tCATM_CS,last,4)를 호출해 4CK 미만 간격을 진단한다.
+P247-001 4.19.3.1 reviewed-statement: The CATM Output is computed based on the CS_n assertion and the values of the CA inputs.
+  CS_n LOW의 fresh sample에서 ^CA를 latch하고 train_val을 모든 DQ에 복제한다.
+P248-001 4.20.1 reviewed-statement: The CS Training Mode is a method to facilitate the loopback of a sampled sequence of the CS_n signal.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-003 4.20.1 reviewed-statement: Once this mode is enabled and the DRAM devices are selected to actively sample and drive feedback, The DRAM will sample the CS_n signal on the rising edge of CK.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-004 4.20.1 reviewed-statement: Every set of four CK rising edge samples will be included in a logical computation to determine the CSTM Output result that is sent back to the host on the DQ bus.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-005 4.20.1 reviewed-statement: Once sampling begins, the DRAM must maintain the consecutive grouping of the samples every 4 tCK.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-006 4.20.1 reviewed-statement: When the CS_n Sample[0] and Sample[2] results in a logic 0 and the CS_n Sample[1] and Sample[3] results in a logic 1, the DRAM will drive a 0 on all the DQ signals.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-007 4.20.1 reviewed-statement: There is no requirement to drive any strobes, and the output signal could transition as often as every 4 tCK.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-008 4.20.2 reviewed-statement: The CS Training Mode is enabled when the host sends an MPC command with the opcode for CS Training Mode Entry.
+  MPC ENTER/EXIT CS TRAIN 상태 전환과 CSTM 중 일반 decode는 존재한다. command restriction·latency는 별도 항목이다.
+P248-010 4.20.2 reviewed-statement: When the DRAM is in this mode, commands are still actively processed.
+  MPC ENTER/EXIT CS TRAIN 상태 전환과 CSTM 중 일반 decode는 존재한다. command restriction·latency는 별도 항목이다.
+P248-013 4.20.2 reviewed-statement: Once the DRAM has CS Training Mode enabled, the DRAM begins sampling on every rising CK edge, with the 4-sample groups looping consecutively.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-014 4.20.2 reviewed-statement: Depending on the value of the samples, the DQ signals are driven high or low.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-018 4.20.2 reviewed-statement: To exit CS Training Mode, an MPC command shall be sent to disable CS Training Mode.
+  MPC ENTER/EXIT CS TRAIN 상태 전환과 CSTM 중 일반 decode는 존재한다. command restriction·latency는 별도 항목이다.
+P248-020 4.20.3 reviewed-statement: In CS Training Mode, the CS_n values are sampled on all CK rising edges.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-021 4.20.3 reviewed-statement: Each group of 4 consecutive samples is evaluated in pairs, and then the two pairs are combined with a logical OR prior to sending to the DQ output.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P248-038 4.20.3 reviewed-statement: *When there is no change on the CSTM Output from previous evaluation, DQ shall continue to drive same value continuously with no switching on the bus.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P249-003 4.20.3 reviewed-statement: The delay from when the CS_n signals are sampled during the fourth CK rising edge (Sample[3]) to when the output of the sample evaluation is driven to a stable value on the DQ pins is specified as tCSTM_Valid, as shown in Figure 96.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P249-067 4.20.3 reviewed-statement: Therefore, even though the CS setup/hold time is appropriate for each DRAM, 4-tCK CS_n sampling window which may have different starting points could appear differently as shown in Figure 98.
+  training_ck_edge가 CS_n을 4개씩 수집하고 pair(0,1) 비교 후 OR하여 train_val에 latch한다. same result는 동일한 static DQ 값으로 유지된다.
+P252-022 4.21.1 reviewed-statement: The sampled feedback state will remain on the DQ bus until a subsequent Write Leveling sample changes the state, or until Write Leveling Training is exited.
+  wl_val은 다음 DQS 상승에서만 바뀌며 MR2[1]이 꺼질 때 DQ mux에서 해제된다.
+P253-002 4.21.2 statement-rule: To enter Write Leveling Training Mode, the controller shall program MR2:OP[1]=1.
+  wl_training_on이 MR2[1]을 직접 읽고 DQ feedback 우선순위를 활성/비활성화한다.
+P253-003 4.21.2 statement-rule: Likewise, to exit the Write Leveling Training Mode, the controller will program MR2:OP[1]=0.
+  wl_training_on이 MR2[1]을 직접 읽고 DQ feedback 우선순위를 활성/비활성화한다.
+P253-020 4.21.3 reviewed-statement: An MRW command is sent to enable Write Leveling Training Mode.
+  MR2[1]을 쓰면 wl_training_on/DQ mux에 즉시 반영된다.
+P255-001 4.21.3 reviewed-statement: The Memory controller initiates Write Leveling mode of all DRAMs in a rank by setting MR2:OP[1]=1.
+  MR2[1]을 쓰면 wl_training_on/DQ mux에 즉시 반영된다.
+P260-005 4.21.5 reviewed-statement: After the WL_ADJ_end offset has been applied, the host will disable Write Leveling Training Mode (MR2:OP[1]=0).
+  MR2[1]을 쓰면 wl_training_on/DQ mux에 즉시 반영된다.
+P264-005 4.23.1 reviewed-statement: A ZQCal Start command may be issued anytime the DRAM is in a state in which it can receive valid commands.
+  do_mpc에서 ZQ START를 init/normal의 valid command gate 내에서 받아 t_zq_start/zq_busy를 설정한다.
+P264-014 4.23.1 reviewed-statement: A ZQCal Latch command issued without rerunning the ZQ Calibration operation will relatch the results of the previous ZQ Calibration operation that completed.
+  init_zq_start가 한 번 설정되면 zq_busy가 끝난 뒤에도 ZQ LATCH를 다시 받을 수 있다. calibration 값은 behavioral abstraction이다.
+P266-002 4.24.1 reviewed-statement: In order to accomplish this, DDR5-SDRAMs will support a single UI command specifically for setting the VrefCA setting.
+  VrefCA/CS를 1cycle opcode로 decode해 CK rising마다 해당 shadow[6:0]에 저장한다.
+P266-010 4.24.2 reviewed-statement: The command is sampled on every rising edge of CK_t/CK_c.
+  VrefCA/CS를 1cycle opcode로 decode해 CK rising마다 해당 shadow[6:0]에 저장한다.
+P267-002 4.25.1 reviewed-statement: In order to accomplish this, DDR5-SDRAMs will support a single UI command specifically for setting the VrefCS setting (similar to VrefCA).
+  VrefCA/CS를 1cycle opcode로 decode해 CK rising마다 해당 shadow[6:0]에 저장한다.
+P267-011 4.25.2 reviewed-statement: The command is sampled on every rising edge of CK_t/CK_c.
+  VrefCA/CS를 1cycle opcode로 decode해 CK rising마다 해당 shadow[6:0]에 저장한다.
+P312-006 4.36 statement-rule: In the case of a x8 device, no extra prefetch is required, as the prefetch is the same as the external transfer size.
+  LANE_W=8, x8 1lane/x16 2lane으로 같은 external bank의 두 ECC key를 나누고 DQ lower/upper byte에 각각 corrected lane을 배치한다. 물리 bank 배치는 behavioral abstraction이다.
+P312-007 4.36 statement-rule: For a x16 device, two 128-bit data words and their corresponding 8 check bits are fetched from different internal banks (same external bank address).
+  LANE_W=8, x8 1lane/x16 2lane으로 같은 external bank의 두 ECC key를 나누고 DQ lower/upper byte에 각각 corrected lane을 배치한다. 물리 bank 배치는 behavioral abstraction이다.
+P312-008 4.36 statement-rule: Each 128 Data bits and the corresponding 8 check bits are checked separately and in parallel.
+  LANE_W=8, x8 1lane/x16 2lane으로 같은 external bank의 두 ECC key를 나누고 DQ lower/upper byte에 각각 corrected lane을 배치한다. 물리 bank 배치는 behavioral abstraction이다.
+P312-009 4.36 statement-rule: On reads, the DRAM corrects any single-bit errors before returning the data to the memory controller.
+  do_read가 lane별 ecc_correct_lane을 호출하고 corrected lane_w에서 burst를 생성한다. read-path single-bit correction은 기존 ECC regression에서도 실행됐다.
+P312-010 4.36 statement-rule: The DRAM shall not write the corrected data back to the array during a read cycle.
+  do_read는 corrected local lane_w만 사용한다. mem/ecc_store에 correction을 쓰는 경로는 없고 ECS의 ecc_scatter와 구별된다.
+P312-014 4.36 reviewed-statement: In the case of a x8 and x16 DDR5, no internal read is required.
+  x8/x16 full BL16 write는 DQS capture 후 ECC bits를 계산하며 pre-read scheduling을 요구하지 않는다. BC8/masked write는 해당 문장과 구별한다.
+P312-015 4.36 statement-rule: For a x16 device, two 136-bit code words are read from two internal banks(same external bank address), one code word is mapped to DQ[0:7] and the other code word is mapped to DQ[8:15].
+  LANE_W=8, x8 1lane/x16 2lane으로 같은 external bank의 두 ECC key를 나누고 DQ lower/upper byte에 각각 corrected lane을 배치한다. 물리 bank 배치는 behavioral abstraction이다.
+P312-016 4.36.1 statement-rule: The ECC blocks show in Figure 153 are the ECC Check Bit Generator, Syndrome Generator, Syndrome Decode and Correction.
+  build_h/ecc_check_bits/ecc_syndrome/ecc_locate와 correction이 존재한다. zero→-1, column match→bit index, unmatched→-2(DUE)로 동작한다.
+P312-017 4.36.1 statement-rule: The Check Bit Generator and Syndrome Generator blocks are fully specified by the H matrix.
+  build_h/ecc_check_bits/ecc_syndrome/ecc_locate와 correction이 존재한다. zero→-1, column match→bit index, unmatched→-2(DUE)로 동작한다.
+P312-018 4.36.1 statement-rule: The Syndrome Decode block executes the following function: Zero Syndrome => No Error Non-Zero Syndrome matches one of the columns of the H matrix => Flip Corresponding bit Non-Zero Syndrome that does not match any of the columns in the H matrix => DUE
+  build_h/ecc_check_bits/ecc_syndrome/ecc_locate와 correction이 존재한다. zero→-1, column match→bit index, unmatched→-2(DUE)로 동작한다.
+P313-005 4.37 reviewed-statement: The Manual ECS mode (MR14:OP[7] = 1B) allows for ECS operations via the Multi-Purpose Command.
+  MPC_MANUAL_ECS=0Ch를 dispatch하고 MR14[7]이 켜져 있을 때만 ecs_step을 호출한다.
+P314-007 4.37.1 reviewed-statement: Manual ECS mode is enabled by MR14 OP[7] = 1B.
+  MPC_MANUAL_ECS=0Ch를 dispatch하고 MR14[7]이 켜져 있을 때만 ecs_step을 호출한다.
+P314-008 4.37.1 reviewed-statement: A manual ECS operation requires an MPC command with OP[7:0]=0000 1100B.
+  MPC_MANUAL_ECS=0Ch를 dispatch하고 MR14[7]이 켜져 있을 때만 ecs_step을 호출한다.
+P315-007 4.37.2 reviewed-statement: For each ECS operation, ECS Address Counters increment the column address after each internal ECS WR command such that the next code word and check bits are selected.
+  ecs_blk→ecs_row→ecs_bank 순으로 증가하고 bank index는 BA 다음 BG 순서라 전체 sweep 후 0으로 wrap한다. physical density/3DS geometry는 별도 미구현이다.
+P315-008 4.37.2 reviewed-statement: Once the column counter wraps (all code words and check bits on the row have been accessed), the row counter will increment until all code words on each of the rows within a bank are accessed.
+  ecs_blk→ecs_row→ecs_bank 순으로 증가하고 bank index는 BA 다음 BG 순서라 전체 sweep 후 0으로 wrap한다. physical density/3DS geometry는 별도 미구현이다.
+P315-009 4.37.2 reviewed-statement: When the row counter wraps (all rows within the bank have been accessed), the bank counter will increment and the next bank within a bank group will repeat the process of accessing each code word.
+  ecs_blk→ecs_row→ecs_bank 순으로 증가하고 bank index는 BA 다음 BG 순서라 전체 sweep 후 0으로 wrap한다. physical density/3DS geometry는 별도 미구현이다.
+P315-010 4.37.2 reviewed-statement: When the bank counter wraps, the bank group counter will increment and the next bank group will repeat the process of accessing each code word, until all bank groups within the DRAM have been accessed.
+  ecs_blk→ecs_row→ecs_bank 순으로 증가하고 bank index는 BA 다음 BG 순서라 전체 sweep 후 0으로 wrap한다. physical density/3DS geometry는 별도 미구현이다.
+P315-011 4.37.2 reviewed-statement: After all the code words within the DRAM are read, corrected, and written once, the bank group counter will wrap and the process begins again with the next manual ECS operation.
+  ecs_blk→ecs_row→ecs_bank 순으로 증가하고 bank index는 BA 다음 BG 순서라 전체 sweep 후 0으로 wrap한다. physical density/3DS geometry는 별도 미구현이다.
+P317-017 4.37.3 statement-rule: The error counters (ECC Error Counter and ECC Errors per Row Counter) reset each time the bank group counter wraps.
+  ecs_step이 마지막 bank에서 wrap하면 ecs_reset_counters를 호출한다. 보고용 MR까지 지우는 별도 오류는 다른 문장에 반영한다.
+P318-004 4.38.1 statement-rule: The CRC polynomial used by DDR5 is the ATM-8 HEC, X^8+X^2+X^1+1 that is same as used on DDR4.
+  8bit feedback polynomial 07h와 initial zero/D63-first 구현이 표준의 8개 XOR식과 모든 64개 basis 및 zero에서 일치했다.
+P321-002 4.38.5 statement-rule: Write CRC function can be enabled or disabled per each nibble independently in x8 device.
+  check_write_crc가 MR50[1+nib%2]가 0인 nibble은 continue한다. x8의 두 nibble enable/disable만 평가한 판정이다.
+P321-003 4.38.5 statement-rule: There are two separate write CRC enable MR bits (for upper and lower nibbles) defined for x8.
+  check_write_crc가 MR50[1+nib%2]가 0인 nibble은 continue한다. x8의 두 nibble enable/disable만 평가한 판정이다.
+P321-005 4.38.5 statement-rule: When write CRC is enable in one nibble and disabled in the other nibble in x8, then the DRAM does not check CRC errors on the disabled nibble, and hence the ALERT_n signal and any internal status bit related to CRC error is not impacted by the disabled nibble.
+  check_write_crc가 MR50[1+nib%2]가 0인 nibble은 continue한다. x8의 두 nibble enable/disable만 평가한 판정이다.
+P321-009 4.38.5 statement-rule: DRAM can write data to the DRAM core without waiting for CRC check for full writes.
+  DQ capture에서 mem에 먼저 쓰고 추가 CRC 2UI를 받은 후 check_write_crc를 호출한다. full write의 speculative write 허용을 구현한다.
+P321-012 4.38.5 statement-rule: There is no write latency adder when write CRC is enabled.
+  wr_pend.launch_ck는 항상 cur_ck+cfg_WL이며 write CRC enable이 launch latency를 바꾸지 않는다.
+P322-017 4.38.9 statement-rule: DRAM will set Write CRC Error Status bit in A[3] of MR50 to '1' upon detecting a CRC error.
+  CRC mismatch 시 MR50[3]=1로 latch하며 timeout에서는 ALERT만 복구한다. MRW를 통한 명시적 clear 경로가 있다. reset은 별도 예외다.
+P322-018 4.38.9 statement-rule: The Write CRC Error Status bit remains Group At '1' until the host clears it explicitly using an MRW command.
+  CRC mismatch 시 MR50[3]=1로 latch하며 timeout에서는 ALERT만 복구한다. MRW를 통한 명시적 clear 경로가 있다. reset은 별도 예외다.
+P336-023 4.42 reviewed-statement: Each ACT command will increment the RAA count by 1 for the individual bank receiving the ACT command.
+  do_act에서 해당 raa[d.bank]를 정확히 1 증가시킨다.
+P336-026 4.42 reviewed-statement: The RFM operation can be initiated to all banks on the DRAM with the RFMab command, or to a single bank address (BA[1:0]) in all bank groups with the RFMsb command.
+  RFM-required=1에서 CA9=REF/RFM, CA10=all/same bank를 decode하고 해당 bank 집합을 처리한다.
+P337-009 4.42 reviewed-statement: The RFM command bits are the same as the REF command, except for CA9.
+  RFM-required=1에서 CA9=REF/RFM, CA10=all/same bank를 decode하고 해당 bank 집합을 처리한다.
+P337-011 4.42 reviewed-statement: If the Refresh Management Required bit is “1”, (MR58 OP[0]=1), CA9=”H” executes the REF command and CA9=”L” executes either an RFMab command if CA10=”L” or an RFMsb command if CA10=”H”.
+  RFM-required=1에서 CA9=REF/RFM, CA10=all/same bank를 decode하고 해당 bank 집합을 처리한다.
+P337-013 4.42 reviewed-statement: tRFM,min is equivalent to tRFC,min. See Table 175.
+  get_timing이 tRFM1=tRFC1, tRFM2=tRFC2, tRFMsb=tRFCsb로 설정한다. 각 숫자 자체의 speed/density 적합성은 별도 검토다.
+P337-018 4.42 statement-rule: When an RFM command is issued to the DRAM, the RAA counter in any bank receiving the command can be decremented by the RAAIMT value, down to a minimum RAA value of 0 (no negative or “pull-in” of RFM commands is allowed).
+  raa_decrement는 max(raa−amount,0)이고 RFMab는 all banks, RFMsb는 모든 BG의 선택 BA에 cfg_raaimt를 적용한다. 일반 RFM-required 모드의 감소 규칙을 평가한다.
+P337-019 4.42 statement-rule: Issuing an RFMab command allows the RAA count in all banks to be decremented by the RAAIMT value.
+  raa_decrement는 max(raa−amount,0)이고 RFMab는 all banks, RFMsb는 모든 BG의 선택 BA에 cfg_raaimt를 적용한다. 일반 RFM-required 모드의 감소 규칙을 평가한다.
+P337-020 4.42 statement-rule: Issuing an RFMsb command with BA[1:0] allows the RAA count only with that bank address across all bank groups to be decremented by the RAAIMT value
+  raa_decrement는 max(raa−amount,0)이고 RFMab는 all banks, RFMsb는 모든 BG의 선택 BA에 cfg_raaimt를 적용한다. 일반 RFM-required 모드의 감소 규칙을 평가한다.
+P337-022 4.42 statement-rule: If the RAA counter reaches RAAMMT, no additional ACT commands are allowed to the DRAM bank until one or more REF or RFM commands have been issued to reduce the RAA counter below the maximum value.
+  do_act가 raa_blocks_act를 호출해 RAA>=cfg_raammt이면 protocol error를 기록한다. 불법 ACT를 진단하는 checker 동작이다.
+P338-012 4.42 statement-rule: No decrement to the RAA count values is allowed for entering/exiting Self Refresh.
+  SRE/exit dispatch는 RAA를 수정하지 않으므로 count를 보존한다.
+P338-013 4.42 statement-rule: The per bank count values before Self Refresh is entered remain unchanged upon Self Refresh exit.
+  SRE/exit dispatch는 RAA를 수정하지 않으므로 count를 보존한다.
+P345-002 4.45.1 reviewed-statement: For normal operation, set MR5:OP[0] = 0 (default).
+  MR5가 reset에서 0이 되므로 Data Output Disable의 기본 bit값은 맞다. bit=1의 실제 output disable은 미구현이다.

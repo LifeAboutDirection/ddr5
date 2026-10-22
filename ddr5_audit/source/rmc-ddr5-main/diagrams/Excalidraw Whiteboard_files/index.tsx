@@ -1,0 +1,21 @@
+import.meta.env = {"VITE_APP_BACKEND_V2_GET_URL": "https://json-dev.excalidraw.com/api/v2/", "VITE_APP_BACKEND_V2_POST_URL": "https://json-dev.excalidraw.com/api/v2/post/", "VITE_APP_LIBRARY_URL": "https://libraries.excalidraw.com", "VITE_APP_LIBRARY_BACKEND": "https://us-central1-excalidraw-room-persistence.cloudfunctions.net/libraries", "VITE_APP_WS_SERVER_URL": "http://localhost:3002", "VITE_APP_PLUS_LP": "https://plus.excalidraw.com", "VITE_APP_PLUS_APP": "http://localhost:3000", "VITE_APP_AI_BACKEND": "http://localhost:3016", "VITE_APP_FIREBASE_CONFIG": "{\"apiKey\":\"AIzaSyCMkxA60XIW8KbqMYL7edC4qT5l4qHX2h8\",\"authDomain\":\"excalidraw-oss-dev.firebaseapp.com\",\"projectId\":\"excalidraw-oss-dev\",\"storageBucket\":\"excalidraw-oss-dev.appspot.com\",\"messagingSenderId\":\"664559512677\",\"appId\":\"1:664559512677:web:a385181f2928d328a7aa8c\"}", "VITE_APP_DEV_DISABLE_LIVE_RELOAD": "", "VITE_APP_ENABLE_TRACKING": "true", "VITE_APP_PORT": "3001", "VITE_APP_DEBUG_ENABLE_TEXT_CONTAINER_BOUNDING_BOX": "", "VITE_APP_COLLAPSE_OVERLAY": "true", "VITE_APP_ENABLE_ESLINT": "true", "VITE_APP_ENABLE_PWA": "false", "VITE_APP_PLUS_EXPORT_PUBLIC_KEY": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm2g5T+Rub6Kbf1Mf57t0\n7r2zeHuVg4dla3r5ryXMswtzz6x767octl6oLThn33mQsPSy3GKglFZoCTXJR4ij\nba8SxB04sL/N8eRrKja7TFWjCVtRwTTfyy771NYYNFVJclkxHyE5qw4m27crHF1y\nUNWEjuqNMi/lwAErS9fFa2oJlWyT8U7zzv/5kQREkxZI6y9v0AF3qcbsy2731FnD\ns9ChJvOUW9toIab2gsIdrKW8ZNpu084ZFVKb6LNjvIXI1Se4oMTHeszXzNptzlot\nkdxxjOoaQMAyfljFSot1F1FlU6MQlag7UnFGvFjRHN1JI5q4K+n3a67DX+TMyRqS\nHQIDAQAB", "VITE_APP_DISABLE_PREVENT_UNLOAD": "", "BASE_URL": "/", "MODE": "development", "DEV": true, "PROD": false, "SSR": false};import { jsxDEV } from "/@id/__x00__react/jsx-dev-runtime";
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=4dcfc768"; const StrictMode = __vite__cjsImport1_react["StrictMode"];
+import __vite__cjsImport2_reactDom_client from "/node_modules/.vite/deps/react-dom_client.js?v=4dcfc768"; const createRoot = __vite__cjsImport2_reactDom_client["createRoot"];
+import { registerSW } from "/@vite-plugin-pwa/virtual:pwa-register";
+import "/sentry.ts";
+import ExcalidrawApp from "/App.tsx";
+window.__EXCALIDRAW_SHA__ = import.meta.env.VITE_APP_GIT_SHA;
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+registerSW();
+root.render(/* @__PURE__ */ jsxDEV(StrictMode, { children: /* @__PURE__ */ jsxDEV(ExcalidrawApp, {}, void 0, false, {
+  fileName: "/home/lalithreddy/Downloads/packages/excalidraw/excalidraw-app/index.tsx",
+  lineNumber: 11,
+  columnNumber: 5
+}, this) }, void 0, false, {
+  fileName: "/home/lalithreddy/Downloads/packages/excalidraw/excalidraw-app/index.tsx",
+  lineNumber: 10,
+  columnNumber: 13
+}, this));
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBY0k7QUFkSixTQUFTQSxrQkFBa0I7QUFDM0IsU0FBU0Msa0JBQWtCO0FBQzNCLFNBQVNDLGtCQUFrQjtBQUUzQixPQUFPO0FBRVAsT0FBT0MsbUJBQW1CO0FBRTFCQyxPQUFPQyxxQkFBcUJDLFlBQVlDLElBQUlDO0FBQzVDLE1BQU1DLGNBQWNDLFNBQVNDLGVBQWUsTUFBTTtBQUNsRCxNQUFNQyxPQUFPWCxXQUFXUSxXQUFXO0FBQ25DUCxXQUFXO0FBQ1hVLEtBQUtDLE9BQ0gsdUJBQUMsY0FDQyxpQ0FBQyxtQkFBRDtBQUFBO0FBQUE7QUFBQTtBQUFBLE9BQWMsS0FEaEI7QUFBQTtBQUFBO0FBQUE7QUFBQSxPQUVBLENBQ0YiLCJuYW1lcyI6WyJTdHJpY3RNb2RlIiwiY3JlYXRlUm9vdCIsInJlZ2lzdGVyU1ciLCJFeGNhbGlkcmF3QXBwIiwid2luZG93IiwiX19FWENBTElEUkFXX1NIQV9fIiwiaW1wb3J0IiwiZW52IiwiVklURV9BUFBfR0lUX1NIQSIsInJvb3RFbGVtZW50IiwiZG9jdW1lbnQiLCJnZXRFbGVtZW50QnlJZCIsInJvb3QiLCJyZW5kZXIiXSwic291cmNlcyI6WyJpbmRleC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgU3RyaWN0TW9kZSB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgY3JlYXRlUm9vdCB9IGZyb20gXCJyZWFjdC1kb20vY2xpZW50XCI7XG5pbXBvcnQgeyByZWdpc3RlclNXIH0gZnJvbSBcInZpcnR1YWw6cHdhLXJlZ2lzdGVyXCI7XG5cbmltcG9ydCBcIi4uL2V4Y2FsaWRyYXctYXBwL3NlbnRyeVwiO1xuXG5pbXBvcnQgRXhjYWxpZHJhd0FwcCBmcm9tIFwiLi9BcHBcIjtcblxud2luZG93Ll9fRVhDQUxJRFJBV19TSEFfXyA9IGltcG9ydC5tZXRhLmVudi5WSVRFX0FQUF9HSVRfU0hBO1xuY29uc3Qgcm9vdEVsZW1lbnQgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInJvb3RcIikhO1xuY29uc3Qgcm9vdCA9IGNyZWF0ZVJvb3Qocm9vdEVsZW1lbnQpO1xucmVnaXN0ZXJTVygpO1xucm9vdC5yZW5kZXIoXG4gIDxTdHJpY3RNb2RlPlxuICAgIDxFeGNhbGlkcmF3QXBwIC8+XG4gIDwvU3RyaWN0TW9kZT4sXG4pO1xuIl0sImZpbGUiOiIvaG9tZS9sYWxpdGhyZWRkeS9Eb3dubG9hZHMvcGFja2FnZXMvZXhjYWxpZHJhdy9leGNhbGlkcmF3LWFwcC9pbmRleC50c3gifQ==

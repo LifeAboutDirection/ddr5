@@ -1,0 +1,190 @@
+P044-108 3.3.1 section-evidence: Upon the completion of Te, all ODT states (CA, CS_n, CK, DQ and DQS ODT) should be valid and the DRAM’s CS_n receiver should no longer be in its CMOS based mode.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 리셋 시 bank/MR/스케줄러를 초기화하고 INIT→NORMAL 상태를 둔다. 기본 INIT_FAST=1은 대기를 64CK로 단축한다. tINIT1/2 및 CS/CK 단계별 조건, 안정 전원 리셋 펄스폭, 초기 NOP 순서를 별도로 검증하지 않는다. MR0/MR10~12/MR15 기본값도 Table 9와 다르다.
+P044-109 3.3.1 section-evidence: ODT termination states will be uncalibrated until completion of ZQcal at (Tj)
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 리셋 시 bank/MR/스케줄러를 초기화하고 INIT→NORMAL 상태를 둔다. 기본 INIT_FAST=1은 대기를 64CK로 단축한다. tINIT1/2 및 CS/CK 단계별 조건, 안정 전원 리셋 펄스폭, 초기 NOP 순서를 별도로 검증하지 않는다. MR0/MR10~12/MR15 기본값도 Table 9와 다르다.
+P047-020 3.3.3 section-evidence: NOTE 4 During ramp up and ramp down [VDDQ-VDD] must be equal or less than 200mV.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 리셋 시 bank/MR/스케줄러를 초기화하고 INIT→NORMAL 상태를 둔다. 기본 INIT_FAST=1은 대기를 64CK로 단축한다. tINIT1/2 및 CS/CK 단계별 조건, 안정 전원 리셋 펄스폭, 초기 NOP 순서를 별도로 검증하지 않는다. MR0/MR10~12/MR15 기본값도 Table 9와 다르다.
+P065-017 3.5.4 section-evidence: NOTE 5 This is set during WL Training, after the host DQS has been aligned to the ideal External WL timings.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR2[1] enable과 DQS 상승에서 CK_t를 sample하는 간단한 feedback만 있다. DDR5의 WRITE-command 기반 Internal Write Leveling Pulse, MR3 WICA, MR7 half-cycle, MR2[7], byte별 DQS·feedback, tWLO 등의 지연이 없다.
+P066-006 3.5.5 section-evidence: NOTE 1 This is set during WL Training, after the host DQS has been aligned to the ideal External WL timings.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR2[1] enable과 DQS 상승에서 CK_t를 sample하는 간단한 feedback만 있다. DDR5의 WRITE-command 기반 Internal Write Leveling Pulse, MR3 WICA, MR7 half-cycle, MR2[7], byte별 DQS·feedback, tWLO 등의 지연이 없다.
+P155-023 4.3.1 section-evidence: NOTE See Command Truth Table for details
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 세 종류 bank-close 동작과 기본 tRP/tRAS/tRTP/tWR 검사는 존재한다. PREab/PREsb는 이미 idle인 bank의 t_pre를 갱신하지 않아서 마지막 PRE 기준 tRP 조건에 불일치한다. Auto-PRE도 tRAS lockout을 포함하지 않는다.
+P165-014 4.6 section-evidence: NOTE See Command Truth Table for details
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. ACT의 bank/row 지정, open state, tRC/tRP/tRRD/tFAW 비교가 있다. 전체 주소 폭·밀도와 3DS, non-binary 행 주소를 포괄하지 않고 위반을 보고한 후에도 open_bank를 실행한다.
+P168-003 4.7.2 section-evidence: The minimum value for the Internal Read Command to Precharge Command Delay is given by tRTP.min. A new bank active command may be issued to the same bank if the following two conditions are satisfied simultaneously:
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-006 4.7.2 section-evidence: Examples of Read commands followed by Precharge are shown in Figure 33 and Figure 34.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-037 4.7.2 section-evidence: MIN is satisfied at Precharge command time(ta+1) and that tRC.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-038 4.7.2 section-evidence: MIN is satisfied at the next Active command time(tc+2) .
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-039 4.7.2 section-evidence: Figure 33 — READ to PRECHARGE with 1tCK Preamble
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-067 4.7.2 section-evidence: MIN is satisfied at Precharge command time(ta+1) and that tRC.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P168-068 4.7.2 section-evidence: MIN is satisfied at the next Active command time(tc+2).
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P169-001 4.7.2.1 section-evidence: The parameters in Table 41 and Table 42 shall be defined for CK to read DQS timings.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P173-024 4.7.4 section-evidence: NOTE 1 RBL: Read burst length associated with Read command
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P173-028 4.7.4 section-evidence: NOTE 2 WBL: Write burst length associated with Write command
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. 일반 READ에 RL 지연, burst ordering, ECC correction, DQS 출력이 있다. rd_pend와 rd_data가 단 하나여서 RL보다 짧은 합법적 READ 간격에서 앞선 READ가 덮어써진다. 독립 검사 CK100/112에서 첫 launch140이 152로 소실됐다.
+P179-017 4.8 section-evidence: CAS Write Latency is defined and measured from final cycle of the Write command to the first effective rising DQS (excluding write preamble).
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. WL 뒤 DQS edge로 DQ를 저장하지만 wr_pend 하나를 다음 WRITE가 덮어쓴다. WR_partial, DM enable/byte mask, BC8 C3, tCCD_L_WR2 조건, 내부 RMW correction이 빠져 있다.
+P180-002 4.8.2 section-evidence: The details of each parameter are defined separately.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. WL 뒤 DQS edge로 DQ를 저장하지만 wr_pend 하나를 다음 WRITE가 덮어쓴다. WR_partial, DM enable/byte mask, BC8 C3, tCCD_L_WR2 조건, 내부 RMW correction이 빠져 있다.
+P180-004 4.8.2 section-evidence: As well, DQS and DQ are shown center-aligned.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. WL 뒤 DQS edge로 DQ를 저장하지만 wr_pend 하나를 다음 WRITE가 덮어쓴다. WR_partial, DM enable/byte mask, BC8 C3, tCCD_L_WR2 조건, 내부 RMW correction이 빠져 있다.
+P180-005 4.8.2 section-evidence: Offset between CK and DQS, and between DQS and DQ may be appropriate.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. WL 뒤 DQS edge로 DQ를 저장하지만 wr_pend 하나를 다음 WRITE가 덮어쓴다. WR_partial, DM enable/byte mask, BC8 C3, tCCD_L_WR2 조건, 내부 RMW correction이 빠져 있다.
+P186-019 4.8.7.1 reviewed-statement: Generally, if Write timing parameters are violated, a complete reset/initialization procedure has to be initiated to make sure that the DRAM works properly.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P186-020 4.8.7.1 reviewed-statement: However, it is desirable, for certain violations as specified below, the DRAM is guaranteed to not “hang up” and that errors are limited to that particular operation.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P186-021 4.8.7.1 reviewed-statement: For the following, it will be assumed that there are no timing violations with regards to the Write command itself (including ODT, etc.) and that it does satisfy all timing requirements not mentioned below.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P186-022 4.8.7.2 reviewed-statement: Should the required data to strobe timing or voltage parameters be violated (Such as: tRx_RDQ_tMargin, tRx_DQS2DQ_Skew, VRx- _DQS, VRx_DQ, etc.), for any of the data/strobe timing edges or data/strobe voltage limits associated with a write burst data eye, then incorrect data might be written to the memory locations addressed with this WRITE command.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P186-023 4.8.7.2 reviewed-statement: In the example, Figure X (add example timing diagram reference) the relevant strobe edges for a write burst are associated with the clock edges: Tn,Tn+0.5,Tn+1,...,Tn+8.5 Subsequent reads from that location might results in unpredictable read data, however the DRAM will work properly otherwise.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-001 4.8.7.3 reviewed-statement: Should the strobe timing requirements (tWPRE, tWPST) or the strobe to clock timing requirements (tDQSS, tDQSoffset) be violated for any of the strobe edges associated with a Write burst, then wrong data might be written to the memory location addressed with the offending WRITE command.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-002 4.8.7.3 reviewed-statement: Subsequent reads from that location might result in unpredictable read data, however the DRAM will work properly otherwise with the following constraints:
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-003 4.8.7.3 reviewed-statement: (1) Both Write CRC and data burst OTF are disabled; timing specifications other than tWPRE, tWPST, tDQSS, tDQSoffset are not violated.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-004 4.8.7.3 reviewed-statement: (2) The offending write strobe (and preamble) arrive no earlier or later than six DQS transition edges from the Write-Latency position.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-005 4.8.7.3 reviewed-statement: (3) A Read command following an offending Write command from any open bank is allowed.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-006 4.8.7.3 reviewed-statement: (4) One or more subsequent WR or a subsequent WRA {to same bank as offending WR} may be issued tCCD_L later but incorrect data could be written; subsequent WR and WRA can be either offending or non-offending Writes.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-007 4.8.7.3 reviewed-statement: Reads from these Writes may provide incorrect data.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-008 4.8.7.3 reviewed-statement: (5) One or more subsequent WR or a subsequent WRA {to a different bank group} may be issued tCCD_S later but incorrect data could be written; subsequent WR and WRA can be either offending or non-offending Writes.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-009 4.8.7.3 reviewed-statement: Reads from these Writes may provide incorrect data.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-010 4.8.7.3 reviewed-statement: (6) Once one or more precharge commands (PREpb, PREsb, or PREab) are issued to DDR5 after offending WRITE command and all banks become precharged state (idle state), a subsequent, non-offending WR or WRA to any open bank shall be able to write correct data.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-011 4.8.7.3 reviewed-statement: (7) DQS strobes including preamble must align to each Write commands data burst length configuration.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-012 4.8.7.3 reviewed-statement: If the DRAM fails to capture or incorrectly de-serializes the incoming data stream because of misalignment or missing strobe edges, errors may occur.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P187-013 4.8.7.3 reviewed-statement: These errors will propagate indefinitely until the DRAM is put into an idle state, i.e., all banks are in the precharged state with tRP satisfied.
+  이 항목은 의도적 DQS/voltage/timing 위반 후 오류 영향 범위와 복구 보장을 요구한다. 현재 positive regression 및 14개 독립 반례는 이 recovery sequence를 검증하지 않아 통과·실패를 확정하지 않는다.
+P190-024 4.9 section-evidence: The clock is internally disabled (in the DRAM) during Self-Refresh Operation to save power.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. SRE/SREF 상태 진입과 CS_n으로 exit, 일부 tXS 검사는 있다. SREF frequency-change 분기, tCKSRX, tSR/ODT timing, 자동 ECS, PASR, 내부 refresh schedule은 없다.
+P190-032 4.9 section-evidence: Once a Self-Refresh Exit is registered, the following timing delay must be satisfied:
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. SRE/SREF 상태 진입과 CS_n으로 exit, 일부 tXS 검사는 있다. SREF frequency-change 분기, tCKSRX, tSR/ODT timing, 자동 ECS, PASR, 내부 refresh schedule은 없다.
+P190-036 4.9 section-evidence: To issue ZQ calibration commands, applicable timing requirements must be satisfied.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. SRE/SREF 상태 진입과 CS_n으로 exit, 일부 tXS 검사는 있다. SREF frequency-change 분기, tCKSRX, tSR/ODT timing, 자동 ECS, PASR, 내부 refresh schedule은 없다.
+P194-004 4.10 section-evidence: In PDE mode, it should be sampled on every edge.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P194-028 4.10.1 section-evidence: CS used to trigger exit of PD
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P194-049 4.10.1 section-evidence: 2. Diagram above is shown with a valid 2-cycle command after tXP for simplicity.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P195-017 4.10.1 section-evidence: NOTE 1 Power-Down command can be sent while operations such as Activation, Precharge, Auto-Precharge or Refresh are in progress but IDD spec will not be applied until the operations are finished.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P195-018 4.10.1 section-evidence: NOTE 2 WR is calculated from tWR by using the Rounding Algorithm.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P195-021 4.10.1 section-evidence: NOTE 4 Read/Write/MRR can refer to both Target command and Non-Target command when CA11=H during PDE command.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P195-024 4.10.1 section-evidence: NOTE 6 RBL: Read burst length associated with Read command a) RBL = 32 (36 w/ RCRC on) for fixed BL32 and BL32 in BL32 OTF mode b) RBL = 16 (18 w/ RCRC on) for fixed BL16 and BL16 in BL32 OTF mode c) RBL = 16 (18 w/ RCRC on) for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. PDE/PDX 상태와 tCPDED/tXP 비교는 있다. PDE 진입 전에 READ/WRITE/REF/MRW가 끝났는지와 모든 power-down 타이밍을 확인하지 않는다. ODT 상태 제어도 없다.
+P200-011 4.13 section-evidence: The external address bus is only required to be in a valid state once this cycle has started.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. REFab/REFsb와 FGR에 따른 tRFC 비교 및 일부 간격 검사가 있다. 평균 tREFI/refresh credit, tREFSBRD/tREFSBRF/tRREFD, 온도·CA8 indicator, mode 전환 조건이 없다. check_refi는 첫 REF 전에는 검사하지 않고 REFsb도 반영하지 않는다.
+P200-012 4.13 section-evidence: When the refresh cycle has completed, all banks of the SDRAM will be in the precharged (idle) state.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. REFab/REFsb와 FGR에 따른 tRFC 비교 및 일부 간격 검사가 있다. 평균 tREFI/refresh credit, tREFSBRD/tREFSBRF/tRREFD, 온도·CA8 indicator, mode 전환 조건이 없다. check_refi는 첫 REF 전에는 검사하지 않고 REFsb도 반영하지 않는다.
+P200-031 4.13 section-evidence: DRAM must be idle DRAM must be idle
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. REFab/REFsb와 FGR에 따른 tRFC 비교 및 일부 간격 검사가 있다. 평균 tREFI/refresh credit, tREFSBRD/tREFSBRF/tRREFD, 온도·CA8 indicator, mode 전환 조건이 없다. check_refi는 첫 REF 전에는 검사하지 않고 REFsb도 반영하지 않는다.
+P200-052 4.13 section-evidence: DRAM must be idle DRAM must be idle
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. REFab/REFsb와 FGR에 따른 tRFC 비교 및 일부 간격 검사가 있다. 평균 tREFI/refresh credit, tREFSBRD/tREFSBRF/tRREFD, 온도·CA8 indicator, mode 전환 조건이 없다. check_refi는 첫 REF 전에는 검사하지 않고 REFsb도 반영하지 않는다.
+P235-002 4.17.1 section-evidence: Due to the increased frequencies supported by DDR5, a simple repeating pattern will not be sufficient for read training.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P235-020 4.17.1 section-evidence: Therefore, the host is responsible to ensure that RTT_PARK (MR34:OP[2:0] is programmed to align with RTT_NOM_RD (MR35:OP[5:3]), if so desired.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P236-008 4.17.1 section-evidence: For Serial Read Training Pattern Format mode, the following Mode Registers are programmed with the data pattern.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P236-019 4.17.1 section-evidence: The values for the Read Pattern Data0/LFSR0 and Read Pattern Data1/LFSR1 registers may be restored to the default values under the following conditions:
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P237-004 4.17.1 section-evidence: The values for both Read Pattern Invert - Lower and Upper DQ Bit registers may be restored to the default values under the following conditions:
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P238-001 4.17.2 reviewed-statement: The seed location in the figure clarifies the mapping for the Read Pattern Data0/LFRS0 and Read Pattern Data1/LFSR1 mode registers relative to the LFSR logic.
+  LFSR source polynomial/seed 경로는 확인했으나 이 문장에 연결된 figure의 bit mapping/지속 상태 조건 전체는 확정하지 않는다.
+P238-003 4.17.2 section-evidence: These assignments between LFSR0 and LFSR1 to each DQ output will create a unique pattern sequence for better coverage of DQ to DQ crosstalk interactions.
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P238-015 4.17.2 section-evidence: The values for the Read LFSR Assignments register may be restored to the default values under the following conditions:
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P238-020 4.17.2 reviewed-statement: The LFSR will only change state to support the read data after the MRR to the specific (MR31) Read Training Pattern address.
+  LFSR source polynomial/seed 경로는 확인했으나 이 문장에 연결된 figure의 bit mapping/지속 상태 조건 전체는 확정하지 않는다.
+P243-016 4.17.4 section-evidence: NOTE 2 Host responsible for proper setting of RTT_PARK of the non-target rank is programmed to align with RTT_NOM_RD, if
+  관련 경로는 존재하지만 이 문장/표 행에 명시된 모든 조건을 만족한다는 개별 근거는 확정하지 못했다. MR31 special MRR에서 serial/LFSR/clock/invert/assignment를 생성한다. 매 호출마다 local LFSR을 MR26/27로 재시드해 이전 상태를 유지하지 않는다. serial도 MSB-first로 구현돼 원문의 bit mapping 대조가 필요하다. 연속 출력 모드와 tMRR_p=8CK 파이프라인은 없다.
+P488-002 15.1.1 reviewed-statement: This limits the number of failure patterns seen by the memory controller such that correction of many failures can be reliably performed in DIMMs with one ECC device.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-003 15.1.1 reviewed-statement: Many internal DRAM failures may impact only a portion of the data from a fetch.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-004 15.1.1 reviewed-statement: The likelihood of a specific component failing may also vary between process generations and DRAM vendors.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-005 15.1.1 reviewed-statement: These guidelines can be used by DDR5 DRAM’s to bound failures from the components most likely to fail.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-006 15.1.1 reviewed-statement: These design guidelines can only address failures that impact a portion of the data from a 128-bit fetch.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-007 15.1.1 reviewed-statement: Failures that impact all the data in a 128-bit fetch from a device (e.g., device failure, bank failure) cannot be bounded as described here.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-008 15.1.2 reviewed-statement: In an x8 device bounded failures are defined by the following qualities:
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-009 15.1.2 reviewed-statement: A bounded fault will not impact more than 32 bits of data in a 128-bit fetch
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-010 15.1.2 reviewed-statement: The data bits impacted by a bounded failure will be confined to at most 2 DQs (i.e., the failures will be DQ aligned)
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-011 15.1.2 reviewed-statement: The DQs transmitting data impacted by the failure will both be in either the first nibble or the second nibble of a burst.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-012 15.1.2 reviewed-statement: That is, the impacted DQs will both be in the set of the first 4 DQs (DQ0, DQ1, DQ2, DQ3) or both in the set of the last four DQs (DQ4, DQ5, DQ6, DQ7)
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-014 15.1.2 reviewed-statement: Device on the left has a bounded fault in lanes DQ0 and DQ1 in the first nibble.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P488-015 15.1.2 reviewed-statement: Device on the right has a bounded fault in lanes DQ4 and DQ6 in the second nibble.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-001 15.1.2 reviewed-statement: An x4 device has similarly defined qualities for the failure boundaries, with the noted exception of the number of bits impacted by a bounded failure.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-002 15.1.2 reviewed-statement: In a DRAM device in a 9x4 configuration bounded failures should not impact more than 16 bits.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-003 15.1.2 reviewed-statement: However, in a 10x4 device the bounded failure may impact up to 32 bits.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-004 15.1.2 reviewed-statement: In x4 devices, bounded failures are defined by the following qualities:
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-005 15.1.2 reviewed-statement: A bounded failure in a DRAM device in a 9x4 configuration shall not impact more than 16 bits of data in a 128-bit prefetch.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-006 15.1.2 reviewed-statement: A bounded failure in a DRAM device in a 10x4 configuration shall not impact more than 32 bits of data in a 128-bit prefetch.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-007 15.1.2 reviewed-statement: For a device in a 9x4 configuration, the data bits impacted by a bounded failure will be confined to one DQ.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P489-008 15.1.2 reviewed-statement: For a device in a 10x4 configuration, the data bits impacted by a bounded failure will be confined to at most two DQs.
+  bounded-fault는 내부 결함 경계를 어떤 물리 block으로 정의하는지에 따라 달라진다. 모델은 arbitrary bit injection만 제공하고 vendor failure model이 없어 이 조건의 준수/위반을 확정할 수 없다.
+P490-001 15.2 reviewed-statement: To maintain the bounded fault design guidelines, miscorrections by the on-die ECC must be restricted when a bounded fault causes a multi-bit error.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-002 15.2 reviewed-statement: In devices with bounded fault it is suggested that the DRAM vendor uses an on-die ECC code that maintains the fault boundaries.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-003 15.2 reviewed-statement: That is, if an error is contained in one boundary, then the on-die ECC should not spread the error into a second boundary by miscorrection.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-004 15.2 reviewed-statement: Note that if faults are not bounded in the device, then the on-die ECC does not need to have these properties.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-005 15.2 reviewed-statement: To restrict miscorrection in devices following bounded fault design guidelines, the data may be divided into blocks aligned with the bounded fault and miscorrection should be restricted in the case an error is contained in a single data block.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-006 15.2 reviewed-statement: The 128 data bits used to compute a set of 8 check bits may be divided into data blocks up to 32 bits in size.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-007 15.2 reviewed-statement: These data blocks are to be determined by the memory vendor to best align with internal DRAM faults.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-008 15.2 reviewed-statement: For example, a common component fault may impact 32 bits per 128 data bits, then the vendor may choose to divide the 128 data bits into four 32-bit blocks each of which correspond to the bits impacted by one of the components failing.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-009 15.2 reviewed-statement: If a multi-bit error occurs on a read and is limited to one data block, then the on-die ECC SEC code should do one of the following:
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-012 15.2 reviewed-statement: Detect the error (a SEC code may detect some multi-bit errors, but detection of these errors is not guaranteed)
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.
+P490-013 15.2 reviewed-statement: The selection of block size and data blocks is determined by the vendor to best suit the device architecture and possible modes of fault.
+  SEC H matrix는 존재하지만 vendor-defined bounded-fault data block 분할이 없다. 해당 block 내부의 multi-bit miscorrection을 모두 대조하기 위한 경계 정의가 없어 판정을 보류한다.

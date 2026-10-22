@@ -1,0 +1,81 @@
+{
+  "sentence_id": "P048-010",
+  "first_pass": {
+    "status": "F",
+    "scope": "digital",
+    "reason": "MR31 분기와 정상 분기 모두 nbeats=16이며 MR0 BL과 독립이다. CRC 확장은 다음 문장의 별도 미구현 항목이다.",
+    "evidence": [
+      "MRR"
+    ],
+    "method": "statement-rule",
+    "optional": false
+  },
+  "ordered_rule_checks": [
+    {
+      "index": 1,
+      "section": "3.4.1",
+      "pattern": "operands.*select one of 256",
+      "section_match": true,
+      "text_match": false,
+      "result": "F"
+    },
+    {
+      "index": 2,
+      "section": "3.4.1",
+      "pattern": "MRR command is initiated",
+      "section_match": true,
+      "text_match": false,
+      "result": "F"
+    },
+    {
+      "index": 3,
+      "section": "3.4.1",
+      "pattern": "contents are available|odd DQ bit|Data in the burst \\(BL0-7\\)",
+      "section_match": true,
+      "text_match": false,
+      "result": "X"
+    },
+    {
+      "index": 4,
+      "section": "3.4.1",
+      "pattern": "all banks.*idle",
+      "section_match": true,
+      "text_match": false,
+      "result": "X"
+    },
+    {
+      "index": 5,
+      "section": "3.4.1",
+      "pattern": "DQS is toggled for the duration",
+      "section_match": true,
+      "text_match": false,
+      "result": "P"
+    },
+    {
+      "index": 6,
+      "section": "3.4.1",
+      "pattern": "command burst length 16 regardless",
+      "section_match": true,
+      "text_match": true,
+      "result": "F"
+    }
+  ],
+  "review_pass2_changes": false,
+  "final_status": "F",
+  "methods": {
+    "scope": 794,
+    "reviewed-statement": 1064,
+    "final-individual-review": 57,
+    "digital-system-scope": 79,
+    "missing-mechanism": 351,
+    "reviewed-scope": 49,
+    "statement-rule": 277,
+    "absent-feature": 767,
+    "access-rule": 7,
+    "contradiction-scope": 43,
+    "section-evidence": 4,
+    "temporal-scope-review": 15
+  },
+  "rule_count": 81,
+  "second_pass_rule_count": 232
+}

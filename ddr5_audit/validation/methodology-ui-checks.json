@@ -1,0 +1,13 @@
+{
+  "html_load": true,
+  "eight_steps": true,
+  "six_rule_checks": true,
+  "sentence_routes": 3507,
+  "chapter_status_filters": true,
+  "source_viewer": true,
+  "crc_context_demo": true,
+  "erratum_displayed": true,
+  "csv_export": true,
+  "mobile_layout": true,
+  "page_errors": []
+}

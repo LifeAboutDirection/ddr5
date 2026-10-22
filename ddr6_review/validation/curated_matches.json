@@ -1,0 +1,94 @@
+{
+  "C001": {
+    "matches": 1,
+    "needle": "MRR has a command burst length (BL) 24."
+  },
+  "C002": {
+    "matches": 1,
+    "needle": "The mode register contents are available at the start of 8th"
+  },
+  "C003": {
+    "matches": 1,
+    "needle": "Every Opcode, OP [7:0], is available for 2 UI lengths"
+  },
+  "C004": {
+    "matches": 1,
+    "needle": "DQ1 bits shall have their contents inverted"
+  },
+  "C005": {
+    "matches": 1,
+    "needle": "valid but undefined content."
+  },
+  "C006": {
+    "matches": 1,
+    "needle": "Only DES command is allowed during tMRR and tMRD periods."
+  },
+  "C007": {
+    "matches": 1,
+    "needle": "The FSP-WR and FSP-OP functions operate completely independently."
+  },
+  "C008": {
+    "matches": 1,
+    "needle": "When Apply MRUPDATE is issued, FSP-WR value specifies"
+  },
+  "C009": {
+    "matches": 1,
+    "needle": "All unused (RV) bits in a defined Mode Register"
+  },
+  "C010": {
+    "matches": 1,
+    "needle": "Writes (MRWs) have no effect."
+  },
+  "C011": {
+    "matches": 1,
+    "needle": "It is illegal to send a REFdb command to the same bank"
+  },
+  "C012": {
+    "matches": 1,
+    "needle": "The DRAM will not track activation counts, nor issue an Alert Back-Off"
+  },
+  "C013": {
+    "matches": 1,
+    "needle": "Performing an ACI with MR34[4]=0"
+  },
+  "C014": {
+    "matches": 1,
+    "needle": "tCS_POST is a digital, programmable parameter"
+  },
+  "C015": {
+    "matches": 1,
+    "needle": "The MRUPDATE will not be performed with any CA4 mixed combination"
+  },
+  "C016": {
+    "matches": 1,
+    "needle": "There is no write latency adder when Write CRC is enabled."
+  },
+  "C017": {
+    "matches": 1,
+    "needle": "DRAM can write data to the DRAM core without waiting"
+  },
+  "C018": {
+    "matches": 1,
+    "needle": "The controller generates the CRC checksum"
+  },
+  "C019": {
+    "matches": 1,
+    "needle": "The CRC-8-D136 code includes 128 data bits"
+  },
+  "C020": {
+    "matches": 1,
+    "needle": "an erroneous command that fails the CA parity check shall not be executed."
+  },
+  "C021": {
+    "matches": 1,
+    "needle": "The parity check passes if the PAR1 is valid"
+  },
+  "C022": {
+    "matches": 2,
+    "needle": "This bit is only supported by 2p3 DRAM devices."
+  },
+  "C023": {
+    "matches": 1,
+    "needle": "EVEN(4ns/156.25ps) = EVEN(25.6) = 28"
+  }
+}

@@ -1,0 +1,5 @@
+tb_ecc build 0 run 0 seconds 9.38
+tb_ddr5_smoke build 0 run 0 seconds 13.51
+tb_ddr5_refresh build 0 run 0 seconds 14.02
+tb_ddr5_ecc build 0 run 0 seconds 15.41
+tb_ddr5_training build 0 run 0 seconds 12.19

@@ -1,0 +1,12 @@
+Consider using the pymupdf_layout package for a greatly improved page layout analysis.
+50/527 pages, 473 units, 37 grids, 4.9s
+100/527 pages, 1540 units, 102 grids, 20.6s
+150/527 pages, 2160 units, 198 grids, 35.1s
+200/527 pages, 2493 units, 289 grids, 44.1s
+250/527 pages, 2657 units, 418 grids, 50.8s
+300/527 pages, 3968 units, 470 grids, 73.1s
+350/527 pages, 4789 units, 540 grids, 84.3s
+400/527 pages, 5455 units, 617 grids, 96.8s
+450/527 pages, 5870 units, 689 grids, 116.0s
+500/527 pages, 6382 units, 749 grids, 123.1s
+DONE {'fragment': 3001, 'sentence': 3442, 'draft_notice': 291} sections 544 lines 50101 tables 781

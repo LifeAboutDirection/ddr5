@@ -1,0 +1,19 @@
+AUDIT|RESET_MR0|SPEC_FAIL|Table 9 default MR0=08h (RL26); actual=00 RL=22
+AUDIT|RESET_MR15|SPEC_FAIL|MR15 ETC default=3 (256/Gb); actual=0
+AUDIT|RESET_VREF|SPEC_FAIL|MR10/11/12 default=2Dh; actual=00/00/00
+AUDIT|MRW_READONLY|SPEC_FAIL|MR58 must ignore MRW; actual=00 expected=93h
+AUDIT|MRW_BANK_IDLE|SPEC_FAIL|MRW while bank0 active must be diagnosed; errors=0
+AUDIT|MRR_BANK_IDLE|SPEC_FAIL|MRR while bank0 active must be diagnosed; errors=0
+AUDIT|MRR_MAPPING|SPEC_FAIL|Tables14-16: UI0 and OP0 UI8=AAAAh for MR0=08h; actual=0008/0008
+AUDIT|MRR_READ_CRC|SPEC_FAIL|MRR with read CRC must use BL18; actual=16
+AUDIT|RFM_DISABLED_IS_REF|SPEC_FAIL|MR58[0]=0: RFM must execute REF; t_ref_ab=9223372036854775808
+AUDIT|RFM_NOT_PERIODIC_REF|SPEC_FAIL|RFM must not postpone periodic REF deadline; last REF changes to=2000
+AUDIT|READ_PIPELINE|SPEC_FAIL|Legal READs CK100/112 RL40 must retain first launch140; single pending launch now=152
+AUDIT|AUTO_PRECHARGE_TRAS|SPEC_FAIL|RDA internal PRE must satisfy ACT100+tRAS77=177; actual=157
+AUDIT|REPEATED_PREAB|SPEC_FAIL|Last PRE determines tRP even for idle bank; t_pre[0]=20
+AUDIT|BYTE_MASK|SPEC_FAIL|DM_n=10: write upper byte, preserve lower; actual=1234 expected=AB34
+AUDIT_SUMMARY|checks=14|spec_failures=14
+- /workspace/ddr5_audit/tb_audit.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 8ps; walltime 0.000 s; speed 29.743 ns/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB

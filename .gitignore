@@ -1,0 +1,18 @@
+# Local Python environments and caches
+.venv/
+**/__pycache__/
+*.py[cod]
+ddr5_audit/tools/
+ddr5_audit/cache/
+
+# Rebuildable simulator/compiler output; keep verification logs and results.
+ddr5_audit/validation/**/obj/
+ddr5_audit/validation/audit_obj/
+*.vcd
+*.fst
+
+# Local credentials and editor state
+.env
+.env.*
+.DS_Store
+.vscode/

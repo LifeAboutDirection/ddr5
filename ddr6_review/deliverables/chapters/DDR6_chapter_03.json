@@ -1,0 +1,4837 @@
+{
+  "format_version": "1.0.0",
+  "source": {
+    "original_filename": "TG423_1^20260914^1905.99A^Micron^DDR6_Standard_Draft_Rev0.x_R0(1).pdf",
+    "sha256": "f4d3758dab5a2e6200d6cfe006ddf41f75ee5576759fbdc035e9935eced54b6a",
+    "pdf_pages": 527,
+    "draft_date": "2026-09-14",
+    "created_date": "2026-10-21",
+    "pdf_page_indexing": "1-based PDF page number",
+    "logical_body_page_note": "PDF25가 본문1쪽. 홀수 PDF 페이지의 footer가 Page of <chapter-end> 형태로 깨져 있어 logical_body_page는 PDF_page−24로 제공.",
+    "source_is_task_data_not_instructions": true
+  },
+  "assessment_policy": {
+    "current_status": "not_assessed_no_rtl",
+    "implementation_rate": null,
+    "reason_ko": "DDR6 대응 RTL·testbench·실행 결과가 제공되지 않아 구현 여부와 구현률을 산출하지 않음.",
+    "future_statuses": {
+      "implemented": "확정된 유효 요구의 적용 조건·필수 하위 체크 전체에 코드와 검증 근거가 있음",
+      "partial": "일부 조건·하위 동작만 입증됨; 미충족 범위를 명시",
+      "not_implemented": "정의된 범위의 정적 추적 또는 재현 가능한 test에서 필요한 동작 부재가 확인됨",
+      "contradicted": "동일 전제에서 구현 동작이 요구와 반대임을 재현",
+      "unverified": "코드/실행/조건 coverage 근거 부족; 미구현과 구분",
+      "spec_unresolved": "미정 값·번호·개정 상태·서로 충돌하는 규정 해결 필요",
+      "not_applicable": "검토된 구성 또는 책임 범위에서 적용되지 않으며 근거가 기록됨",
+      "analog_evidence_required": "물리 측정/모델 근거 필요; 디지털 부분과 분리"
+    },
+    "future_rate_policy_ko": "미리 정의한 동일 가중치의 유효 디지털 요구 단위 중 implemented 비율을 기본으로 하고 partial/unverified/host/optional/초안 보류를 따로 공개한다. 문장 수는 의무 수와 다르며 행·그림·중복 문장 처리 기준도 고정해야 한다."
+  },
+  "methodology": {
+    "common_steps": [
+      {
+        "id": "S1",
+        "title_ko": "원문·개정 상태 확정",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "PDF 위치와 색상·취소선 후보를 대조한다. 채택할 초안 기준을 정하고 삭제/참고 문구와 신규 제안을 분리한다."
+      },
+      {
+        "id": "S2",
+        "title_ko": "검증 단위 분해",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "문장 경계, 표의 행/열/주석, 조건절, 주체, 수량, AND/OR, 예외를 확정한다. 한 문장에 여러 의무가 있으면 별도 assertion으로 분리한다."
+      },
+      {
+        "id": "S3",
+        "title_ko": "적용 범위 확정",
+        "method": "semantic_review",
+        "action_ko": "DRAM·host·PHY/아날로그 중 책임 주체와 PSD/FSP/속도/밀도/모드 적용 조합을 결정한다. 디지털 타이밍과 host 의무를 임의로 제외하지 않는다."
+      },
+      {
+        "id": "S4",
+        "title_ko": "참조 조항 연결",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "번호로 후보를 찾은 뒤 제목·내용·개정 상태가 맞는지 검토한다. 전제·예외·정의·표 매핑을 연결한다. 존재하는 번호라는 이유만으로 올바른 참조라고 확정하지 않는다."
+      },
+      {
+        "id": "S5",
+        "title_ko": "구현 경로 추적",
+        "method": "static_analysis_required",
+        "action_ko": "명령 수신/디코드 → 상태·MR 선택 → 내부 처리 → 출력·부수 효과 경로를 추적한다. 선언·이름 검색·상수 하나만으로 구현되었다고 판정하지 않는다."
+      },
+      {
+        "id": "S6",
+        "title_ko": "관측 가능한 검증 작성",
+        "method": "verification_design_required",
+        "action_ko": "정상, 경계, 반대 조건, 모드 간 조합, 예외를 test/assertion으로 만든다. 내부 변수와 최종 DQ/DQS/ALERT·MR readback·array 상태를 구분한다."
+      },
+      {
+        "id": "S7",
+        "title_ko": "근거와 반례 기록",
+        "method": "evidence_required",
+        "action_ko": "RTL revision/file/line, 신호, 실행한 test, 실제/기대 값, waveform, 관측 범위를 보존한다. 진단 출력과 명령 차단은 서로 다른 동작이다."
+      },
+      {
+        "id": "S8",
+        "title_ko": "판정과 미해결점 분리",
+        "method": "rule_based_after_evidence",
+        "action_ko": "확정된 적용 조건 전체와 필요한 하위 체크가 충족되어야 implemented를 부여한다. 부족한 근거, 초안 모호함, 부분 구현, 범위 밖을 각각 구분한다."
+      }
+    ],
+    "rule_catalog": [
+      {
+        "id": "R_CONDITION",
+        "pattern": "\\b(if|when|while|unless|during|after|before|until|provided|except|regardless)\\b",
+        "purpose": "조건·예외 구간 후보를 보존; 문장 의미/조건 범위는 검토 필요"
+      },
+      {
+        "id": "R_NORMATIVE",
+        "pattern": "\\b(shall|must|required|prohibited|illegal|only|cannot)\\b",
+        "purpose": "의무/금지 후보 표시; 평서문도 요구사항일 수 있으므로 비매칭을 제외 근거로 사용하지 않음"
+      },
+      {
+        "id": "R_PERMISSION",
+        "pattern": "\\b(may|can|should|recommended|optional)\\b",
+        "purpose": "허용·능력·권고 구분 요청; may를 모든 경우 필수 동작으로 바꾸지 않음"
+      },
+      {
+        "id": "R_QUANTIFIER",
+        "pattern": "\\b(all|every|each|any|both|only|at least|at most|minimum|maximum|regardless|independent)\\b",
+        "purpose": "전칭/한정/독립성 범위와 반례 테스트 후보 표시"
+      },
+      {
+        "id": "R_TIMING",
+        "pattern": "\\bt[A-Z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)?\\b|\\b(?:[np]?s|nCK|tCK|UI|cycles?)\\b",
+        "purpose": "타이밍 이름·단위 후보 추출; 기준 edge/rounding/min/max는 본문과 표로 확정"
+      },
+      {
+        "id": "R_REGISTER",
+        "pattern": "(?:PG\\[[^\\]]+\\])?MR[0-9A-Fa-fxXyY]+(?:\\s*(?:OP)?\\s*\\[[^\\]]+\\])?",
+        "purpose": "MR 주소·필드 검색 후보; 16진수·새/구 번호·취소선을 확인하고 주소 확정"
+      },
+      {
+        "id": "R_REFERENCE",
+        "pattern": "\\b(Sections?|Tables?|Figures?|Chapters?)\\s+([0-9xX]+(?:\\.[0-9xXyY]+)*)",
+        "purpose": "명시적 번호 참조 후보 생성; 번호가 맞아도 내용 일치 여부는 별도 검토"
+      },
+      {
+        "id": "R_DRAFT",
+        "pattern": "\\b(TBD|TBC|TBS|Unballoted|DIRECTIONAL|To be balloted)\\b|MR[xXyY]+|[xX]\\.[xX]\\.[yYxX]",
+        "purpose": "미정값·미투표·임시주소/번호를 확정 판정의 blocker로 기록"
+      },
+      {
+        "id": "R_RESERVED",
+        "pattern": "\\b(RFU|reserved|undefined|unknown|don.t care|ignored)\\b",
+        "purpose": "reserved/undefined/don’t-care/ignore의 서로 다른 의미를 구분하도록 체크 생성"
+      },
+      {
+        "id": "R_NEGATION",
+        "pattern": "\\b(not|never|no|without|cannot|prohibited|illegal)\\b",
+        "purpose": "부정/금지 동작 후보 검출; 경고만 출력하고 실행하는 경로를 별도 점검"
+      }
+    ],
+    "domains": [
+      {
+        "id": "architecture",
+        "title": "PSD·구성·주소 구조",
+        "sections": [
+          "2.1",
+          "2.2"
+        ],
+        "related": [
+          "2.1.4",
+          "2.1.5",
+          "7.1.1"
+        ],
+        "checks": [
+          "1p6/1p12/2p3/2p6별 PSD 수·DQ 수·bank/bank-group/row/column 비트가 선언뿐 아니라 디코드와 실제 저장 위치에 일치하는지 확인한다.",
+          "공유 CK/DQS와 PSD별 명령·데이터 경로를 구분하고, 한 PSD 동작이 다른 PSD의 MR/array/state를 잘못 덮어쓰지 않는지 확인한다.",
+          "주소 최솟값·최댓값·서로 다른 bank/PSD를 대상으로 alias, 데이터 분리, 구성별 미사용 비트 처리를 검사한다. 패키지 ball 위치와 실리콘 구조 보증은 별도 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "metadata",
+        "title": "BL24 패킷·Metadata",
+        "sections": [
+          "2.3",
+          "7.4.5"
+        ],
+        "related": [
+          "2.3",
+          "7.4.5",
+          "7.9.8.4"
+        ],
+        "checks": [
+          "BL24의 UI와 DQ lane별 data/metadata/non-data/CRC 위치를 해당 구성의 그림·표와 일대일 대응시킨다.",
+          "MD_OFF/MD_8b/MD_16b와 저장 CRC 여부별 array 저장 비트, 주소 carve-out, readback, zero padding을 구분한다.",
+          "데이터와 metadata를 독립적으로 변화시켜 round-trip 및 경계 주소를 검사한다. 미정 MRxx 값을 임의의 기존 DDR5 주소로 대체하지 않는다."
+        ]
+      },
+      {
+        "id": "clock",
+        "title": "CK·DQS 샘플링과 동기화",
+        "sections": [
+          "3",
+          "7.2"
+        ],
+        "related": [
+          "3",
+          "7.1.1",
+          "7.2"
+        ],
+        "checks": [
+          "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+          "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+          "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다."
+        ]
+      },
+      {
+        "id": "initialization",
+        "title": "초기화·reset",
+        "sections": [
+          "4.1.1",
+          "4.1.2",
+          "4.1.3"
+        ],
+        "related": [
+          "4.1",
+          "6.6",
+          "6.7"
+        ],
+        "checks": [
+          "전원 ramp, RESET_n, 안정 클록, 필수 MR 설정의 순서와 대기 시간별 상태 전이를 확인한다. 전원 안정 조건은 모델의 입력 가정으로 명시한다.",
+          "power-up/reset/정상 동작 중 reset의 MR default, array 보존 여부, pending command, 출력 enable을 각각 추적한다.",
+          "각 대기 시간의 직전/정확한 경계/직후와 초기화 미완료 상태의 명령을 검사한다. 실제 전압 ramp 품질은 RTL 검증 결과와 분리한다."
+        ]
+      },
+      {
+        "id": "fsp",
+        "title": "FSP 전환·shadow 적용",
+        "sections": [
+          "4.1.4",
+          "4.2.5"
+        ],
+        "related": [
+          "4.1.4",
+          "4.2.5",
+          "6.6.1.1",
+          "7.8.3"
+        ],
+        "checks": [
+          "FSP-WR의 MR read/write 선택과 FSP-OP의 동작 set 선택이 독립인지, 두 set이 같은 저장 변수를 잘못 공유하지 않는지 확인한다.",
+          "inactive set 변경 중 active 동작 불변성, Full PDE/주파수 변경 순서, 전환 시 여러 파라미터의 동시 적용을 검사한다.",
+          "MRUPDATE shadow의 공유 여부와 Apply 시점 FSP-WR 대상 선택을 추적한다. 전환 전후 readback·latency·ODT 제어를 관측한다."
+        ]
+      },
+      {
+        "id": "mcme",
+        "title": "Multi-cycle CS·MRUPDATE",
+        "sections": [
+          "4.2.1",
+          "7.8.3"
+        ],
+        "related": [
+          "4.2.1",
+          "7.8.3",
+          "4.1.4"
+        ],
+        "checks": [
+          "MCME 진입이 multi-cycle CS와 MRUPDATE의 기준 cycle을 어떻게 초기화하는지 확인한다.",
+          "4개 CA cycle의 주소/OP 조립과 CA4 조합을 검사한다. 모두 HIGH, 모두 LOW, 혼합 조합을 분리하고 혼합 시 잘못된 MR 쓰기가 없는지 확인한다.",
+          "tMC_Setup/tMC_CSPW/tMC_Hold를 측정하고 shadow 저장과 Apply/종료 시 효과를 분리하여 검증한다."
+        ]
+      },
+      {
+        "id": "pda",
+        "title": "PDA·DQ swizzle discovery",
+        "sections": [
+          "4.2.2",
+          "4.2.4"
+        ],
+        "related": [
+          "4.2.2",
+          "4.2.4",
+          "6.7.2",
+          "6.7.3"
+        ],
+        "checks": [
+          "PDA enumeration ID 프로그램과 select ID 비교, 선택되지 않은 device의 무반응을 다중 device 환경에서 확인한다.",
+          "DSDM 진입/출력 매핑/종료와 정상 read/write 경로의 차이를 표에서 확정하고 각 DQ lane permutation을 검사한다.",
+          "reset 기본 ID, 중복/불일치 ID, PSD별 선택 범위 및 종료 뒤 정상 매핑 복귀를 확인한다."
+        ]
+      },
+      {
+        "id": "zq",
+        "title": "ZQ 보정 제어",
+        "sections": [
+          "4.2.3"
+        ],
+        "related": [
+          "4.2.3",
+          "6.6.1.8"
+        ],
+        "checks": [
+          "시작·백그라운드·정지·reset·결과 latch 상태와 MR 제어를 추적하고 요구된 대기 시간에 맞는 완료/적용 시점을 검사한다.",
+          "ZQ 공유, 다중 die, VDDQ off 조건에서 host 제약과 device 제어 책임을 분리한다.",
+          "디지털 완료 플래그나 코드 갱신은 검증하되 저항·용량·보정 정확도는 analog 모델/측정 근거가 있어야 충족으로 판정한다."
+        ]
+      },
+      {
+        "id": "ca_training",
+        "title": "CSTM·CATM",
+        "sections": [
+          "4.2.6",
+          "4.2.8"
+        ],
+        "related": [
+          "4.2.6",
+          "4.2.8",
+          "7.8.3",
+          "7.7"
+        ],
+        "checks": [
+          "훈련 진입/종료 opcode, command/train 상태 전이, DQ feedback mapping과 mode별 허용 명령을 추적한다.",
+          "비교 대상 CS/CA, edge, per-lane/위상별 feedback, PRBS tap·seed·shift 방향을 본문/그림과 독립 참조 모델로 비교한다.",
+          "정상 mode와 훈련 mode의 경로 격리, 종료 후 복귀, WUCS·MRUPDATE 관련 예외를 교차 검사한다."
+        ]
+      },
+      {
+        "id": "analog_control",
+        "title": "VREF·CTLE·DFE·DCA 제어와 아날로그 효과",
+        "sections": [
+          "4.2.7",
+          "4.2.9",
+          "4.2.10",
+          "4.2.12",
+          "4.2.14",
+          "4.2.16",
+          "4.2.18",
+          "7.9.7"
+        ],
+        "related": [
+          "6.6",
+          "6.7",
+          "8.5"
+        ],
+        "checks": [
+          "공통 코드+per-pin offset, enable/disable, 지원 여부, signed encoding, reserved code와 MR readback을 해당 정의 표로 확인한다.",
+          "lane/phase 선택, 범위·포화·default·update/latch delay를 디지털 동작으로 검사한다. MR 저장만 있고 기능 선택에 연결되지 않은 경우를 구분한다.",
+          "mV·ps·gain·tap coefficient·eye margin 등 물리적 효과에는 별도 analog/real-number 모델 또는 측정이 필요하다. 논리 코드 검증과 물리 정확도를 합산하지 않는다."
+        ]
+      },
+      {
+        "id": "write_leveling",
+        "title": "Write leveling",
+        "sections": [
+          "4.2.11"
+        ],
+        "related": [
+          "4.2.11",
+          "6.6.1.16",
+          "6.6.1.17"
+        ],
+        "checks": [
+          "external WL, internal cycle/phase alignment의 진입·종료와 feedback 입력/출력 lane·edge를 각각 추적한다.",
+          "DQS pulse에 따른 CK 샘플 결과와 지연, MR 설정별 출력, 기능 종료 뒤 정상 write 복귀를 검사한다.",
+          "훈련 중 ODT 제어와 host DQS 제공 책임을 분리하고 필요한 setup/hold·pulse 간격 경계를 확인한다."
+        ]
+      },
+      {
+        "id": "hrt",
+        "title": "Host Receiver Training",
+        "sections": [
+          "4.2.13"
+        ],
+        "related": [
+          "4.2.13",
+          "6.6.1.18"
+        ],
+        "checks": [
+          "user pattern/PRBS 선택, 24-bit Fibonacci LFSR의 tap·seed·shift·lane 지연·inversion을 그림과 비교한다.",
+          "HRT 진입/종료 MR opcode와 idle/read 중 출력 조건, 훈련 중 정상 명령 처리 여부를 검증한다.",
+          "연속 패턴과 재진입의 seed 복원, PSD/lane 독립성 및 DQ/DQS 파형을 검사한다. 본문 MRDD/MR05 등 주소와 최신 MR map 간 불일치는 먼저 해결한다."
+        ]
+      },
+      {
+        "id": "preamble_training",
+        "title": "Read preamble training",
+        "sections": [
+          "4.2.15"
+        ],
+        "related": [
+          "4.2.15",
+          "7.4.1"
+        ],
+        "checks": [
+          "진입/종료 MR 설정과 DQS 정적/토글 구간, DQ 유효 여부를 구분해 출력 state machine을 검사한다.",
+          "정상 read의 preamble/postamble과 훈련 전용 파형을 혼동하지 않는지 확인한다.",
+          "모드 전환 경계에서 출력 enable·첫 edge·마지막 edge와 정상 read 복귀를 검증한다."
+        ]
+      },
+      {
+        "id": "wtm",
+        "title": "Write Training Mode",
+        "sections": [
+          "4.2.17"
+        ],
+        "related": [
+          "4.2.17",
+          "4.2.13.5",
+          "6.7.95"
+        ],
+        "checks": [
+          "PSD별 24-bit LFSR 또는 user pattern의 기대값, per-pin 실제 수신 데이터 비교, seed·phase·inversion을 독립 모델로 검증한다.",
+          "lane/phase별 오류 count의 증가·포화·초기화·readback과 오류가 없는 경우를 검사한다.",
+          "WTM 진입/종료·정상 write array 부수 효과·다른 PSD의 격리와 재훈련 시 상태 초기화를 확인한다."
+        ]
+      },
+      {
+        "id": "state_diagram",
+        "title": "상태 전이도",
+        "sections": [
+          "5"
+        ],
+        "related": [
+          "5",
+          "7.1",
+          "7.6",
+          "7.8"
+        ],
+        "checks": [
+          "그림의 각 node/edge를 상태·허용 명령·guard 조건으로 전사하고 본문에 더 구체적인 예외가 있는지 확인한다.",
+          "진입·종료·reset 전이를 최소 한 번 실행하고 금지 edge와 진행 중 명령의 부수 효과를 검사한다.",
+          "단순화된 그림에 없다는 이유만으로 본문에 허용된 동작을 금지하지 않는다. 이미지 안의 화살표는 텍스트 추출만으로 검증되지 않는다."
+        ]
+      },
+      {
+        "id": "mode_register",
+        "title": "MR 저장·접근 속성",
+        "sections": [
+          "6"
+        ],
+        "related": [
+          "6.1",
+          "6.2",
+          "6.3",
+          "7.8"
+        ],
+        "checks": [
+          "주소/bit 범위, reset 값, RW/RO/WO/W1C/read-clear 등 표에 정의된 접근 속성, reserved read value를 각각 확인한다.",
+          "shared/PSD별 공간, MRA[7], FSP별 저장/적용 선택을 실제 MRW/MRR/MRUPDATE 경로와 연결한다. page 관련 삭제 후보는 유효 요구인지 먼저 확인한다.",
+          "read/write 접근의 허용 상태와 부수 효과를 검사한다. 무조건 mr[address]=value인 구현이나 선언만 된 bit는 속성 구현의 근거가 아니다."
+        ]
+      },
+      {
+        "id": "command",
+        "title": "명령 수신·truth table",
+        "sections": [
+          "7.1"
+        ],
+        "related": [
+          "7.1.1",
+          "7.1.2",
+          "7.2",
+          "7.9.14"
+        ],
+        "checks": [
+          "CA0~CA5/CS와 C0~C5의 truth-table 행을 명령·주소·PSD·CID·parity 디코드와 대조한다.",
+          "2N 모드와 2/4/6 cycle 조립, DES/NOP, 무효·중단 시퀀스에서 부분 명령 실행이 없는지 검사한다.",
+          "불법 동작 뒤 요구되는 host reset 절차와 device가 명시적으로 차단해야 하는 동작을 구분한다. 미규정 동작의 임의 파형을 fail로 단정하지 않는다."
+        ]
+      },
+      {
+        "id": "row",
+        "title": "ACT·Precharge",
+        "sections": [
+          "7.3"
+        ],
+        "related": [
+          "7.3",
+          "8.1",
+          "9.1"
+        ],
+        "checks": [
+          "PSD/bank/group/row별 open-row 상태와 ACT/PRE 대상 집합을 확인한다. per/dual/quad/all-bank를 구분한다.",
+          "tRCD_R/W, tRAS, tRP, tRC, tRRD, tFAW 및 activation counter 관련 시간을 상태별로 검사한다.",
+          "auto-precharge의 예약/실행 시점과 pending read/write, last ACT/last data edge 조건을 구분해 경계에서 데이터 유실을 검사한다."
+        ]
+      },
+      {
+        "id": "read_write",
+        "title": "Read·Write·DQS·latency",
+        "sections": [
+          "7.4.1",
+          "7.4.2",
+          "7.4.3",
+          "7.4.4"
+        ],
+        "related": [
+          "2.3",
+          "7.4",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "명령 주소에서 array 데이터, burst/UI/lane 매핑까지 추적하고 실제 DQ/DQS의 첫·마지막 유효 edge와 beat 수를 측정한다.",
+          "RL/WL, preamble/postamble/interamble, back-to-back·turnaround·동일/다른 bank-group의 경계 조건을 검사한다.",
+          "metadata·CRC·RMW·FSP·PSD 구성에 따른 경로 차이를 검사한다. pending slot 한 개 덮어쓰기, beat off-by-one, data mask 범위 오류를 반례로 찾는다."
+        ]
+      },
+      {
+        "id": "refresh",
+        "title": "Refresh·Self-refresh",
+        "sections": [
+          "7.5.1",
+          "7.5.2"
+        ],
+        "related": [
+          "7.5.1",
+          "7.5.2",
+          "6.6.1.5",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "REFab/REFdb/REFqb별 대상 bank 집합과 내부 bank/row counter 업데이트, reset·SRX·REFab 동기화를 추적한다.",
+          "정해진 refresh window/간격·busy 시간·bank 재방문 금지와 허용 reorder를 검사한다. REFab 하나를 모든 유형의 구현으로 간주하지 않는다.",
+          "self-refresh entry/exit·power-down 병행·온도/모드 관련 주기를 검사한다. 논리 retention 모델과 물리적 전하 보존 보증은 구분한다."
+        ]
+      },
+      {
+        "id": "prac",
+        "title": "PRAC·ACI·ABO·RFM",
+        "sections": [
+          "7.5.3"
+        ],
+        "related": [
+          "7.5.3",
+          "6.6.1.53",
+          "6.6.1.54",
+          "9.1"
+        ],
+        "checks": [
+          "row별 activation count와 활성 지속 시간 기여, ACI 시작/완료/재시작, counting·ABO gating을 추적한다.",
+          "threshold/BAT, PRFM, ABO 발생·해제·지연·우선순위, 대응 refresh 순서를 각각 검증한다.",
+          "threshold 바로 아래/같음/초과, 여러 row·PSD 경쟁, 오류/재초기화, host 대응 지연을 검사한다. RFM을 일반 REF에 단순 연결한 것은 PRAC 전체 근거가 아니다."
+        ]
+      },
+      {
+        "id": "power",
+        "title": "Power-down",
+        "sections": [
+          "7.6"
+        ],
+        "related": [
+          "7.6",
+          "4.2.5",
+          "7.7"
+        ],
+        "checks": [
+          "Full-PD/ODT-PD, PSD별 entry/exit, clock 유지/정지와 ODT 상태의 차이를 state machine에서 확인한다.",
+          "entry 전 pending 동작 완료, exit 명령·대기 시간·첫 유효 명령, FSP/주파수 변경 허용 순서를 검사한다.",
+          "한 PSD만 power-down이거나 다른 PSD가 동작 중인 조합에서 공유 자원·출력·MR 보존을 확인한다. 실제 소비전력은 별도 측정이다."
+        ]
+      },
+      {
+        "id": "wucs",
+        "title": "Wake-up CS",
+        "sections": [
+          "7.7"
+        ],
+        "related": [
+          "7.7",
+          "7.8.3",
+          "4.2.6"
+        ],
+        "checks": [
+          "CS pre-command wake-up과 post-command inactivity timer의 시작/재시작/만료 조건 및 MR enable을 확인한다.",
+          "timeout 직전/동일 시점/직후 명령과 연속 명령, idle→wake-up 지연을 검사한다.",
+          "MRUPDATE/CSTM 예외와 tCS_POST 값의 초기 제안 주석을 함께 검토한다. 잠정 64/128/256 값을 최종 고정 표준으로 간주하지 않는다."
+        ]
+      },
+      {
+        "id": "mrr",
+        "title": "Mode Register Read",
+        "sections": [
+          "7.8.1"
+        ],
+        "related": [
+          "7.8.1",
+          "6.3",
+          "7.1.1",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "MRR decode→shared/PSD/FSP 대상 선택→OP byte→DQ serializer→DQS 종료까지 추적한다. BL24, OP의 UI8~23 배치·2UI 반복 및 DQ1 반전을 별도 체크한다. page 관련 문구는 삭제 후보를 먼저 확인한다.",
+          "2p3/2p6/1p6/1p12와 shared/PSD MR별 mapping 표를 대조한다. valid-but-undefined lane에 고정 값을 요구하지 않는다.",
+          "RL+tCK2DQO의 관측 기준, tMRR/tMRD·DES-only 구간과 후속 명령을 검사한다. Table 1~8 등 잔존 참조를 현재 번호와 의미 대조한다."
+        ]
+      },
+      {
+        "id": "mrw",
+        "title": "Mode Register Write",
+        "sections": [
+          "7.8.2"
+        ],
+        "related": [
+          "7.8.2",
+          "6.2",
+          "6.3",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "6-cycle/구성별 MRW 주소·OP 조립, PSD 대상, FSP-WR 선택과 허용 상태를 확인한다.",
+          "write 완료/파라미터 적용 시점과 readback, 접근 속성에 따른 무시/clear 부수 효과를 검사한다.",
+          "MRW 전후 명령 간격 및 MR 변경 중 동작 일관성을 검사하고 미정/개정 주소는 최신 표와 먼저 정합한다."
+        ]
+      },
+      {
+        "id": "odt",
+        "title": "ODT 상태·타이밍",
+        "sections": [
+          "7.9.1"
+        ],
+        "related": [
+          "7.9.1",
+          "6.6",
+          "6.7",
+          "7.6"
+        ],
+        "checks": [
+          "read/write/non-target/park/power-down/training 상태별 ODT 선택 코드를 상태 표와 대조한다.",
+          "ODT on/off 지연, FSP별 적용, PSD/공유 DQS 관계를 파형에서 검사한다.",
+          "디지털 ODT enable과 저항의 전압·온도 의존 특성을 분리한다. enable 신호만으로 Ron/Rtt 허용오차 충족을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "sensor",
+        "title": "온도 센서·interval oscillator",
+        "sections": [
+          "7.9.2",
+          "7.9.3"
+        ],
+        "related": [
+          "7.9.2",
+          "7.9.3",
+          "6.6"
+        ],
+        "checks": [
+          "시작/정지/완료, counter 폭·오버플로, 결과 latch와 다중 byte readback의 일관성을 확인한다.",
+          "온도 코드/offset 또는 oscillator count가 입력 가정·기간·lane·clock 선택에 맞는지 참조 모델과 비교한다.",
+          "sample/update 지연과 연속/중단/재시작 경계를 검사한다. 물리 온도 정확도·지연 drift는 센서/analog 모델 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "repair",
+        "title": "hPPR·sPPR·MBIST/mPPR",
+        "sections": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6"
+        ],
+        "related": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6",
+          "6.6.1.49",
+          "6.7"
+        ],
+        "checks": [
+          "guard key, resource availability, mode entry, ACT/WRA/PRE 주소와 선택 device, busy/program time 및 exit를 추적한다.",
+          "row remapping과 resource 소모/readback, hPPR 영구성·sPPR undo/lock/reset 특성을 각각 확인한다.",
+          "잘못된 key·자원 없음·다른 PSD active·시간 미충족·재시도·MBIST 결과 처리의 부수 효과를 검사한다. 물리 fuse 수명은 디지털 모델의 외부 범위다."
+        ]
+      },
+      {
+        "id": "crc",
+        "title": "CRC 계산·packet·오류 보고",
+        "sections": [
+          "7.9.8"
+        ],
+        "related": [
+          "7.9.8",
+          "2.3",
+          "7.4.5",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "선택된 CRC-4/CRC-8 다항식, 입력 길이·bit order·초기값·metadata/zero pad·lane mapping을 독립 참조 계산과 비교한다. CRC-4-SC-8 삭제 후보를 유효 요구와 섞지 않는다.",
+          "read와 write enable 독립성, stored/unstored CRC·MD 모드·구성별 허용 조합, latency adder를 확인한다.",
+          "1-bit/다중 bit 오류를 data와 checksum 위치에 주입하고 ALERT 극성·지연·폭, sticky status·clear를 검사한다. host retry 책임과 DRAM data write 허용 여부를 구분한다."
+        ]
+      },
+      {
+        "id": "ecc",
+        "title": "ECC·bounded fault·ECS",
+        "sections": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "related": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "checks": [
+          "오류 모델, correction/detection 범위와 array 저장·read 반환·status 업데이트를 분리해 검증한다.",
+          "bounded fault의 영향을 받는 data bit 수와 sub-packet 수를 fault injection 모델로 확인한다. 물리 fault 제한은 RTL만으로 증명되지 않는다.",
+          "DIRECTIONAL/To be balloted 상태와 아직 정의되지 않은 ECS 동작은 확정 요구로 생성하지 않는다. 검증 조건이 없는 항목은 spec_unresolved로 보류한다."
+        ]
+      },
+      {
+        "id": "fault",
+        "title": "ALERT·fault register",
+        "sections": [
+          "7.9.12",
+          "7.9.13"
+        ],
+        "related": [
+          "7.9.12",
+          "7.9.13",
+          "7.5.3",
+          "7.9.8"
+        ],
+        "checks": [
+          "fault source별 status set, enable mask, 요약 OR, ALERT 극성과 clear 조건을 추적한다.",
+          "read-clear/reset/power-off/PRAC 예외, 동시 fault·우선순위·retrigger를 검사한다.",
+          "Unballoted/참고 회색 문구와 최신 MR map의 주소·기능 충돌을 먼저 해결한다. 레지스터 배열이 있다는 이유로 미정 fault protocol의 구현을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "parity",
+        "title": "CA parity·command blocking",
+        "sections": [
+          "7.9.14"
+        ],
+        "related": [
+          "7.9.14",
+          "7.1.1",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "2/4/6-cycle별 PAR1/PAR2 XOR 대상, CA5 지원 조건, even parity와 parity bit 제외 규칙을 독립 계산으로 비교한다.",
+          "disable/nonblocking/blocking 모드별 parity latency와 erroneous command의 실제 실행/차단·pending cancel을 추적한다.",
+          "각 CA cycle bit 오류와 연속 오류를 주입하여 ALERT·C0~C5 log·clear·후속 명령 복구를 검사한다. 경고 호출만으로 blocking 구현을 판정하지 않는다."
+        ]
+      },
+      {
+        "id": "ignore",
+        "title": "Command Ignore",
+        "sections": [
+          "7.10"
+        ],
+        "related": [
+          "7.10",
+          "6.6.1.15",
+          "7.1.1"
+        ],
+        "checks": [
+          "2p3 지원 범위, MR0E enable/polarity, C0:CA4 ignore 해석을 truth table과 대조한다.",
+          "ACT/READ/WRITE/PRE 각각에서 무시될 때 array·bank state·pending response에 부수 효과가 없는지 확인한다.",
+          "disable 시 ignore bit 무효, polarity 0/1의 양쪽 경우, 다른 구성·다른 명령 예외를 검사한다."
+        ]
+      },
+      {
+        "id": "timing",
+        "title": "명령 제약·AC core timing",
+        "sections": [
+          "8",
+          "9"
+        ],
+        "related": [
+          "8",
+          "9.1",
+          "7.1",
+          "7.4"
+        ],
+        "checks": [
+          "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+          "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+          "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다."
+        ]
+      },
+      {
+        "id": "electrical",
+        "title": "전기·패키지·측정 조건",
+        "sections": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "related": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "checks": [
+          "전압·전류·임피던스·capacitance·jitter·eye·slew 규격의 측정 지점, 부하, 온도, 주파수와 min/max를 확인한다.",
+          "문장 안에 MR 제어·논리 level·샘플링·시간 조건이 있으면 디지털 하위 요구로 분리해 검사한다. chapter만 보고 모든 문장을 제외하지 않는다.",
+          "나머지 물리 요구에는 SPICE/AMS/real-number 모델 또는 측정 결과를 연결한다. 순수 0/1 RTL 시뮬레이션 성공은 물리적 적합 근거가 아니다."
+        ]
+      },
+      {
+        "id": "context",
+        "title": "범위·목차·개정 이력",
+        "sections": [
+          "FRONT",
+          "1",
+          "17"
+        ],
+        "related": [
+          "1",
+          "17"
+        ],
+        "checks": [
+          "설명·정의·개정 이력인지 실제 동작 의무인지 먼저 분류한다. 과거 ballot 제목을 현재 동작 요구로 세지 않는다.",
+          "용어/문서 범위/색상 범례가 기술 문장 해석에 영향을 주는 경우 참조 근거로 연결한다.",
+          "구현률 분모에는 승인된 적용성 결정을 거친 요구만 포함한다. 이 자료는 현재 RTL 구현률을 계산하지 않는다."
+        ]
+      }
+    ],
+    "inference_explanation_ko": "규칙은 문장 경계/토큰/표 위치/번호 후보와 기능별 체크 템플릿을 생성한다. 의미 검토는 주어·조건 범위·전칭·허용/의무·예외·참조 우선순위를 확정한다. 모든 문장에 별도 추론을 실행했다는 뜻이 아니다. 선택된 예시의 근거 요약은 source_reviewed_notes로 구분한다. 8단계는 재현 가능한 외부 검토 절차이며 내부 사고 과정의 로그/횟수가 아니다.",
+    "dependency_explanation_ko": "다른 문장은 전제, 예외, 용어 정의, MR attribute, timing 값, mapping 표를 제공한다. 번호/인접/동일 표행 연결은 규칙 기반 후보이고 실제 의미 관계는 검토가 필요하다. 다른 문장의 구현 상태를 현재 문장에 전파하지 않는다.",
+    "limitations_ko": [
+      "전체 527쪽의 native PDF text를 처리했다. OCR/모든 그림의 도형·색상 면적·화살표 의미 전사는 수행하지 않았다.",
+      "sentence_candidate는 자동 분할 후보이며 확정된 요구사항 수가 아니다. 절 경계·cross-page 문장·표 셀의 병합/각주·superscript를 원문과 대조해야 한다.",
+      "개별 semantic review가 없는 항목은 generated_requires_sentence_review로 명시한다. 체크 템플릿 적용은 독립적인 문장별 검토 완료를 의미하지 않는다.",
+      "색상과 취소선 후보를 보존하지만 개정 문구 자동 채택은 하지 않는다. candidate_after_strike_removal은 검토 편의용이다.",
+      "디지털/물리/host 범위는 후보 분류다. 물리 chapter라도 MR·timing·논리 요구는 별도로 검토해야 한다.",
+      "각 문장의 기능별 체크 목록은 연관 확인 항목이다. 모든 목록이 그 한 문장에 규정된 의무라는 뜻은 아니다.",
+      "코드 검색·정적 분석·simulation·formal proof를 DDR6 대상으로 실행하지 않았다. 모든 구현 상태는 not_assessed_no_rtl이다."
+    ]
+  },
+  "chapter": {
+    "id": "3",
+    "title": "Clocking",
+    "sections": [
+      {
+        "id": "3",
+        "title": "Clocking",
+        "pdf_page": 52,
+        "y": 67.0,
+        "level": 1
+      }
+    ],
+    "record_count": 14,
+    "sentence_candidate_count": 11,
+    "table_ids": [
+      "P052-T001",
+      "P053-T001",
+      "P053-T002"
+    ],
+    "records": [
+      {
+        "id": "D6-P052-0001",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            99.25,
+            536.47,
+            112.72
+          ],
+          "source_line_ids": [
+            "P052-B0004-L000"
+          ],
+          "origin": "body",
+          "original_text": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c).",
+          "raw_text": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c). ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 95
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c).",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c). ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CK_t",
+            "CK_c"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c)."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c).",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CK_t",
+              "CK_c"
+            ],
+            "expected_property_source": "DDR6 SDRAM's command and address interface operates from a differential Clock pair (CK_t/CK_c).",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [],
+            "next_ids": [
+              "D6-P052-0002"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_TIMING",
+              "matched_text": [
+                "s"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0002",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            99.25,
+            536.47,
+            124.72
+          ],
+          "source_line_ids": [
+            "P052-B0004-L000",
+            "P052-B0004-L001"
+          ],
+          "origin": "body",
+          "original_text": "Commands and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c.",
+          "raw_text": "Commands \nand Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 114
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "Commands and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "Commands ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CK_t",
+            "CK_c"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "Commands and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "Commands and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "QUANTIFIER_COVERAGE",
+            "method": "rule_based_trigger_semantic_scope_required",
+            "quantifiers": [
+              "every"
+            ],
+            "check_ko": "한정 대상 집합을 정의하고 경계·누락 구성·반대 조건을 검증한다. 모든 주소/모드라는 문구를 단일 정상 케이스로 입증하지 않는다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CK_t",
+              "CK_c"
+            ],
+            "expected_property_source": "Commands and Addresses are registered single data rate (SDR) at every rising edge of CK_t and falling edge of CK_c.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [
+              "every"
+            ],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0001"
+            ],
+            "next_ids": [
+              "D6-P052-0003"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_QUANTIFIER",
+              "matched_text": [
+                "every"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0003",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            111.25,
+            526.63,
+            136.72
+          ],
+          "source_line_ids": [
+            "P052-B0004-L001",
+            "P052-B0004-L002"
+          ],
+          "origin": "body",
+          "original_text": "CS is sampled at every other rising edge of CK_t and the falling edge of CK_c.",
+          "raw_text": "CS is \nsampled at every other rising edge of CK_t and the falling edge of CK_c.",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 77
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "CS is sampled at every other rising edge of CK_t and the falling edge of CK_c.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "CS is ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "sampled at every other rising edge of CK_t and the falling edge of CK_c.",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CS",
+            "CK_t",
+            "CK_c"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "CS is sampled at every other rising edge of CK_t and the falling edge of CK_c."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "CS is sampled at every other rising edge of CK_t and the falling edge of CK_c.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "QUANTIFIER_COVERAGE",
+            "method": "rule_based_trigger_semantic_scope_required",
+            "quantifiers": [
+              "every"
+            ],
+            "check_ko": "한정 대상 집합을 정의하고 경계·누락 구성·반대 조건을 검증한다. 모든 주소/모드라는 문구를 단일 정상 케이스로 입증하지 않는다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CS",
+              "CK_t",
+              "CK_c"
+            ],
+            "expected_property_source": "CS is sampled at every other rising edge of CK_t and the falling edge of CK_c.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [
+              "every"
+            ],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0002"
+            ],
+            "next_ids": [
+              "D6-P052-0004"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_QUANTIFIER",
+              "matched_text": [
+                "every"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0004",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            147.25,
+            540.31,
+            160.72
+          ],
+          "source_line_ids": [
+            "P052-B0005-L000"
+          ],
+          "origin": "body",
+          "original_text": "DDR6 uses a double data rate (DDR) data interface.",
+          "raw_text": "DDR6 uses a double data rate (DDR) data interface. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 50
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "DDR6 uses a double data rate (DDR) data interface.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "DDR6 uses a double data rate (DDR) data interface. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "DDR6 uses a double data rate (DDR) data interface."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "DDR6 uses a double data rate (DDR) data interface.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [],
+            "expected_property_source": "DDR6 uses a double data rate (DDR) data interface.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0003"
+            ],
+            "next_ids": [
+              "D6-P052-0005"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0005",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            147.25,
+            540.31,
+            172.72
+          ],
+          "source_line_ids": [
+            "P052-B0005-L000",
+            "P052-B0005-L001"
+          ],
+          "origin": "body",
+          "original_text": "The data interface uses two different types of clock pairs for Read (CK_t/CK_c) and Write (DQS_t/DQS_c).",
+          "raw_text": "The data interface uses two different types of clock pairs for Read \n(CK_t/CK_c) and Write (DQS_t/DQS_c). ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 103
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "The data interface uses two different types of clock pairs for Read (CK_t/CK_c) and Write (DQS_t/DQS_c).",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "The data interface uses two different types of clock pairs for Read ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "(CK_t/CK_c) and Write (DQS_t/DQS_c). ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CK_t",
+            "CK_c",
+            "DQS_t",
+            "DQS_c"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "The data interface uses two different types of clock pairs for Read (CK_t/CK_c) and Write (DQS_t/DQS_c)."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "The data interface uses two different types of clock pairs for Read (CK_t/CK_c) and Write (DQS_t/DQS_c).",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CK_t",
+              "CK_c",
+              "DQS_t",
+              "DQS_c"
+            ],
+            "expected_property_source": "The data interface uses two different types of clock pairs for Read (CK_t/CK_c) and Write (DQS_t/DQS_c).",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0004"
+            ],
+            "next_ids": [
+              "D6-P052-0006"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0006",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            159.25,
+            540.07,
+            184.72
+          ],
+          "source_line_ids": [
+            "P052-B0005-L001",
+            "P052-B0005-L002"
+          ],
+          "origin": "body",
+          "original_text": "CK_t and CK_c are used to drive DQ Read, and they are source synchronous to the DQS during Read operation.",
+          "raw_text": "CK_t and CK_c are used to drive DQ Read, and they are source synchro-\nnous to the DQS during Read operation. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 107
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "CK_t and CK_c are used to drive DQ Read, and they are source synchronous to the DQS during Read operation.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "CK_t and CK_c are used to drive DQ Read, and they are source synchro-",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "nous to the DQS during Read operation. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CK_t",
+            "CK_c",
+            "DQ",
+            "DQS"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "CK_t and CK_c are used to drive DQ Read,",
+            "and they are source synchronous to the DQS during Read operation."
+          ],
+          "condition_candidates": [
+            {
+              "keyword": "during",
+              "text": "during Read operation.",
+              "binding_verified": false
+            }
+          ],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "CK_t and CK_c are used to drive DQ Read, and they are source synchronous to the DQS during Read operation.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [
+              "during Read operation."
+            ],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CK_t",
+              "CK_c",
+              "DQ",
+              "DQS"
+            ],
+            "expected_property_source": "CK_t and CK_c are used to drive DQ Read, and they are source synchronous to the DQS during Read operation.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0005"
+            ],
+            "next_ids": [
+              "D6-P052-0007"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_CONDITION",
+              "matched_text": [
+                "during"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0007",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "draft_notice",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            171.25,
+            540.07,
+            184.72
+          ],
+          "source_line_ids": [
+            "P052-B0005-L002"
+          ],
+          "origin": "body",
+          "original_text": "The DQS is bi-directional.",
+          "raw_text": "The DQS is bi-directional. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 26
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "The DQS is bi-directional.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "The DQS is bi-directional. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "DQS"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "The DQS is bi-directional."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "The DQS is bi-directional.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "DQS"
+            ],
+            "expected_property_source": "The DQS is bi-directional.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0006"
+            ],
+            "next_ids": [
+              "D6-P052-0008"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_DRAFT",
+              "matched_text": [
+                "directional"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "draft_placeholder",
+            "literal": "directional",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0008",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            171.25,
+            540.07,
+            196.72
+          ],
+          "source_line_ids": [
+            "P052-B0005-L002",
+            "P052-B0005-L003"
+          ],
+          "origin": "body",
+          "original_text": "The DQ Write data is registered by DQS at every rising edge of DQS_t and rising edge of DQS_c for write operation.",
+          "raw_text": "The DQ Write data is registered by DQS at every \nrising edge of DQS_t and rising edge of DQS_c for write operation.",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 113
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "The DQ Write data is registered by DQS at every rising edge of DQS_t and rising edge of DQS_c for write operation.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "The DQ Write data is registered by DQS at every ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "rising edge of DQS_t and rising edge of DQS_c for write operation.",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "DQ",
+            "DQS",
+            "DQS_t",
+            "DQS_c"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "The DQ Write data is registered by DQS at every rising edge of DQS_t and rising edge of DQS_c for write operation."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "The DQ Write data is registered by DQS at every rising edge of DQS_t and rising edge of DQS_c for write operation.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "QUANTIFIER_COVERAGE",
+            "method": "rule_based_trigger_semantic_scope_required",
+            "quantifiers": [
+              "every"
+            ],
+            "check_ko": "한정 대상 집합을 정의하고 경계·누락 구성·반대 조건을 검증한다. 모든 주소/모드라는 문구를 단일 정상 케이스로 입증하지 않는다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "DQ",
+              "DQS",
+              "DQS_t",
+              "DQS_c"
+            ],
+            "expected_property_source": "The DQ Write data is registered by DQS at every rising edge of DQS_t and rising edge of DQS_c for write operation.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [
+              "every"
+            ],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0007"
+            ],
+            "next_ids": [
+              "D6-P052-0009"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_QUANTIFIER",
+              "matched_text": [
+                "every"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0009",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            207.25,
+            540.31,
+            232.72
+          ],
+          "source_line_ids": [
+            "P052-B0006-L000",
+            "P052-B0006-L001"
+          ],
+          "origin": "body",
+          "original_text": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the SDRAM.",
+          "raw_text": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the \nSDRAM. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 112
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the SDRAM.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "SDRAM. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "DQS",
+            "DQ"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the SDRAM."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the SDRAM.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "DQS",
+              "DQ"
+            ],
+            "expected_property_source": "DDR6 SDRAM uses an un-matched DQS-DQ path for Write to enable high speed performance and save power in the SDRAM.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0008"
+            ],
+            "next_ids": [
+              "D6-P052-0010"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0010",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            219.25,
+            540.31,
+            232.72
+          ],
+          "source_line_ids": [
+            "P052-B0006-L001"
+          ],
+          "origin": "body",
+          "original_text": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS.",
+          "raw_text": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS. ",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 105
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS. ",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "host_or_system",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "DQ",
+            "DQS"
+          ],
+          "numeric_literals": [],
+          "modal_words": [
+            "required"
+          ],
+          "atomic_clause_candidates": [
+            "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "QUANTIFIER_COVERAGE",
+            "method": "rule_based_trigger_semantic_scope_required",
+            "quantifiers": [
+              "each"
+            ],
+            "check_ko": "한정 대상 집합을 정의하고 경계·누락 구성·반대 조건을 검증한다. 모든 주소/모드라는 문구를 단일 정상 케이스로 입증하지 않는다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "DQ",
+              "DQS"
+            ],
+            "expected_property_source": "Therefore, a per-pin training by a host is required to adjust a timing of each DQ signal relative to DQS.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [
+              "each"
+            ],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0009"
+            ],
+            "next_ids": [
+              "D6-P052-0011"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_NORMATIVE",
+              "matched_text": [
+                "required"
+              ]
+            },
+            {
+              "rule_id": "R_QUANTIFIER",
+              "matched_text": [
+                "each"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0011",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            219.25,
+            540.31,
+            244.72
+          ],
+          "source_line_ids": [
+            "P052-B0006-L001",
+            "P052-B0006-L002"
+          ],
+          "origin": "body",
+          "original_text": "This will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+          "raw_text": "This \nwill allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 102
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "This will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "This ",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "mixed_digital_and_physical_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "DQ",
+            "DQS"
+          ],
+          "numeric_literals": [],
+          "modal_words": [
+            "will"
+          ],
+          "atomic_clause_candidates": [
+            "This will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "This will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "DQ",
+              "DQS"
+            ],
+            "expected_property_source": "This will allow a data eye to arrive at a SDRAM DQ receiver latch being centered on the DQS transition.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0010"
+            ],
+            "next_ids": [
+              "D6-P052-0012"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P052-0012",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 52,
+          "logical_body_page": 28,
+          "bbox": [
+            71.99,
+            255.25,
+            529.51,
+            268.72
+          ],
+          "source_line_ids": [
+            "P052-B0007-L000"
+          ],
+          "origin": "body",
+          "original_text": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+          "raw_text": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 108
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": false,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CA",
+            "CK"
+          ],
+          "numeric_literals": [],
+          "modal_words": [
+            "shall"
+          ],
+          "atomic_clause_candidates": [
+            "CA is matched with CK,",
+            "and CAs skew training shall be used to compensate the increased CA and CK path delay."
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CA",
+              "CK"
+            ],
+            "expected_property_source": "CA is matched with CK, and CAs skew training shall be used to compensate the increased CA and CK path delay.",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0011"
+            ],
+            "next_ids": [
+              "D6-P053-0001"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_NORMATIVE",
+              "matched_text": [
+                "shall"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P053-0001",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "clause_fragment_candidate",
+        "source": {
+          "pdf_page": 53,
+          "logical_body_page": 29,
+          "bbox": [
+            71.99,
+            68.48,
+            359.52,
+            80.94
+          ],
+          "source_line_ids": [
+            "P053-B0003-L000"
+          ],
+          "origin": "body",
+          "original_text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "raw_text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 72
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": true,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "needs_semantic_scope_review",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CS",
+            "CA"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "NOTE: A nominal example of the signal pin alignments after CSTM and CATM"
+          ],
+          "condition_candidates": [
+            {
+              "keyword": "after",
+              "text": "after CSTM and CATM",
+              "binding_verified": false
+            }
+          ],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [
+              "after CSTM and CATM"
+            ],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CS",
+              "CA"
+            ],
+            "expected_property_source": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P052-0012"
+            ],
+            "next_ids": [
+              "D6-P053-0002"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_CONDITION",
+              "matched_text": [
+                "after"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "sentence_boundary_or_fragment_review",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P053-0002",
+        "chapter_id": "3",
+        "section_id": "3",
+        "record_kind": "clause_fragment_candidate",
+        "source": {
+          "pdf_page": 53,
+          "logical_body_page": 29,
+          "bbox": [
+            71.99,
+            396.4,
+            359.52,
+            408.86
+          ],
+          "source_line_ids": [
+            "P053-B0005-L000"
+          ],
+          "origin": "body",
+          "original_text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "raw_text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "table_id": null,
+          "row_index": null,
+          "cell_index": null
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 72
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": true,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "needs_semantic_scope_review",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [
+            "CS",
+            "CA"
+          ],
+          "numeric_literals": [],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "NOTE: A nominal example of the signal pin alignments after CSTM and CATM"
+          ],
+          "condition_candidates": [
+            {
+              "keyword": "after",
+              "text": "after CSTM and CATM",
+              "binding_verified": false
+            }
+          ],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "clock",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_clock_1",
+            "method": "section_selected_review_template",
+            "check_ko": "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_2",
+            "method": "section_selected_review_template",
+            "check_ko": "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_clock_3",
+            "method": "section_selected_review_template",
+            "check_ko": "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [
+              "after CSTM and CATM"
+            ],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [
+              "CS",
+              "CA"
+            ],
+            "expected_property_source": "NOTE: A nominal example of the signal pin alignments after CSTM and CATM",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P053-0001"
+            ],
+            "next_ids": [],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "3",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.2",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_CONDITION",
+              "matched_text": [
+                "after"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "sentence_boundary_or_fragment_review",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      }
+    ]
+  },
+  "table_supplements": [
+    {
+      "id": "P052-T001",
+      "pdf_page": 52,
+      "section_id": "3",
+      "bbox": [
+        139.66,
+        301.69,
+        537.35,
+        455.85
+      ],
+      "row_count": 6,
+      "column_count": 10,
+      "rows": [
+        {
+          "row": 1,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [],
+          "id": "P052-T001-R001",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 2,
+          "cells": [
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P052-T001-R002",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 3,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P052-B0014-L000"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P052-B0014-L001"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P052-B0014-L002"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P052-B0014-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P052-B0014-L000",
+            "P052-B0014-L001",
+            "P052-B0014-L002",
+            "P052-B0014-L003"
+          ],
+          "id": "P052-T001-R003",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  | V | V | V | V |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 4,
+          "cells": [
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P052-T001-R004",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            null,
+            null,
+            null,
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P052-T001-R005",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [],
+          "id": "P052-T001-R006",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        }
+      ],
+      "kind": "detected_grid_may_be_table_or_diagram",
+      "caption_candidate_id": null,
+      "caption_link_verified": false,
+      "domain_id": "clock",
+      "common_step_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "review_checks_ko": [
+        "행·열 header, 병합 셀, 단위, 주석 번호와 개정 색상을 PDF에서 확인하고 유효 요구를 확정한다.",
+        "encoding 표는 모든 legal/reserved code와 default/속성을, timing 표는 command pair·bank 관계·min/max·단위·산식을, mapping 표는 lane×UI별 bit 위치를 점검한다.",
+        "표 내부 문장이 별도 record로도 추출된 경우 같은 요구를 구현률에 중복 합산하지 않는다.",
+        "격자 탐지는 timing diagram·그림의 matrix도 포함할 수 있다. table/figure 구분과 도형의 의미는 원문에서 확인한다."
+      ]
+    },
+    {
+      "id": "P053-T001",
+      "pdf_page": 53,
+      "section_id": "3",
+      "bbox": [
+        139.24,
+        113.4,
+        534.19,
+        266.45
+      ],
+      "row_count": 6,
+      "column_count": 10,
+      "rows": [
+        {
+          "row": 1,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [],
+          "id": "P053-T001-R001",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 2,
+          "cells": [
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P053-T001-R002",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 3,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P053-B0018-L000"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P053-B0018-L001"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P053-B0018-L002"
+              ]
+            },
+            {
+              "text": "V",
+              "source_line_ids": [
+                "P053-B0018-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0018-L000",
+            "P053-B0018-L001",
+            "P053-B0018-L002",
+            "P053-B0018-L003"
+          ],
+          "id": "P053-T001-R003",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " | V | V | V | V |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 4,
+          "cells": [
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P053-T001-R004",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            null,
+            null,
+            null,
+            null,
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            null
+          ],
+          "source_line_ids": [],
+          "id": "P053-T001-R005",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [],
+          "id": "P053-T001-R006",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  |  |  |  |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        }
+      ],
+      "kind": "detected_grid_may_be_table_or_diagram",
+      "caption_candidate_id": "H00646",
+      "caption_link_verified": false,
+      "domain_id": "clock",
+      "common_step_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "review_checks_ko": [
+        "행·열 header, 병합 셀, 단위, 주석 번호와 개정 색상을 PDF에서 확인하고 유효 요구를 확정한다.",
+        "encoding 표는 모든 legal/reserved code와 default/속성을, timing 표는 command pair·bank 관계·min/max·단위·산식을, mapping 표는 lane×UI별 bit 위치를 점검한다.",
+        "표 내부 문장이 별도 record로도 추출된 경우 같은 요구를 구현률에 중복 합산하지 않는다.",
+        "격자 탐지는 timing diagram·그림의 matrix도 포함할 수 있다. table/figure 구분과 도형의 의미는 원문에서 확인한다."
+      ]
+    },
+    {
+      "id": "P053-T002",
+      "pdf_page": 53,
+      "section_id": "3",
+      "bbox": [
+        71.92,
+        439.85,
+        540.06,
+        557.14
+      ],
+      "row_count": 6,
+      "column_count": 3,
+      "rows": [
+        {
+          "row": 1,
+          "cells": [
+            {
+              "text": "Pin",
+              "source_line_ids": [
+                "P053-B0007-L000"
+              ]
+            },
+            {
+              "text": "Speed",
+              "source_line_ids": [
+                "P053-B0007-L001"
+              ]
+            },
+            {
+              "text": "Unit",
+              "source_line_ids": [
+                "P053-B0007-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0007-L000",
+            "P053-B0007-L001",
+            "P053-B0007-L002"
+          ],
+          "id": "P053-T002-R001",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Pin | Speed | Unit",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 2,
+          "cells": [
+            {
+              "text": "CK_t, CK_c",
+              "source_line_ids": [
+                "P053-B0008-L000"
+              ]
+            },
+            {
+              "text": "5200",
+              "source_line_ids": [
+                "P053-B0008-L001"
+              ]
+            },
+            {
+              "text": "MHz",
+              "source_line_ids": [
+                "P053-B0008-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0008-L000",
+            "P053-B0008-L001",
+            "P053-B0008-L002"
+          ],
+          "id": "P053-T002-R002",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "CK_t, CK_c | 5200 | MHz",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 3,
+          "cells": [
+            {
+              "text": "Command/Address",
+              "source_line_ids": [
+                "P053-B0009-L000"
+              ]
+            },
+            {
+              "text": "5200",
+              "source_line_ids": [
+                "P053-B0009-L001"
+              ]
+            },
+            {
+              "text": "Mbps/pin",
+              "source_line_ids": [
+                "P053-B0009-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0009-L000",
+            "P053-B0009-L001",
+            "P053-B0009-L002"
+          ],
+          "id": "P053-T002-R003",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Command/Address | 5200 | Mbps/pin",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 4,
+          "cells": [
+            {
+              "text": "Chip Select",
+              "source_line_ids": [
+                "P053-B0010-L000"
+              ]
+            },
+            {
+              "text": "2600",
+              "source_line_ids": [
+                "P053-B0010-L001"
+              ]
+            },
+            {
+              "text": "Mbps/pin",
+              "source_line_ids": [
+                "P053-B0010-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0010-L000",
+            "P053-B0010-L001",
+            "P053-B0010-L002"
+          ],
+          "id": "P053-T002-R004",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Chip Select | 2600 | Mbps/pin",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            {
+              "text": "DQS_t, DQS_c",
+              "source_line_ids": [
+                "P053-B0011-L000"
+              ]
+            },
+            {
+              "text": "5200",
+              "source_line_ids": [
+                "P053-B0011-L001"
+              ]
+            },
+            {
+              "text": "MHz",
+              "source_line_ids": [
+                "P053-B0011-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0011-L000",
+            "P053-B0011-L001",
+            "P053-B0011-L002"
+          ],
+          "id": "P053-T002-R005",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "DQS_t, DQS_c | 5200 | MHz",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            {
+              "text": "DQ",
+              "source_line_ids": [
+                "P053-B0012-L000"
+              ]
+            },
+            {
+              "text": "10400",
+              "source_line_ids": [
+                "P053-B0012-L001"
+              ]
+            },
+            {
+              "text": "Mbps/pin",
+              "source_line_ids": [
+                "P053-B0012-L002"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P053-B0012-L000",
+            "P053-B0012-L001",
+            "P053-B0012-L002"
+          ],
+          "id": "P053-T002-R006",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "DQ | 10400 | Mbps/pin",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.clock.checks"
+          ]
+        }
+      ],
+      "kind": "detected_grid_may_be_table_or_diagram",
+      "caption_candidate_id": "H00646",
+      "caption_link_verified": false,
+      "domain_id": "clock",
+      "common_step_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "review_checks_ko": [
+        "행·열 header, 병합 셀, 단위, 주석 번호와 개정 색상을 PDF에서 확인하고 유효 요구를 확정한다.",
+        "encoding 표는 모든 legal/reserved code와 default/속성을, timing 표는 command pair·bank 관계·min/max·단위·산식을, mapping 표는 lane×UI별 bit 위치를 점검한다.",
+        "표 내부 문장이 별도 record로도 추출된 경우 같은 요구를 구현률에 중복 합산하지 않는다.",
+        "격자 탐지는 timing diagram·그림의 matrix도 포함할 수 있다. table/figure 구분과 도형의 의미는 원문에서 확인한다."
+      ]
+    }
+  ],
+  "source_ledger_companion": "../DDR6_source_ledger.json",
+  "global_references_note_ko": "다른 chapter/record/caption 참조는 DDR6_sentence_checklist.json에서 찾는다. 각 chapter 파일은 전체의 중복 부분집합이다."
+}

@@ -1,0 +1,173 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+classes: {
+  axi: {style: {fill: "#100a1e"; stroke: "#cba6f7"}}
+  cif: {style: {fill: "#080e20"; stroke: "#89b4fa"}}
+  mc: {style: {fill: "#04060e"; stroke: "#89dceb"}}
+  fsm: {style: {fill: "#12040e"; stroke: "#f38ba8"}}
+  me: {style: {fill: "#120c04"; stroke: "#fab387"}}
+  sch: {style: {fill: "#040e04"; stroke: "#a6e3a1"}}
+  dfi: {style: {fill: "#10100a"; stroke: "#f9e2af"}}
+  ro: {style: {stroke-dash: 4; stroke: "#6c7086"}}
+}
+
+AXI: {
+  label: "AXI Domain"
+  Masters: "AXI Masters\n(N_CLIENTS)" {class: axi}
+  Interconnect: "AXI Interconnect" {class: axi}
+  Masters -> Interconnect
+}
+
+CIF: {
+  label: "CIF (AXI CLK)"
+  WrPort: "AXI Write Port\nvalid-ready" {class: cif}
+  RdPort: "AXI Read Port\nvalid-ready" {class: cif}
+  AMU: "AMU\nXOR hash + field extract\nrank=MSB hashed" {class: cif}
+  Splitter: "Burst Splitter\nS1 row bound / S2 BL align" {class: cif}
+  ROB: "ROB {AXID, seqnum}" {class: cif}
+  Merge: "Merge Logic\nfragment reassembly" {class: cif}
+  ReqFifo: "Async REQ FIFO\nCIF->MC credit-based" {class: cif}
+  RespFifo: "Async RESP FIFO\nMC->CIF credit-based" {class: cif}
+
+  WrPort -> AMU
+  RdPort -> AMU
+  AMU -> Splitter
+  Splitter -> ROB
+  ROB -> Merge
+  Merge -> ReqFifo
+  RespFifo -> RdPort: "valid-credit up" {class: ro}
+}
+
+MCCore: {
+  label: "MC Core (MC CLK) -- intra-MC = valid-credit"
+
+  WDB: "Write Data Buffer\nSRAM index-addr" {class: mc}
+  WrTcam: "WR_TCAM\n{BG,bank,row,col}\ngated by WR_status.valid" {class: fsm}
+  RdTcam: "RD_TCAM\n{BG,bank} ternary\ngated by RD_status.valid" {class: fsm}
+  WrStatus: "WR Status Reg\nvalid|status|age\nOwner: WR WM Mgr" {class: mc}
+  RdStatus: "RD Status Reg\nvalid|status|age|merge_pending\nOwner: RD WM Mgr" {class: mc}
+  GC: "Global Cycle Counter\nfree-running" {class: mc}
+  TimingRegFile: "timing_reg_file\nparam_id -> nCK" {class: mc}
+
+  WrWM: "WR Watermark Mgr\nOwns WR_TCAM+WR_status\nSched: READ ONLY" {class: mc}
+  RdWM: "RD Watermark Mgr\nOwns RD_TCAM+RD_status\nSched: READ ONLY" {class: mc}
+  RAW: "RAW Bypass Manager\nStageA exact match\nStageB mask coverage" {class: fsm}
+  MergeUnit: "Merge Unit\n64x2:1 mux/byte" {class: fsm}
+  HoldFwd: "Hold-Forward 2-deep\nsrc0 RAW / src1 DRAM" {class: mc}
+  BankPart: "Bank Partition Ctrl\npartition_reg|window_ctr\nWINDOW_SIZE=2xtREFI" {class: sch}
+  WrDataPath: "Write Data Path\nWL align|CRC|DFI timing" {class: mc}
+  RdDataPath: "Read Data Path\nlatency ctr|cap FIFO|ECC" {class: mc}
+
+  ReqFifoIn: "REQ FIFO in" {class: ro}
+  ReqFifoIn -> WrWM: "credit CDC"
+  ReqFifoIn -> RdWM: "credit CDC"
+
+  WrWM -> WrTcam
+  WrWM -> WrStatus
+  RdWM -> RdTcam
+  RdWM -> RdStatus
+  WrTcam -> RAW: "hit vector"
+  RAW -> MergeUnit
+  MergeUnit -> HoldFwd
+  HoldFwd -> WDB: "resp packet" {class: ro}
+}
+
+Scheduler: {
+  label: "Scheduler (read-only vs state)"
+  S0: "Stage0 Maintenance Override\nref_urgent>ref_due>rfm_req>zq_due\nbypass 1-3 -> S4" {class: sch}
+  S1: "Stage1 TCAM Search\nRD/WR hit_bitmap+meta" {class: sch}
+  S2: "Stage2 can_* Gate + SJF Cost\nregistered can_* only" {class: sch}
+  S3: "Stage3 SJF Winner\nS0-override>starved-miss>hit>miss\nRD_STARV=12480 WR_STARV=37440" {class: sch}
+  S4: "Stage4 Cmd Emission + Writebacks\n-> DFI via ME mux\n-> Timing/State tables" {class: sch}
+  NopPrio: "NOP Cycle Priority\n1 OppREFsb 2 SpecACT 3 WR drain" {class: sch}
+  BankPipe: "Bank Pipeline + Partition Policy\nACT->diffBG->ACT->CAS\nno tRTW/tWTR in window" {class: sch}
+
+  S0 -> S1 -> S2 -> S3 -> S4
+}
+
+FSMTables: {
+  label: "FSM Tables"
+  PerBank: "Per-Bank FSM Table [N_RANKS x 16]\nstate|row_open|next_*|can_*(reg)|ref_pending" {class: fsm}
+  PerRank: "Per-Rank FSM Table [N_RANKS]\nstate|gate_rfc|gate_zq|ref_credits\nraa[16]|last_TUF|last_refsb_gc[32]" {class: fsm}
+  GlobalTiming: "Global Timing Table\nnext_act/cas_any|faw_window\nper-BG/rank can_*(reg)" {class: fsm}
+  BankActCtr: "Bank Act Counter [N_RANKS x 16]\ncount|dirty" {class: fsm}
+  ErrHandler: "Error Handler\nscheduler_err + dfi_alert_n" {class: fsm}
+}
+
+MaintenanceEngine: {
+  label: "Maintenance Engine (6 sub-FSMs)"
+  Init: "1 Init FSM\n16 states DDR5 POR\nowns DFI until init_done" {class: me}
+  Refresh: "2 Refresh FSM\n6 states leaky-bucket\nREFab/REFsb/FGR\nOpportunity REFsb on NOP" {class: me}
+  ZQ: "3 ZQcal FSM\n7 states per-rank" {class: me}
+  RFM: "4 RFM FSM\n6 states\nRAA[rank][bank] ctr" {class: me}
+  PowerMgmt: "5 Power Mgmt FSM\n10 states PD+SR" {class: me}
+  MRPoll: "6 MR_Poll FSM\n6 states\nMR4 TUF, >85C halves tREFI" {class: me}
+  DfiMux: "DFI Output Mux\ninit_done=0 -> Init drives DFI\ninit_done=1 -> Sched drives DFI\none-way latch" {class: me}
+
+  Init -> DfiMux
+}
+
+DFIPHY: {
+  label: "DFI / PHY"
+  PHY: "DDR PHY\nDFI 5.2" {class: dfi}
+  DRAM: "DDR5 DRAM" {class: dfi}
+  PHY -> DRAM
+}
+
+# ── cross-domain wiring, matches RMC v1.9.8 rules ──
+AXI.Interconnect -> CIF.WrPort: "AXI4" {class: axi}
+AXI.Interconnect -> CIF.RdPort: "AXI4" {class: axi}
+CIF.ReqFifo -> MCCore.ReqFifoIn: "credit-based CDC"
+
+MCCore.RdTcam -> Scheduler.S1: "hit_bitmap+meta"
+MCCore.WrTcam -> Scheduler.S1
+MCCore.WrStatus -> Scheduler.S3: "WR age (RO)" {class: ro}
+MCCore.RdStatus -> Scheduler.S3: "RD age (RO)" {class: ro}
+FSMTables.BankActCtr -> Scheduler.S2: "count (RO)" {class: ro}
+FSMTables.BankActCtr -> MaintenanceEngine.Refresh: "count -> argmin"
+MCCore.GC -> FSMTables.PerBank: "gc"
+MCCore.GC -> FSMTables.PerRank: "gc"
+MCCore.TimingRegFile -> Scheduler.S4: "timing params"
+MCCore.BankPart -> Scheduler.S2: "rd/wr mask"
+
+Scheduler.S4 -> FSMTables.PerBank: "state,next_*,row_open"
+Scheduler.S4 -> FSMTables.GlobalTiming: "next_*_any,bg,rank,faw"
+Scheduler.S4 -> FSMTables.PerRank: "raa_inc_en"
+Scheduler.S4 -> MCCore.WrStatus: "status -> ISSUED" {class: ro}
+
+FSMTables.PerBank -> Scheduler.S2: "can_cas/pre/act/ref" {class: ro}
+FSMTables.GlobalTiming -> Scheduler.S2: "can_*_any/bg/rank/faw" {class: ro}
+FSMTables.PerRank -> Scheduler.S0: "gate_rfc/zq" {class: ro}
+
+MaintenanceEngine.Refresh -> Scheduler.S0: "ref_urgent/due, zq_due, rfm_req"
+MaintenanceEngine.RFM -> Scheduler.S0
+MaintenanceEngine.ZQ -> Scheduler.S0
+MaintenanceEngine.Refresh -> FSMTables.PerBank: "ref_pending set/clr"
+MaintenanceEngine.RFM -> FSMTables.PerRank: "gate_rfc/zq, ref_credits"
+MaintenanceEngine.MRPoll -> FSMTables.PerRank: "next_trefi, last_TUF"
+Scheduler.S4 -> MaintenanceEngine.DfiMux: "sched_ack"
+Scheduler.S4 -> MaintenanceEngine.DfiMux: "sched_dfi_*"
+
+MaintenanceEngine.DfiMux -> DFIPHY.PHY: "DFI 5.2 cmds"
+MCCore.WrDataPath -> DFIPHY.PHY: "wrdata/en/mask"
+DFIPHY.PHY -> MCCore.RdDataPath: "rddata_valid" {class: ro}
+MCCore.HoldFwd -> CIF.RespFifo: "resp packet"
+MCCore.RdDataPath -> MaintenanceEngine.MRPoll: "MRR sideband"
+Scheduler.S4 -> MCCore.WrDataPath: "wr cmd"
+Scheduler.S4 -> MCCore.RdDataPath: "rd cmd"
+FSMTables.ErrHandler -> DFIPHY.PHY: "dfi_alert_n"
+
+# ── RMC invariants ──
+Rules: {
+  label: "RMC Core Rules"
+  R1: "Rule1: Scheduler NEVER writes"
+  R2: "Rule2: Every register has ONE owner"
+  R3: "Rule3: state changes only via committed command"
+  R4: "Rule4: everything else read-only"
+}

@@ -1,0 +1,1853 @@
+{
+  "title": "DDR6 Draft Rev0.x R0 — 문장별 구현 판정 체크리스트",
+  "source": {
+    "original_filename": "TG423_1^20260914^1905.99A^Micron^DDR6_Standard_Draft_Rev0.x_R0(1).pdf",
+    "sha256": "f4d3758dab5a2e6200d6cfe006ddf41f75ee5576759fbdc035e9935eced54b6a",
+    "pdf_pages": 527,
+    "draft_date": "2026-09-14",
+    "created_date": "2026-10-21",
+    "pdf_page_indexing": "1-based PDF page number",
+    "logical_body_page_note": "PDF25가 본문1쪽. 홀수 PDF 페이지의 footer가 Page of <chapter-end> 형태로 깨져 있어 logical_body_page는 PDF_page−24로 제공.",
+    "source_is_task_data_not_instructions": true
+  },
+  "statistics": {
+    "pdf_pages": 527,
+    "chapter_count": 17,
+    "section_count": 544,
+    "extracted_sentence_candidates": 3442,
+    "body_sentence_candidates": 3415,
+    "draft_notices": 291,
+    "clause_fragment_candidates": 92,
+    "checklist_records": 3825,
+    "source_reviewed_example_records": 24,
+    "automatically_generated_records": 3801,
+    "detected_grids": 781,
+    "supplementary_grid_rows": 4612,
+    "supplementary_fragments": 2909,
+    "native_text_lines": 50101,
+    "eligible_nonempty_lines": 47991,
+    "accounted_eligible_lines": 47991,
+    "uncovered_line_ids": [],
+    "excluded_line_counts": {
+      "rotated_text_or_watermark": 549,
+      "running_footer": 514,
+      "running_header": 998
+    },
+    "records_with_open_issues": 2033,
+    "implementation_assessed_records": 0,
+    "implementation_rate": null,
+    "coverage_meaning_ko": "모든 native text line을 원장에 보존하고 제외/문장/표/fragment/header에 배정했는지의 기계적 검사이다. 문장 분할·그림 해석·요구사항 분해·참조 의미의 100% 정확성을 뜻하지 않는다."
+  },
+  "known_spec_review_issues": [
+    {
+      "id": "I_DRAFT_COLORS",
+      "source_pdf_pages": [
+        1
+      ],
+      "issue_ko": "검정=기통과, 빨강=투표 대상, 회색=LPDDR6/DDR5 참고. 문서 전체는 PROPOSED draft이다.",
+      "required_action_ko": "구현 기준으로 채택할 개정 범위를 먼저 정하고 삭제/참고 문구를 요구사항에서 분리한다."
+    },
+    {
+      "id": "I_MRR_REFERENCE",
+      "source_pdf_pages": [
+        339,
+        340,
+        341,
+        342,
+        343
+      ],
+      "section_ids": [
+        "7.8.1",
+        "7.8.1.2"
+      ],
+      "issue_ko": "MRR 본문의 Table 1-6/7/8와 Section x.x.y는 현재 편집 번호와 일치 여부를 확인해야 한다.",
+      "required_action_ko": "MRR 매핑/타이밍 표 및 §6.3/§7.1.1/§8.1.4/§8.2와 의미를 대조하고 승인된 연결을 기록한다."
+    },
+    {
+      "id": "I_CRC_REFERENCE",
+      "source_pdf_pages": [
+        408,
+        409
+      ],
+      "section_ids": [
+        "7.9.8.1",
+        "7.9.8.2"
+      ],
+      "issue_ko": "Section 1.1.4.3/1.1.4.4는 현재 목차에 없다.",
+      "required_action_ko": "CRC packet mapping §7.9.8.3~4를 의미상 후보로 검토한다. 자동으로 번호를 대체하지 않는다."
+    },
+    {
+      "id": "I_EVEN_EXAMPLE",
+      "source_pdf_pages": [
+        265
+      ],
+      "section_ids": [
+        "7.2.4"
+      ],
+      "issue_ko": "EVEN(25.6)=28 예제가 next even integer 정의와 불일치한다(통상 정의라면 26).",
+      "required_action_ko": "4의 배수 제약인지 오타인지 명세 확인 후 기대 timing을 정한다."
+    },
+    {
+      "id": "I_REGISTER_REDLINE",
+      "source_pdf_pages": [
+        164,
+        179,
+        200,
+        315,
+        433
+      ],
+      "issue_ko": "MR4E35 같은 문자열과 disenabled/willshall은 취소선·삽입 문구가 이어져 추출된 사례다. §6.1 paged MR 내용 일부도 삭제 후보다.",
+      "required_action_ko": "style_runs 및 PDF 시각 정보를 이용해 이전/신규 문구를 분리한다. 후보 문자열을 유효 주소로 파싱하지 않는다."
+    },
+    {
+      "id": "I_UNBALLOTED",
+      "source_pdf_pages": [
+        424,
+        425,
+        426,
+        427
+      ],
+      "section_ids": [
+        "7.9.10",
+        "7.9.11",
+        "7.9.12",
+        "7.9.13"
+      ],
+      "issue_ko": "DIRECTIONAL, To be balloted, Unballoted 상태의 절이 포함되어 있다.",
+      "required_action_ko": "본문이나 참고 내용이 있어도 최종 DDR6 요구로 확정하지 말고 spec_unresolved 상태를 별도 관리한다."
+    },
+    {
+      "id": "I_WUCS_PROPOSAL",
+      "source_pdf_pages": [
+        338
+      ],
+      "section_ids": [
+        "7.7.5"
+      ],
+      "issue_ko": "tCS_POST 값은 초기 제안이며 대체 값 가능성이 주석에 남아 있다.",
+      "required_action_ko": "시험에 사용한 초안 가정과 채택 값을 명시한다."
+    }
+  ],
+  "methodology": {
+    "common_steps": [
+      {
+        "id": "S1",
+        "title_ko": "원문·개정 상태 확정",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "PDF 위치와 색상·취소선 후보를 대조한다. 채택할 초안 기준을 정하고 삭제/참고 문구와 신규 제안을 분리한다."
+      },
+      {
+        "id": "S2",
+        "title_ko": "검증 단위 분해",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "문장 경계, 표의 행/열/주석, 조건절, 주체, 수량, AND/OR, 예외를 확정한다. 한 문장에 여러 의무가 있으면 별도 assertion으로 분리한다."
+      },
+      {
+        "id": "S3",
+        "title_ko": "적용 범위 확정",
+        "method": "semantic_review",
+        "action_ko": "DRAM·host·PHY/아날로그 중 책임 주체와 PSD/FSP/속도/밀도/모드 적용 조합을 결정한다. 디지털 타이밍과 host 의무를 임의로 제외하지 않는다."
+      },
+      {
+        "id": "S4",
+        "title_ko": "참조 조항 연결",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "번호로 후보를 찾은 뒤 제목·내용·개정 상태가 맞는지 검토한다. 전제·예외·정의·표 매핑을 연결한다. 존재하는 번호라는 이유만으로 올바른 참조라고 확정하지 않는다."
+      },
+      {
+        "id": "S5",
+        "title_ko": "구현 경로 추적",
+        "method": "static_analysis_required",
+        "action_ko": "명령 수신/디코드 → 상태·MR 선택 → 내부 처리 → 출력·부수 효과 경로를 추적한다. 선언·이름 검색·상수 하나만으로 구현되었다고 판정하지 않는다."
+      },
+      {
+        "id": "S6",
+        "title_ko": "관측 가능한 검증 작성",
+        "method": "verification_design_required",
+        "action_ko": "정상, 경계, 반대 조건, 모드 간 조합, 예외를 test/assertion으로 만든다. 내부 변수와 최종 DQ/DQS/ALERT·MR readback·array 상태를 구분한다."
+      },
+      {
+        "id": "S7",
+        "title_ko": "근거와 반례 기록",
+        "method": "evidence_required",
+        "action_ko": "RTL revision/file/line, 신호, 실행한 test, 실제/기대 값, waveform, 관측 범위를 보존한다. 진단 출력과 명령 차단은 서로 다른 동작이다."
+      },
+      {
+        "id": "S8",
+        "title_ko": "판정과 미해결점 분리",
+        "method": "rule_based_after_evidence",
+        "action_ko": "확정된 적용 조건 전체와 필요한 하위 체크가 충족되어야 implemented를 부여한다. 부족한 근거, 초안 모호함, 부분 구현, 범위 밖을 각각 구분한다."
+      }
+    ],
+    "rule_catalog": [
+      {
+        "id": "R_CONDITION",
+        "pattern": "\\b(if|when|while|unless|during|after|before|until|provided|except|regardless)\\b",
+        "purpose": "조건·예외 구간 후보를 보존; 문장 의미/조건 범위는 검토 필요"
+      },
+      {
+        "id": "R_NORMATIVE",
+        "pattern": "\\b(shall|must|required|prohibited|illegal|only|cannot)\\b",
+        "purpose": "의무/금지 후보 표시; 평서문도 요구사항일 수 있으므로 비매칭을 제외 근거로 사용하지 않음"
+      },
+      {
+        "id": "R_PERMISSION",
+        "pattern": "\\b(may|can|should|recommended|optional)\\b",
+        "purpose": "허용·능력·권고 구분 요청; may를 모든 경우 필수 동작으로 바꾸지 않음"
+      },
+      {
+        "id": "R_QUANTIFIER",
+        "pattern": "\\b(all|every|each|any|both|only|at least|at most|minimum|maximum|regardless|independent)\\b",
+        "purpose": "전칭/한정/독립성 범위와 반례 테스트 후보 표시"
+      },
+      {
+        "id": "R_TIMING",
+        "pattern": "\\bt[A-Z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)?\\b|\\b(?:[np]?s|nCK|tCK|UI|cycles?)\\b",
+        "purpose": "타이밍 이름·단위 후보 추출; 기준 edge/rounding/min/max는 본문과 표로 확정"
+      },
+      {
+        "id": "R_REGISTER",
+        "pattern": "(?:PG\\[[^\\]]+\\])?MR[0-9A-Fa-fxXyY]+(?:\\s*(?:OP)?\\s*\\[[^\\]]+\\])?",
+        "purpose": "MR 주소·필드 검색 후보; 16진수·새/구 번호·취소선을 확인하고 주소 확정"
+      },
+      {
+        "id": "R_REFERENCE",
+        "pattern": "\\b(Sections?|Tables?|Figures?|Chapters?)\\s+([0-9xX]+(?:\\.[0-9xXyY]+)*)",
+        "purpose": "명시적 번호 참조 후보 생성; 번호가 맞아도 내용 일치 여부는 별도 검토"
+      },
+      {
+        "id": "R_DRAFT",
+        "pattern": "\\b(TBD|TBC|TBS|Unballoted|DIRECTIONAL|To be balloted)\\b|MR[xXyY]+|[xX]\\.[xX]\\.[yYxX]",
+        "purpose": "미정값·미투표·임시주소/번호를 확정 판정의 blocker로 기록"
+      },
+      {
+        "id": "R_RESERVED",
+        "pattern": "\\b(RFU|reserved|undefined|unknown|don.t care|ignored)\\b",
+        "purpose": "reserved/undefined/don’t-care/ignore의 서로 다른 의미를 구분하도록 체크 생성"
+      },
+      {
+        "id": "R_NEGATION",
+        "pattern": "\\b(not|never|no|without|cannot|prohibited|illegal)\\b",
+        "purpose": "부정/금지 동작 후보 검출; 경고만 출력하고 실행하는 경로를 별도 점검"
+      }
+    ],
+    "domains": [
+      {
+        "id": "architecture",
+        "title": "PSD·구성·주소 구조",
+        "sections": [
+          "2.1",
+          "2.2"
+        ],
+        "related": [
+          "2.1.4",
+          "2.1.5",
+          "7.1.1"
+        ],
+        "checks": [
+          "1p6/1p12/2p3/2p6별 PSD 수·DQ 수·bank/bank-group/row/column 비트가 선언뿐 아니라 디코드와 실제 저장 위치에 일치하는지 확인한다.",
+          "공유 CK/DQS와 PSD별 명령·데이터 경로를 구분하고, 한 PSD 동작이 다른 PSD의 MR/array/state를 잘못 덮어쓰지 않는지 확인한다.",
+          "주소 최솟값·최댓값·서로 다른 bank/PSD를 대상으로 alias, 데이터 분리, 구성별 미사용 비트 처리를 검사한다. 패키지 ball 위치와 실리콘 구조 보증은 별도 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "metadata",
+        "title": "BL24 패킷·Metadata",
+        "sections": [
+          "2.3",
+          "7.4.5"
+        ],
+        "related": [
+          "2.3",
+          "7.4.5",
+          "7.9.8.4"
+        ],
+        "checks": [
+          "BL24의 UI와 DQ lane별 data/metadata/non-data/CRC 위치를 해당 구성의 그림·표와 일대일 대응시킨다.",
+          "MD_OFF/MD_8b/MD_16b와 저장 CRC 여부별 array 저장 비트, 주소 carve-out, readback, zero padding을 구분한다.",
+          "데이터와 metadata를 독립적으로 변화시켜 round-trip 및 경계 주소를 검사한다. 미정 MRxx 값을 임의의 기존 DDR5 주소로 대체하지 않는다."
+        ]
+      },
+      {
+        "id": "clock",
+        "title": "CK·DQS 샘플링과 동기화",
+        "sections": [
+          "3",
+          "7.2"
+        ],
+        "related": [
+          "3",
+          "7.1.1",
+          "7.2"
+        ],
+        "checks": [
+          "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+          "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+          "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다."
+        ]
+      },
+      {
+        "id": "initialization",
+        "title": "초기화·reset",
+        "sections": [
+          "4.1.1",
+          "4.1.2",
+          "4.1.3"
+        ],
+        "related": [
+          "4.1",
+          "6.6",
+          "6.7"
+        ],
+        "checks": [
+          "전원 ramp, RESET_n, 안정 클록, 필수 MR 설정의 순서와 대기 시간별 상태 전이를 확인한다. 전원 안정 조건은 모델의 입력 가정으로 명시한다.",
+          "power-up/reset/정상 동작 중 reset의 MR default, array 보존 여부, pending command, 출력 enable을 각각 추적한다.",
+          "각 대기 시간의 직전/정확한 경계/직후와 초기화 미완료 상태의 명령을 검사한다. 실제 전압 ramp 품질은 RTL 검증 결과와 분리한다."
+        ]
+      },
+      {
+        "id": "fsp",
+        "title": "FSP 전환·shadow 적용",
+        "sections": [
+          "4.1.4",
+          "4.2.5"
+        ],
+        "related": [
+          "4.1.4",
+          "4.2.5",
+          "6.6.1.1",
+          "7.8.3"
+        ],
+        "checks": [
+          "FSP-WR의 MR read/write 선택과 FSP-OP의 동작 set 선택이 독립인지, 두 set이 같은 저장 변수를 잘못 공유하지 않는지 확인한다.",
+          "inactive set 변경 중 active 동작 불변성, Full PDE/주파수 변경 순서, 전환 시 여러 파라미터의 동시 적용을 검사한다.",
+          "MRUPDATE shadow의 공유 여부와 Apply 시점 FSP-WR 대상 선택을 추적한다. 전환 전후 readback·latency·ODT 제어를 관측한다."
+        ]
+      },
+      {
+        "id": "mcme",
+        "title": "Multi-cycle CS·MRUPDATE",
+        "sections": [
+          "4.2.1",
+          "7.8.3"
+        ],
+        "related": [
+          "4.2.1",
+          "7.8.3",
+          "4.1.4"
+        ],
+        "checks": [
+          "MCME 진입이 multi-cycle CS와 MRUPDATE의 기준 cycle을 어떻게 초기화하는지 확인한다.",
+          "4개 CA cycle의 주소/OP 조립과 CA4 조합을 검사한다. 모두 HIGH, 모두 LOW, 혼합 조합을 분리하고 혼합 시 잘못된 MR 쓰기가 없는지 확인한다.",
+          "tMC_Setup/tMC_CSPW/tMC_Hold를 측정하고 shadow 저장과 Apply/종료 시 효과를 분리하여 검증한다."
+        ]
+      },
+      {
+        "id": "pda",
+        "title": "PDA·DQ swizzle discovery",
+        "sections": [
+          "4.2.2",
+          "4.2.4"
+        ],
+        "related": [
+          "4.2.2",
+          "4.2.4",
+          "6.7.2",
+          "6.7.3"
+        ],
+        "checks": [
+          "PDA enumeration ID 프로그램과 select ID 비교, 선택되지 않은 device의 무반응을 다중 device 환경에서 확인한다.",
+          "DSDM 진입/출력 매핑/종료와 정상 read/write 경로의 차이를 표에서 확정하고 각 DQ lane permutation을 검사한다.",
+          "reset 기본 ID, 중복/불일치 ID, PSD별 선택 범위 및 종료 뒤 정상 매핑 복귀를 확인한다."
+        ]
+      },
+      {
+        "id": "zq",
+        "title": "ZQ 보정 제어",
+        "sections": [
+          "4.2.3"
+        ],
+        "related": [
+          "4.2.3",
+          "6.6.1.8"
+        ],
+        "checks": [
+          "시작·백그라운드·정지·reset·결과 latch 상태와 MR 제어를 추적하고 요구된 대기 시간에 맞는 완료/적용 시점을 검사한다.",
+          "ZQ 공유, 다중 die, VDDQ off 조건에서 host 제약과 device 제어 책임을 분리한다.",
+          "디지털 완료 플래그나 코드 갱신은 검증하되 저항·용량·보정 정확도는 analog 모델/측정 근거가 있어야 충족으로 판정한다."
+        ]
+      },
+      {
+        "id": "ca_training",
+        "title": "CSTM·CATM",
+        "sections": [
+          "4.2.6",
+          "4.2.8"
+        ],
+        "related": [
+          "4.2.6",
+          "4.2.8",
+          "7.8.3",
+          "7.7"
+        ],
+        "checks": [
+          "훈련 진입/종료 opcode, command/train 상태 전이, DQ feedback mapping과 mode별 허용 명령을 추적한다.",
+          "비교 대상 CS/CA, edge, per-lane/위상별 feedback, PRBS tap·seed·shift 방향을 본문/그림과 독립 참조 모델로 비교한다.",
+          "정상 mode와 훈련 mode의 경로 격리, 종료 후 복귀, WUCS·MRUPDATE 관련 예외를 교차 검사한다."
+        ]
+      },
+      {
+        "id": "analog_control",
+        "title": "VREF·CTLE·DFE·DCA 제어와 아날로그 효과",
+        "sections": [
+          "4.2.7",
+          "4.2.9",
+          "4.2.10",
+          "4.2.12",
+          "4.2.14",
+          "4.2.16",
+          "4.2.18",
+          "7.9.7"
+        ],
+        "related": [
+          "6.6",
+          "6.7",
+          "8.5"
+        ],
+        "checks": [
+          "공통 코드+per-pin offset, enable/disable, 지원 여부, signed encoding, reserved code와 MR readback을 해당 정의 표로 확인한다.",
+          "lane/phase 선택, 범위·포화·default·update/latch delay를 디지털 동작으로 검사한다. MR 저장만 있고 기능 선택에 연결되지 않은 경우를 구분한다.",
+          "mV·ps·gain·tap coefficient·eye margin 등 물리적 효과에는 별도 analog/real-number 모델 또는 측정이 필요하다. 논리 코드 검증과 물리 정확도를 합산하지 않는다."
+        ]
+      },
+      {
+        "id": "write_leveling",
+        "title": "Write leveling",
+        "sections": [
+          "4.2.11"
+        ],
+        "related": [
+          "4.2.11",
+          "6.6.1.16",
+          "6.6.1.17"
+        ],
+        "checks": [
+          "external WL, internal cycle/phase alignment의 진입·종료와 feedback 입력/출력 lane·edge를 각각 추적한다.",
+          "DQS pulse에 따른 CK 샘플 결과와 지연, MR 설정별 출력, 기능 종료 뒤 정상 write 복귀를 검사한다.",
+          "훈련 중 ODT 제어와 host DQS 제공 책임을 분리하고 필요한 setup/hold·pulse 간격 경계를 확인한다."
+        ]
+      },
+      {
+        "id": "hrt",
+        "title": "Host Receiver Training",
+        "sections": [
+          "4.2.13"
+        ],
+        "related": [
+          "4.2.13",
+          "6.6.1.18"
+        ],
+        "checks": [
+          "user pattern/PRBS 선택, 24-bit Fibonacci LFSR의 tap·seed·shift·lane 지연·inversion을 그림과 비교한다.",
+          "HRT 진입/종료 MR opcode와 idle/read 중 출력 조건, 훈련 중 정상 명령 처리 여부를 검증한다.",
+          "연속 패턴과 재진입의 seed 복원, PSD/lane 독립성 및 DQ/DQS 파형을 검사한다. 본문 MRDD/MR05 등 주소와 최신 MR map 간 불일치는 먼저 해결한다."
+        ]
+      },
+      {
+        "id": "preamble_training",
+        "title": "Read preamble training",
+        "sections": [
+          "4.2.15"
+        ],
+        "related": [
+          "4.2.15",
+          "7.4.1"
+        ],
+        "checks": [
+          "진입/종료 MR 설정과 DQS 정적/토글 구간, DQ 유효 여부를 구분해 출력 state machine을 검사한다.",
+          "정상 read의 preamble/postamble과 훈련 전용 파형을 혼동하지 않는지 확인한다.",
+          "모드 전환 경계에서 출력 enable·첫 edge·마지막 edge와 정상 read 복귀를 검증한다."
+        ]
+      },
+      {
+        "id": "wtm",
+        "title": "Write Training Mode",
+        "sections": [
+          "4.2.17"
+        ],
+        "related": [
+          "4.2.17",
+          "4.2.13.5",
+          "6.7.95"
+        ],
+        "checks": [
+          "PSD별 24-bit LFSR 또는 user pattern의 기대값, per-pin 실제 수신 데이터 비교, seed·phase·inversion을 독립 모델로 검증한다.",
+          "lane/phase별 오류 count의 증가·포화·초기화·readback과 오류가 없는 경우를 검사한다.",
+          "WTM 진입/종료·정상 write array 부수 효과·다른 PSD의 격리와 재훈련 시 상태 초기화를 확인한다."
+        ]
+      },
+      {
+        "id": "state_diagram",
+        "title": "상태 전이도",
+        "sections": [
+          "5"
+        ],
+        "related": [
+          "5",
+          "7.1",
+          "7.6",
+          "7.8"
+        ],
+        "checks": [
+          "그림의 각 node/edge를 상태·허용 명령·guard 조건으로 전사하고 본문에 더 구체적인 예외가 있는지 확인한다.",
+          "진입·종료·reset 전이를 최소 한 번 실행하고 금지 edge와 진행 중 명령의 부수 효과를 검사한다.",
+          "단순화된 그림에 없다는 이유만으로 본문에 허용된 동작을 금지하지 않는다. 이미지 안의 화살표는 텍스트 추출만으로 검증되지 않는다."
+        ]
+      },
+      {
+        "id": "mode_register",
+        "title": "MR 저장·접근 속성",
+        "sections": [
+          "6"
+        ],
+        "related": [
+          "6.1",
+          "6.2",
+          "6.3",
+          "7.8"
+        ],
+        "checks": [
+          "주소/bit 범위, reset 값, RW/RO/WO/W1C/read-clear 등 표에 정의된 접근 속성, reserved read value를 각각 확인한다.",
+          "shared/PSD별 공간, MRA[7], FSP별 저장/적용 선택을 실제 MRW/MRR/MRUPDATE 경로와 연결한다. page 관련 삭제 후보는 유효 요구인지 먼저 확인한다.",
+          "read/write 접근의 허용 상태와 부수 효과를 검사한다. 무조건 mr[address]=value인 구현이나 선언만 된 bit는 속성 구현의 근거가 아니다."
+        ]
+      },
+      {
+        "id": "command",
+        "title": "명령 수신·truth table",
+        "sections": [
+          "7.1"
+        ],
+        "related": [
+          "7.1.1",
+          "7.1.2",
+          "7.2",
+          "7.9.14"
+        ],
+        "checks": [
+          "CA0~CA5/CS와 C0~C5의 truth-table 행을 명령·주소·PSD·CID·parity 디코드와 대조한다.",
+          "2N 모드와 2/4/6 cycle 조립, DES/NOP, 무효·중단 시퀀스에서 부분 명령 실행이 없는지 검사한다.",
+          "불법 동작 뒤 요구되는 host reset 절차와 device가 명시적으로 차단해야 하는 동작을 구분한다. 미규정 동작의 임의 파형을 fail로 단정하지 않는다."
+        ]
+      },
+      {
+        "id": "row",
+        "title": "ACT·Precharge",
+        "sections": [
+          "7.3"
+        ],
+        "related": [
+          "7.3",
+          "8.1",
+          "9.1"
+        ],
+        "checks": [
+          "PSD/bank/group/row별 open-row 상태와 ACT/PRE 대상 집합을 확인한다. per/dual/quad/all-bank를 구분한다.",
+          "tRCD_R/W, tRAS, tRP, tRC, tRRD, tFAW 및 activation counter 관련 시간을 상태별로 검사한다.",
+          "auto-precharge의 예약/실행 시점과 pending read/write, last ACT/last data edge 조건을 구분해 경계에서 데이터 유실을 검사한다."
+        ]
+      },
+      {
+        "id": "read_write",
+        "title": "Read·Write·DQS·latency",
+        "sections": [
+          "7.4.1",
+          "7.4.2",
+          "7.4.3",
+          "7.4.4"
+        ],
+        "related": [
+          "2.3",
+          "7.4",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "명령 주소에서 array 데이터, burst/UI/lane 매핑까지 추적하고 실제 DQ/DQS의 첫·마지막 유효 edge와 beat 수를 측정한다.",
+          "RL/WL, preamble/postamble/interamble, back-to-back·turnaround·동일/다른 bank-group의 경계 조건을 검사한다.",
+          "metadata·CRC·RMW·FSP·PSD 구성에 따른 경로 차이를 검사한다. pending slot 한 개 덮어쓰기, beat off-by-one, data mask 범위 오류를 반례로 찾는다."
+        ]
+      },
+      {
+        "id": "refresh",
+        "title": "Refresh·Self-refresh",
+        "sections": [
+          "7.5.1",
+          "7.5.2"
+        ],
+        "related": [
+          "7.5.1",
+          "7.5.2",
+          "6.6.1.5",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "REFab/REFdb/REFqb별 대상 bank 집합과 내부 bank/row counter 업데이트, reset·SRX·REFab 동기화를 추적한다.",
+          "정해진 refresh window/간격·busy 시간·bank 재방문 금지와 허용 reorder를 검사한다. REFab 하나를 모든 유형의 구현으로 간주하지 않는다.",
+          "self-refresh entry/exit·power-down 병행·온도/모드 관련 주기를 검사한다. 논리 retention 모델과 물리적 전하 보존 보증은 구분한다."
+        ]
+      },
+      {
+        "id": "prac",
+        "title": "PRAC·ACI·ABO·RFM",
+        "sections": [
+          "7.5.3"
+        ],
+        "related": [
+          "7.5.3",
+          "6.6.1.53",
+          "6.6.1.54",
+          "9.1"
+        ],
+        "checks": [
+          "row별 activation count와 활성 지속 시간 기여, ACI 시작/완료/재시작, counting·ABO gating을 추적한다.",
+          "threshold/BAT, PRFM, ABO 발생·해제·지연·우선순위, 대응 refresh 순서를 각각 검증한다.",
+          "threshold 바로 아래/같음/초과, 여러 row·PSD 경쟁, 오류/재초기화, host 대응 지연을 검사한다. RFM을 일반 REF에 단순 연결한 것은 PRAC 전체 근거가 아니다."
+        ]
+      },
+      {
+        "id": "power",
+        "title": "Power-down",
+        "sections": [
+          "7.6"
+        ],
+        "related": [
+          "7.6",
+          "4.2.5",
+          "7.7"
+        ],
+        "checks": [
+          "Full-PD/ODT-PD, PSD별 entry/exit, clock 유지/정지와 ODT 상태의 차이를 state machine에서 확인한다.",
+          "entry 전 pending 동작 완료, exit 명령·대기 시간·첫 유효 명령, FSP/주파수 변경 허용 순서를 검사한다.",
+          "한 PSD만 power-down이거나 다른 PSD가 동작 중인 조합에서 공유 자원·출력·MR 보존을 확인한다. 실제 소비전력은 별도 측정이다."
+        ]
+      },
+      {
+        "id": "wucs",
+        "title": "Wake-up CS",
+        "sections": [
+          "7.7"
+        ],
+        "related": [
+          "7.7",
+          "7.8.3",
+          "4.2.6"
+        ],
+        "checks": [
+          "CS pre-command wake-up과 post-command inactivity timer의 시작/재시작/만료 조건 및 MR enable을 확인한다.",
+          "timeout 직전/동일 시점/직후 명령과 연속 명령, idle→wake-up 지연을 검사한다.",
+          "MRUPDATE/CSTM 예외와 tCS_POST 값의 초기 제안 주석을 함께 검토한다. 잠정 64/128/256 값을 최종 고정 표준으로 간주하지 않는다."
+        ]
+      },
+      {
+        "id": "mrr",
+        "title": "Mode Register Read",
+        "sections": [
+          "7.8.1"
+        ],
+        "related": [
+          "7.8.1",
+          "6.3",
+          "7.1.1",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "MRR decode→shared/PSD/FSP 대상 선택→OP byte→DQ serializer→DQS 종료까지 추적한다. BL24, OP의 UI8~23 배치·2UI 반복 및 DQ1 반전을 별도 체크한다. page 관련 문구는 삭제 후보를 먼저 확인한다.",
+          "2p3/2p6/1p6/1p12와 shared/PSD MR별 mapping 표를 대조한다. valid-but-undefined lane에 고정 값을 요구하지 않는다.",
+          "RL+tCK2DQO의 관측 기준, tMRR/tMRD·DES-only 구간과 후속 명령을 검사한다. Table 1~8 등 잔존 참조를 현재 번호와 의미 대조한다."
+        ]
+      },
+      {
+        "id": "mrw",
+        "title": "Mode Register Write",
+        "sections": [
+          "7.8.2"
+        ],
+        "related": [
+          "7.8.2",
+          "6.2",
+          "6.3",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "6-cycle/구성별 MRW 주소·OP 조립, PSD 대상, FSP-WR 선택과 허용 상태를 확인한다.",
+          "write 완료/파라미터 적용 시점과 readback, 접근 속성에 따른 무시/clear 부수 효과를 검사한다.",
+          "MRW 전후 명령 간격 및 MR 변경 중 동작 일관성을 검사하고 미정/개정 주소는 최신 표와 먼저 정합한다."
+        ]
+      },
+      {
+        "id": "odt",
+        "title": "ODT 상태·타이밍",
+        "sections": [
+          "7.9.1"
+        ],
+        "related": [
+          "7.9.1",
+          "6.6",
+          "6.7",
+          "7.6"
+        ],
+        "checks": [
+          "read/write/non-target/park/power-down/training 상태별 ODT 선택 코드를 상태 표와 대조한다.",
+          "ODT on/off 지연, FSP별 적용, PSD/공유 DQS 관계를 파형에서 검사한다.",
+          "디지털 ODT enable과 저항의 전압·온도 의존 특성을 분리한다. enable 신호만으로 Ron/Rtt 허용오차 충족을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "sensor",
+        "title": "온도 센서·interval oscillator",
+        "sections": [
+          "7.9.2",
+          "7.9.3"
+        ],
+        "related": [
+          "7.9.2",
+          "7.9.3",
+          "6.6"
+        ],
+        "checks": [
+          "시작/정지/완료, counter 폭·오버플로, 결과 latch와 다중 byte readback의 일관성을 확인한다.",
+          "온도 코드/offset 또는 oscillator count가 입력 가정·기간·lane·clock 선택에 맞는지 참조 모델과 비교한다.",
+          "sample/update 지연과 연속/중단/재시작 경계를 검사한다. 물리 온도 정확도·지연 drift는 센서/analog 모델 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "repair",
+        "title": "hPPR·sPPR·MBIST/mPPR",
+        "sections": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6"
+        ],
+        "related": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6",
+          "6.6.1.49",
+          "6.7"
+        ],
+        "checks": [
+          "guard key, resource availability, mode entry, ACT/WRA/PRE 주소와 선택 device, busy/program time 및 exit를 추적한다.",
+          "row remapping과 resource 소모/readback, hPPR 영구성·sPPR undo/lock/reset 특성을 각각 확인한다.",
+          "잘못된 key·자원 없음·다른 PSD active·시간 미충족·재시도·MBIST 결과 처리의 부수 효과를 검사한다. 물리 fuse 수명은 디지털 모델의 외부 범위다."
+        ]
+      },
+      {
+        "id": "crc",
+        "title": "CRC 계산·packet·오류 보고",
+        "sections": [
+          "7.9.8"
+        ],
+        "related": [
+          "7.9.8",
+          "2.3",
+          "7.4.5",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "선택된 CRC-4/CRC-8 다항식, 입력 길이·bit order·초기값·metadata/zero pad·lane mapping을 독립 참조 계산과 비교한다. CRC-4-SC-8 삭제 후보를 유효 요구와 섞지 않는다.",
+          "read와 write enable 독립성, stored/unstored CRC·MD 모드·구성별 허용 조합, latency adder를 확인한다.",
+          "1-bit/다중 bit 오류를 data와 checksum 위치에 주입하고 ALERT 극성·지연·폭, sticky status·clear를 검사한다. host retry 책임과 DRAM data write 허용 여부를 구분한다."
+        ]
+      },
+      {
+        "id": "ecc",
+        "title": "ECC·bounded fault·ECS",
+        "sections": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "related": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "checks": [
+          "오류 모델, correction/detection 범위와 array 저장·read 반환·status 업데이트를 분리해 검증한다.",
+          "bounded fault의 영향을 받는 data bit 수와 sub-packet 수를 fault injection 모델로 확인한다. 물리 fault 제한은 RTL만으로 증명되지 않는다.",
+          "DIRECTIONAL/To be balloted 상태와 아직 정의되지 않은 ECS 동작은 확정 요구로 생성하지 않는다. 검증 조건이 없는 항목은 spec_unresolved로 보류한다."
+        ]
+      },
+      {
+        "id": "fault",
+        "title": "ALERT·fault register",
+        "sections": [
+          "7.9.12",
+          "7.9.13"
+        ],
+        "related": [
+          "7.9.12",
+          "7.9.13",
+          "7.5.3",
+          "7.9.8"
+        ],
+        "checks": [
+          "fault source별 status set, enable mask, 요약 OR, ALERT 극성과 clear 조건을 추적한다.",
+          "read-clear/reset/power-off/PRAC 예외, 동시 fault·우선순위·retrigger를 검사한다.",
+          "Unballoted/참고 회색 문구와 최신 MR map의 주소·기능 충돌을 먼저 해결한다. 레지스터 배열이 있다는 이유로 미정 fault protocol의 구현을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "parity",
+        "title": "CA parity·command blocking",
+        "sections": [
+          "7.9.14"
+        ],
+        "related": [
+          "7.9.14",
+          "7.1.1",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "2/4/6-cycle별 PAR1/PAR2 XOR 대상, CA5 지원 조건, even parity와 parity bit 제외 규칙을 독립 계산으로 비교한다.",
+          "disable/nonblocking/blocking 모드별 parity latency와 erroneous command의 실제 실행/차단·pending cancel을 추적한다.",
+          "각 CA cycle bit 오류와 연속 오류를 주입하여 ALERT·C0~C5 log·clear·후속 명령 복구를 검사한다. 경고 호출만으로 blocking 구현을 판정하지 않는다."
+        ]
+      },
+      {
+        "id": "ignore",
+        "title": "Command Ignore",
+        "sections": [
+          "7.10"
+        ],
+        "related": [
+          "7.10",
+          "6.6.1.15",
+          "7.1.1"
+        ],
+        "checks": [
+          "2p3 지원 범위, MR0E enable/polarity, C0:CA4 ignore 해석을 truth table과 대조한다.",
+          "ACT/READ/WRITE/PRE 각각에서 무시될 때 array·bank state·pending response에 부수 효과가 없는지 확인한다.",
+          "disable 시 ignore bit 무효, polarity 0/1의 양쪽 경우, 다른 구성·다른 명령 예외를 검사한다."
+        ]
+      },
+      {
+        "id": "timing",
+        "title": "명령 제약·AC core timing",
+        "sections": [
+          "8",
+          "9"
+        ],
+        "related": [
+          "8",
+          "9.1",
+          "7.1",
+          "7.4"
+        ],
+        "checks": [
+          "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+          "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+          "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다."
+        ]
+      },
+      {
+        "id": "electrical",
+        "title": "전기·패키지·측정 조건",
+        "sections": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "related": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "checks": [
+          "전압·전류·임피던스·capacitance·jitter·eye·slew 규격의 측정 지점, 부하, 온도, 주파수와 min/max를 확인한다.",
+          "문장 안에 MR 제어·논리 level·샘플링·시간 조건이 있으면 디지털 하위 요구로 분리해 검사한다. chapter만 보고 모든 문장을 제외하지 않는다.",
+          "나머지 물리 요구에는 SPICE/AMS/real-number 모델 또는 측정 결과를 연결한다. 순수 0/1 RTL 시뮬레이션 성공은 물리적 적합 근거가 아니다."
+        ]
+      },
+      {
+        "id": "context",
+        "title": "범위·목차·개정 이력",
+        "sections": [
+          "FRONT",
+          "1",
+          "17"
+        ],
+        "related": [
+          "1",
+          "17"
+        ],
+        "checks": [
+          "설명·정의·개정 이력인지 실제 동작 의무인지 먼저 분류한다. 과거 ballot 제목을 현재 동작 요구로 세지 않는다.",
+          "용어/문서 범위/색상 범례가 기술 문장 해석에 영향을 주는 경우 참조 근거로 연결한다.",
+          "구현률 분모에는 승인된 적용성 결정을 거친 요구만 포함한다. 이 자료는 현재 RTL 구현률을 계산하지 않는다."
+        ]
+      }
+    ],
+    "inference_explanation_ko": "규칙은 문장 경계/토큰/표 위치/번호 후보와 기능별 체크 템플릿을 생성한다. 의미 검토는 주어·조건 범위·전칭·허용/의무·예외·참조 우선순위를 확정한다. 모든 문장에 별도 추론을 실행했다는 뜻이 아니다. 선택된 예시의 근거 요약은 source_reviewed_notes로 구분한다. 8단계는 재현 가능한 외부 검토 절차이며 내부 사고 과정의 로그/횟수가 아니다.",
+    "dependency_explanation_ko": "다른 문장은 전제, 예외, 용어 정의, MR attribute, timing 값, mapping 표를 제공한다. 번호/인접/동일 표행 연결은 규칙 기반 후보이고 실제 의미 관계는 검토가 필요하다. 다른 문장의 구현 상태를 현재 문장에 전파하지 않는다.",
+    "limitations_ko": [
+      "전체 527쪽의 native PDF text를 처리했다. OCR/모든 그림의 도형·색상 면적·화살표 의미 전사는 수행하지 않았다.",
+      "sentence_candidate는 자동 분할 후보이며 확정된 요구사항 수가 아니다. 절 경계·cross-page 문장·표 셀의 병합/각주·superscript를 원문과 대조해야 한다.",
+      "개별 semantic review가 없는 항목은 generated_requires_sentence_review로 명시한다. 체크 템플릿 적용은 독립적인 문장별 검토 완료를 의미하지 않는다.",
+      "색상과 취소선 후보를 보존하지만 개정 문구 자동 채택은 하지 않는다. candidate_after_strike_removal은 검토 편의용이다.",
+      "디지털/물리/host 범위는 후보 분류다. 물리 chapter라도 MR·timing·논리 요구는 별도로 검토해야 한다.",
+      "각 문장의 기능별 체크 목록은 연관 확인 항목이다. 모든 목록이 그 한 문장에 규정된 의무라는 뜻은 아니다.",
+      "코드 검색·정적 분석·simulation·formal proof를 DDR6 대상으로 실행하지 않았다. 모든 구현 상태는 not_assessed_no_rtl이다."
+    ]
+  },
+  "assessment_policy": {
+    "current_status": "not_assessed_no_rtl",
+    "implementation_rate": null,
+    "reason_ko": "DDR6 대응 RTL·testbench·실행 결과가 제공되지 않아 구현 여부와 구현률을 산출하지 않음.",
+    "future_statuses": {
+      "implemented": "확정된 유효 요구의 적용 조건·필수 하위 체크 전체에 코드와 검증 근거가 있음",
+      "partial": "일부 조건·하위 동작만 입증됨; 미충족 범위를 명시",
+      "not_implemented": "정의된 범위의 정적 추적 또는 재현 가능한 test에서 필요한 동작 부재가 확인됨",
+      "contradicted": "동일 전제에서 구현 동작이 요구와 반대임을 재현",
+      "unverified": "코드/실행/조건 coverage 근거 부족; 미구현과 구분",
+      "spec_unresolved": "미정 값·번호·개정 상태·서로 충돌하는 규정 해결 필요",
+      "not_applicable": "검토된 구성 또는 책임 범위에서 적용되지 않으며 근거가 기록됨",
+      "analog_evidence_required": "물리 측정/모델 근거 필요; 디지털 부분과 분리"
+    },
+    "future_rate_policy_ko": "미리 정의한 동일 가중치의 유효 디지털 요구 단위 중 implemented 비율을 기본으로 하고 partial/unverified/host/optional/초안 보류를 따로 공개한다. 문장 수는 의무 수와 다르며 행·그림·중복 문장 처리 기준도 고정해야 한다."
+  },
+  "chapters": [
+    {
+      "id": "FRONT",
+      "title": "Cover and front matter",
+      "record_count": 24,
+      "sentence_candidate_count": 24,
+      "table_ids": []
+    },
+    {
+      "id": "1",
+      "title": "Scope",
+      "record_count": 5,
+      "sentence_candidate_count": 5,
+      "table_ids": []
+    },
+    {
+      "id": "2",
+      "title": "Overview",
+      "record_count": 169,
+      "sentence_candidate_count": 165,
+      "table_ids": [
+        "P027-T001",
+        "P028-T001",
+        "P029-T004",
+        "P029-T005",
+        "P030-T003",
+        "P030-T004",
+        "P030-T005",
+        "P031-T001",
+        "P032-T001",
+        "P033-T001",
+        "P033-T002",
+        "P034-T001",
+        "P035-T001",
+        "P036-T001",
+        "P036-T003",
+        "P036-T005",
+        "P037-T001",
+        "P038-T001",
+        "P038-T002",
+        "P039-T001",
+        "P042-T001",
+        "P043-T001",
+        "P044-T001",
+        "P045-T001",
+        "P046-T001",
+        "P046-T002",
+        "P047-T001",
+        "P047-T002",
+        "P048-T001",
+        "P049-T001",
+        "P049-T002",
+        "P050-T001",
+        "P050-T002",
+        "P050-T003",
+        "P050-T004",
+        "P050-T005",
+        "P050-T006"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Clocking",
+      "record_count": 14,
+      "sentence_candidate_count": 11,
+      "table_ids": [
+        "P052-T001",
+        "P053-T001",
+        "P053-T002"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Initialization and Training",
+      "record_count": 1070,
+      "sentence_candidate_count": 1004,
+      "table_ids": [
+        "P054-T001",
+        "P055-T001",
+        "P056-T001",
+        "P056-T002",
+        "P057-T001",
+        "P058-T001",
+        "P058-T002",
+        "P059-T001",
+        "P060-T001",
+        "P060-T002",
+        "P061-T001",
+        "P062-T001",
+        "P062-T002",
+        "P063-T001",
+        "P063-T003",
+        "P063-T008",
+        "P066-T001",
+        "P067-T001",
+        "P068-T001",
+        "P071-T001",
+        "P073-T001",
+        "P073-T003",
+        "P074-T001",
+        "P075-T001",
+        "P076-T001",
+        "P077-T001",
+        "P078-T001",
+        "P078-T002",
+        "P079-T001",
+        "P079-T002",
+        "P080-T001",
+        "P081-T001",
+        "P082-T001",
+        "P083-T001",
+        "P084-T001",
+        "P084-T003",
+        "P086-T001",
+        "P086-T002",
+        "P086-T003",
+        "P086-T004",
+        "P086-T005",
+        "P086-T006",
+        "P086-T007",
+        "P086-T008",
+        "P087-T001",
+        "P088-T001",
+        "P088-T002",
+        "P088-T003",
+        "P089-T001",
+        "P090-T001",
+        "P092-T001",
+        "P092-T006",
+        "P093-T001",
+        "P093-T002",
+        "P094-T001",
+        "P095-T001",
+        "P096-T001",
+        "P097-T001",
+        "P099-T001",
+        "P099-T002",
+        "P100-T001",
+        "P100-T002",
+        "P101-T001",
+        "P102-T001",
+        "P103-T001",
+        "P104-T001",
+        "P104-T002",
+        "P105-T001",
+        "P105-T002",
+        "P106-T001",
+        "P107-T001",
+        "P107-T002",
+        "P108-T001",
+        "P109-T001",
+        "P110-T001",
+        "P111-T001",
+        "P112-T001",
+        "P115-T001",
+        "P115-T002",
+        "P116-T001",
+        "P117-T001",
+        "P117-T002",
+        "P119-T001",
+        "P119-T002",
+        "P120-T001",
+        "P120-T002",
+        "P121-T001",
+        "P121-T002",
+        "P121-T003",
+        "P122-T001",
+        "P123-T001",
+        "P123-T002",
+        "P123-T003",
+        "P124-T001",
+        "P124-T002",
+        "P125-T001",
+        "P125-T002",
+        "P126-T001",
+        "P126-T002",
+        "P127-T001",
+        "P128-T001",
+        "P128-T002",
+        "P128-T003",
+        "P128-T004",
+        "P129-T001",
+        "P129-T002",
+        "P129-T003",
+        "P129-T004",
+        "P130-T001",
+        "P130-T002",
+        "P130-T003",
+        "P131-T001",
+        "P131-T002",
+        "P132-T001",
+        "P132-T002",
+        "P133-T001",
+        "P134-T001",
+        "P135-T001",
+        "P136-T001",
+        "P139-T001",
+        "P139-T002",
+        "P140-T001",
+        "P140-T002",
+        "P140-T003",
+        "P141-T001",
+        "P141-T002",
+        "P141-T003",
+        "P142-T001",
+        "P142-T002",
+        "P142-T003",
+        "P143-T001",
+        "P143-T002",
+        "P143-T003",
+        "P144-T001",
+        "P144-T002",
+        "P144-T003",
+        "P144-T004",
+        "P145-T001",
+        "P145-T002",
+        "P145-T003",
+        "P145-T004",
+        "P146-T001",
+        "P146-T002",
+        "P146-T003",
+        "P147-T001",
+        "P147-T002",
+        "P147-T003",
+        "P148-T001",
+        "P148-T002",
+        "P148-T003",
+        "P149-T001",
+        "P149-T002",
+        "P149-T003",
+        "P149-T004",
+        "P150-T001",
+        "P150-T002",
+        "P150-T003",
+        "P150-T004",
+        "P151-T001",
+        "P153-T001",
+        "P153-T002",
+        "P155-T001",
+        "P155-T002",
+        "P156-T001",
+        "P157-T001",
+        "P158-T001",
+        "P159-T001",
+        "P159-T002",
+        "P160-T001"
+      ]
+    },
+    {
+      "id": "5",
+      "title": "DDR6 Simplified State Diagram",
+      "record_count": 18,
+      "sentence_candidate_count": 13,
+      "table_ids": []
+    },
+    {
+      "id": "6",
+      "title": "Mode Registers (MRs)",
+      "record_count": 285,
+      "sentence_candidate_count": 248,
+      "table_ids": [
+        "P164-T001",
+        "P164-T002",
+        "P165-T001",
+        "P169-T001",
+        "P170-T001",
+        "P171-T001",
+        "P172-T001",
+        "P172-T002",
+        "P173-T001",
+        "P174-T001",
+        "P175-T001",
+        "P176-T001",
+        "P177-T001",
+        "P178-T001",
+        "P179-T001",
+        "P179-T002",
+        "P180-T001",
+        "P180-T002",
+        "P180-T003",
+        "P181-T001",
+        "P181-T002",
+        "P182-T001",
+        "P182-T002",
+        "P183-T001",
+        "P184-T001",
+        "P184-T002",
+        "P185-T001",
+        "P185-T002",
+        "P185-T003",
+        "P186-T001",
+        "P186-T002",
+        "P186-T003",
+        "P187-T001",
+        "P187-T002",
+        "P187-T003",
+        "P188-T001",
+        "P188-T002",
+        "P188-T003",
+        "P189-T001",
+        "P189-T002",
+        "P189-T003",
+        "P190-T001",
+        "P190-T002",
+        "P191-T001",
+        "P191-T002",
+        "P191-T003",
+        "P191-T004",
+        "P192-T001",
+        "P192-T002",
+        "P192-T003",
+        "P193-T001",
+        "P193-T002",
+        "P194-T001",
+        "P194-T002",
+        "P194-T003",
+        "P194-T004",
+        "P195-T001",
+        "P195-T002",
+        "P195-T003",
+        "P195-T004",
+        "P196-T001",
+        "P196-T002",
+        "P196-T003",
+        "P196-T004",
+        "P196-T005",
+        "P197-T001",
+        "P197-T002",
+        "P197-T003",
+        "P197-T004",
+        "P197-T005",
+        "P197-T006",
+        "P198-T001",
+        "P198-T002",
+        "P198-T003",
+        "P198-T004",
+        "P199-T001",
+        "P199-T002",
+        "P199-T003",
+        "P200-T001",
+        "P200-T002",
+        "P201-T001",
+        "P201-T002",
+        "P201-T003",
+        "P201-T004",
+        "P201-T005",
+        "P202-T001",
+        "P202-T002",
+        "P202-T003",
+        "P203-T001",
+        "P203-T002",
+        "P204-T001",
+        "P204-T002",
+        "P205-T001",
+        "P206-T001",
+        "P206-T002",
+        "P207-T001",
+        "P207-T002",
+        "P208-T001",
+        "P208-T002",
+        "P208-T003",
+        "P209-T001",
+        "P209-T002",
+        "P209-T003",
+        "P210-T001",
+        "P210-T002",
+        "P210-T003",
+        "P211-T001",
+        "P211-T002",
+        "P212-T001",
+        "P212-T002",
+        "P213-T001",
+        "P213-T002",
+        "P214-T001",
+        "P214-T002",
+        "P215-T001",
+        "P215-T002",
+        "P216-T001",
+        "P216-T002",
+        "P217-T001",
+        "P217-T002",
+        "P218-T001",
+        "P218-T002",
+        "P219-T001",
+        "P219-T002",
+        "P220-T001",
+        "P220-T002",
+        "P221-T001",
+        "P221-T002",
+        "P222-T001",
+        "P222-T002",
+        "P223-T001",
+        "P223-T002",
+        "P224-T001",
+        "P224-T002",
+        "P225-T001",
+        "P225-T002",
+        "P226-T001",
+        "P226-T002",
+        "P227-T001",
+        "P227-T002",
+        "P228-T001",
+        "P228-T002",
+        "P229-T001",
+        "P229-T002",
+        "P230-T001",
+        "P230-T002",
+        "P231-T001",
+        "P231-T002",
+        "P231-T003",
+        "P232-T001",
+        "P232-T002",
+        "P233-T001",
+        "P233-T002",
+        "P234-T001",
+        "P234-T002",
+        "P235-T001",
+        "P235-T002",
+        "P236-T001",
+        "P236-T002",
+        "P237-T001",
+        "P237-T002",
+        "P238-T001",
+        "P238-T002",
+        "P238-T003",
+        "P238-T004",
+        "P238-T005",
+        "P239-T001",
+        "P239-T002",
+        "P239-T003",
+        "P239-T004",
+        "P239-T005",
+        "P240-T001",
+        "P240-T002",
+        "P240-T003",
+        "P240-T004",
+        "P240-T005",
+        "P241-T001",
+        "P241-T002",
+        "P242-T001",
+        "P242-T002",
+        "P242-T003",
+        "P243-T001",
+        "P243-T002",
+        "P243-T003",
+        "P244-T001",
+        "P244-T002",
+        "P244-T003",
+        "P245-T001",
+        "P245-T002",
+        "P245-T003",
+        "P246-T001",
+        "P246-T002",
+        "P246-T003",
+        "P246-T004",
+        "P246-T005",
+        "P247-T001",
+        "P247-T002",
+        "P247-T003",
+        "P247-T004",
+        "P248-T001",
+        "P248-T002",
+        "P248-T003",
+        "P248-T004",
+        "P249-T001",
+        "P249-T002",
+        "P249-T003",
+        "P249-T004",
+        "P250-T001",
+        "P250-T002",
+        "P251-T001",
+        "P251-T002",
+        "P251-T003",
+        "P252-T001",
+        "P252-T002",
+        "P252-T003",
+        "P253-T001",
+        "P253-T002",
+        "P254-T001",
+        "P254-T002",
+        "P255-T001",
+        "P255-T002",
+        "P256-T001",
+        "P256-T002",
+        "P257-T001",
+        "P257-T002"
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Command and Operation",
+      "record_count": 1535,
+      "sentence_candidate_count": 1437,
+      "table_ids": [
+        "P258-T001",
+        "P259-T001",
+        "P260-T001",
+        "P261-T001",
+        "P262-T001",
+        "P263-T001",
+        "P264-T001",
+        "P265-T002",
+        "P268-T001",
+        "P268-T009",
+        "P270-T001",
+        "P271-T001",
+        "P271-T002",
+        "P273-T001",
+        "P274-T001",
+        "P274-T008",
+        "P275-T001",
+        "P276-T001",
+        "P277-T001",
+        "P281-T001",
+        "P282-T001",
+        "P282-T002",
+        "P283-T001",
+        "P283-T002",
+        "P284-T001",
+        "P284-T002",
+        "P286-T001",
+        "P291-T001",
+        "P291-T002",
+        "P294-T001",
+        "P294-T002",
+        "P295-T001",
+        "P299-T001",
+        "P299-T002",
+        "P300-T001",
+        "P300-T002",
+        "P301-T001",
+        "P302-T001",
+        "P302-T002",
+        "P303-T001",
+        "P304-T001",
+        "P305-T001",
+        "P306-T001",
+        "P308-T001",
+        "P310-T001",
+        "P311-T001",
+        "P313-T001",
+        "P314-T001",
+        "P314-T004",
+        "P316-T001",
+        "P317-T001",
+        "P317-T002",
+        "P318-T001",
+        "P318-T002",
+        "P319-T001",
+        "P319-T002",
+        "P320-T001",
+        "P322-T001",
+        "P323-T001",
+        "P323-T002",
+        "P324-T001",
+        "P324-T002",
+        "P324-T003",
+        "P325-T001",
+        "P325-T002",
+        "P325-T003",
+        "P326-T001",
+        "P326-T002",
+        "P326-T003",
+        "P326-T004",
+        "P326-T005",
+        "P326-T006",
+        "P327-T001",
+        "P327-T002",
+        "P328-T001",
+        "P329-T001",
+        "P329-T003",
+        "P331-T001",
+        "P331-T006",
+        "P332-T001",
+        "P333-T001",
+        "P333-T005",
+        "P333-T006",
+        "P334-T001",
+        "P335-T001",
+        "P335-T004",
+        "P336-T001",
+        "P338-T001",
+        "P340-T001",
+        "P340-T002",
+        "P340-T003",
+        "P340-T004",
+        "P341-T001",
+        "P341-T002",
+        "P342-T001",
+        "P342-T002",
+        "P343-T001",
+        "P343-T002",
+        "P344-T002",
+        "P344-T003",
+        "P345-T001",
+        "P346-T001",
+        "P347-T001",
+        "P347-T007",
+        "P349-T001",
+        "P350-T001",
+        "P351-T001",
+        "P352-T001",
+        "P352-T002",
+        "P353-T001",
+        "P353-T002",
+        "P354-T001",
+        "P354-T002",
+        "P355-T001",
+        "P355-T002",
+        "P356-T001",
+        "P356-T002",
+        "P356-T003",
+        "P356-T004",
+        "P357-T001",
+        "P358-T001",
+        "P359-T001",
+        "P360-T001",
+        "P361-T001",
+        "P362-T001",
+        "P363-T001",
+        "P364-T001",
+        "P368-T001",
+        "P369-T001",
+        "P369-T002",
+        "P370-T001",
+        "P370-T002",
+        "P371-T001",
+        "P371-T014",
+        "P372-T001",
+        "P372-T007",
+        "P373-T001",
+        "P373-T002",
+        "P374-T001",
+        "P374-T002",
+        "P374-T003",
+        "P374-T004",
+        "P375-T001",
+        "P375-T002",
+        "P375-T003",
+        "P376-T001",
+        "P376-T002",
+        "P376-T003",
+        "P376-T004",
+        "P377-T001",
+        "P378-T001",
+        "P378-T002",
+        "P379-T001",
+        "P381-T001",
+        "P381-T004",
+        "P381-T005",
+        "P382-T001",
+        "P384-T001",
+        "P384-T004",
+        "P385-T001",
+        "P386-T001",
+        "P387-T001",
+        "P387-T002",
+        "P388-T001",
+        "P390-T001",
+        "P390-T004",
+        "P390-T005",
+        "P391-T001",
+        "P391-T003",
+        "P392-T001",
+        "P392-T002",
+        "P392-T003",
+        "P393-T001",
+        "P393-T002",
+        "P393-T003",
+        "P394-T001",
+        "P394-T002",
+        "P395-T001",
+        "P396-T001",
+        "P397-T001",
+        "P398-T001",
+        "P399-T001",
+        "P400-T001",
+        "P401-T001",
+        "P402-T001",
+        "P403-T001",
+        "P404-T001",
+        "P405-T001",
+        "P406-T001",
+        "P407-T001",
+        "P407-T002",
+        "P409-T001",
+        "P410-T001",
+        "P411-T001",
+        "P411-T002",
+        "P411-T003",
+        "P412-T001",
+        "P413-T001",
+        "P413-T002",
+        "P415-T001",
+        "P415-T002",
+        "P415-T003",
+        "P415-T004",
+        "P416-T001",
+        "P416-T002",
+        "P417-T001",
+        "P417-T002",
+        "P417-T003",
+        "P418-T001",
+        "P418-T002",
+        "P419-T001",
+        "P419-T002",
+        "P420-T001",
+        "P420-T002",
+        "P421-T001",
+        "P421-T002",
+        "P422-T001",
+        "P423-T001",
+        "P427-T001",
+        "P427-T002",
+        "P427-T003",
+        "P427-T004",
+        "P428-T001",
+        "P428-T002",
+        "P429-T001",
+        "P429-T002",
+        "P430-T001",
+        "P431-T001",
+        "P431-T002",
+        "P432-T001",
+        "P434-T001",
+        "P435-T001",
+        "P436-T001",
+        "P436-T002",
+        "P437-T007",
+        "P438-T001",
+        "P439-T001",
+        "P439-T002",
+        "P439-T003",
+        "P441-T001"
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Command Constraints and AC Timing",
+      "record_count": 76,
+      "sentence_candidate_count": 70,
+      "table_ids": [
+        "P442-T001",
+        "P443-T001",
+        "P443-T002",
+        "P444-T001",
+        "P444-T002",
+        "P445-T001",
+        "P445-T002",
+        "P446-T001",
+        "P446-T002",
+        "P447-T001",
+        "P448-T001",
+        "P449-T001",
+        "P449-T002",
+        "P450-T001",
+        "P450-T002",
+        "P451-T001",
+        "P451-T002",
+        "P452-T001",
+        "P452-T002",
+        "P452-T003",
+        "P453-T001",
+        "P455-T001",
+        "P455-T002",
+        "P457-T001"
+      ]
+    },
+    {
+      "id": "9",
+      "title": "Core Timings",
+      "record_count": 3,
+      "sentence_candidate_count": 2,
+      "table_ids": [
+        "P460-T001",
+        "P461-T001"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "AC and DC Operating Conditions",
+      "record_count": 18,
+      "sentence_candidate_count": 15,
+      "table_ids": [
+        "P462-T001",
+        "P463-T001",
+        "P464-T001",
+        "P465-T001"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "AC and DC Input/Output Operating Conditions",
+      "record_count": 43,
+      "sentence_candidate_count": 36,
+      "table_ids": [
+        "P466-T001",
+        "P467-T001",
+        "P471-T001",
+        "P472-T001"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "AC and DC Input Measurement Levels",
+      "record_count": 346,
+      "sentence_candidate_count": 298,
+      "table_ids": [
+        "P474-T001",
+        "P475-T001",
+        "P475-T002",
+        "P475-T003",
+        "P476-T001",
+        "P476-T002",
+        "P477-T001",
+        "P477-T002",
+        "P478-T001",
+        "P479-T001",
+        "P479-T002",
+        "P479-T003",
+        "P480-T001",
+        "P481-T001",
+        "P483-T001",
+        "P484-T001",
+        "P484-T002",
+        "P485-T001",
+        "P486-T001",
+        "P487-T001",
+        "P487-T002",
+        "P487-T003",
+        "P488-T001",
+        "P488-T002",
+        "P489-T001",
+        "P489-T002",
+        "P490-T001",
+        "P491-T001",
+        "P492-T001",
+        "P493-T001",
+        "P493-T002",
+        "P494-T001",
+        "P494-T002",
+        "P495-T001",
+        "P495-T002",
+        "P496-T001",
+        "P497-T001",
+        "P497-T002",
+        "P498-T001",
+        "P498-T002",
+        "P500-T001",
+        "P501-T001",
+        "P502-T001",
+        "P503-T001"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "AC and DC Output Levels and Timing",
+      "record_count": 129,
+      "sentence_candidate_count": 91,
+      "table_ids": [
+        "P504-T001",
+        "P505-T001",
+        "P507-T001",
+        "P507-T002",
+        "P507-T003",
+        "P508-T001",
+        "P508-T002",
+        "P509-T001",
+        "P509-T002",
+        "P509-T003",
+        "P510-T001",
+        "P510-T002",
+        "P510-T003",
+        "P511-T001",
+        "P511-T002",
+        "P512-T001",
+        "P512-T002",
+        "P513-T001",
+        "P513-T002",
+        "P514-T001",
+        "P515-T001",
+        "P515-T003",
+        "P516-T001",
+        "P516-T002",
+        "P517-T001",
+        "P517-T002"
+      ]
+    },
+    {
+      "id": "14",
+      "title": "DDR6 Silicon Pad IO Capacitance",
+      "record_count": 71,
+      "sentence_candidate_count": 10,
+      "table_ids": [
+        "P518-T001",
+        "P519-T001"
+      ]
+    },
+    {
+      "id": "15",
+      "title": "IDD Specification Parameters and Test Conditions",
+      "record_count": 2,
+      "sentence_candidate_count": 0,
+      "table_ids": []
+    },
+    {
+      "id": "16",
+      "title": "Electrical Characteristics and AC Timing",
+      "record_count": 12,
+      "sentence_candidate_count": 10,
+      "table_ids": [
+        "P521-T001"
+      ]
+    },
+    {
+      "id": "17",
+      "title": "Revision History",
+      "record_count": 5,
+      "sentence_candidate_count": 3,
+      "table_ids": []
+    }
+  ]
+}

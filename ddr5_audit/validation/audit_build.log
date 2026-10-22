@@ -1,0 +1,6 @@
+make: Entering directory '/workspace/ddr5_audit/validation/audit_obj'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/workspace/ddr5_audit/validation/audit_obj'
+- V e r i l a t i o n   R e p o r t:  rev vUNKNOWN-built20260516-4e853d8
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.011 s (elab=0.000, cvt=0.000, bld=0.010); cpu 0.001 s on 2 threads; allocated 19.254 MB

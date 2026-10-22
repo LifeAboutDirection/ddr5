@@ -1,0 +1,11 @@
+*.zip
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+__pycache__/
+verif/ddr5_model/sim/obj_dir/
+*.vcd
+*.fst

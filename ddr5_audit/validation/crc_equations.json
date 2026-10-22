@@ -1,0 +1,17 @@
+{
+  "test": "CRC8_D64 standard XOR equations vs source shift algorithm",
+  "checks": 65,
+  "passed": 65,
+  "basis_complete": true,
+  "method": "zero vector and 64 basis vectors; both maps linear over GF(2)",
+  "formula_terms": {
+    "0": 29,
+    "1": 37,
+    "2": 33,
+    "3": 32,
+    "4": 31,
+    "5": 30,
+    "6": 29,
+    "7": 29
+  }
+}

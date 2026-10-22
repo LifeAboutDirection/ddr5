@@ -1,0 +1,2 @@
+PyMuPDF==1.26.6
+jsonschema==4.26.0

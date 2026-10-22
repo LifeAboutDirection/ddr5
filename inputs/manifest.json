@@ -1,0 +1,20 @@
+[
+  {
+    "filename": "JESD79-5B_v1-2.pdf",
+    "original_filename": "JESD79-5B_v1-2.pdf",
+    "bytes": 10407055,
+    "sha256": "0121708016bd83aca249c4e9d312433eacb69d0c985b0ea8bc624a7548e36c66"
+  },
+  {
+    "filename": "rmc-ddr5-main.zip",
+    "original_filename": "rmc-ddr5-main.zip",
+    "bytes": 25178391,
+    "sha256": "efc53a1301fbe6e8d11a93760c862b15392d4cd0db337130b24a6637fb29d0d3"
+  },
+  {
+    "filename": "DDR6_Standard_Draft_Rev0.x_R0_20260914.pdf",
+    "original_filename": "1-TG423_1-20260914-1905.99A-Micron-DDR6_Standard_Draft_Rev0.x_R0-1-.pdf",
+    "bytes": 10703447,
+    "sha256": "f4d3758dab5a2e6200d6cfe006ddf41f75ee5576759fbdc035e9935eced54b6a"
+  }
+]

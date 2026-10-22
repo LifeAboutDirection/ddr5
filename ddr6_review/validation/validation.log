@@ -1,0 +1,50 @@
+{
+  "result": "passed",
+  "json_schema_valid": true,
+  "unique_record_ids": true,
+  "all_internal_targets_exist": true,
+  "all_source_line_targets_exist": true,
+  "all_527_pages_present": true,
+  "source_pdf_sha256_unchanged": true,
+  "all_implementation_verdicts_unassessed": true,
+  "no_unaccounted_native_text_lines": true,
+  "chapter_count_reconciliation": true,
+  "all_curated_matchers_hit": true,
+  "meaningful_source_probes": [
+    "MRR BL24 PDF339/7.8.1",
+    "CRC-4-SC-8 deletion candidate",
+    "CRC unresolved reference",
+    "EVEN contradiction example",
+    "MRUPDATE mixed CA4 branch"
+  ],
+  "limitations": "검증은 JSON/연결/표본 추출/집계에 관한 것이다. 전체 문장 의미의 수작업 검토나 RTL 시뮬레이션이 아니다.",
+  "statistics": {
+    "pdf_pages": 527,
+    "chapter_count": 17,
+    "section_count": 544,
+    "extracted_sentence_candidates": 3442,
+    "body_sentence_candidates": 3415,
+    "draft_notices": 291,
+    "clause_fragment_candidates": 92,
+    "checklist_records": 3825,
+    "source_reviewed_example_records": 24,
+    "automatically_generated_records": 3801,
+    "detected_grids": 781,
+    "supplementary_grid_rows": 4612,
+    "supplementary_fragments": 2909,
+    "native_text_lines": 50101,
+    "eligible_nonempty_lines": 47991,
+    "accounted_eligible_lines": 47991,
+    "uncovered_line_ids": [],
+    "excluded_line_counts": {
+      "rotated_text_or_watermark": 549,
+      "running_footer": 514,
+      "running_header": 998
+    },
+    "records_with_open_issues": 2033,
+    "implementation_assessed_records": 0,
+    "implementation_rate": null,
+    "coverage_meaning_ko": "모든 native text line을 원장에 보존하고 제외/문장/표/fragment/header에 배정했는지의 기계적 검사이다. 문장 분할·그림 해석·요구사항 분해·참조 의미의 100% 정확성을 뜻하지 않는다."
+  }
+}
+FILES [('README_ko.md', 4548), ('DDR6_checklist_summary.json', 59911), ('query_checklist.py', 802), ('DDR6_source_ledger.json', 14656738), ('DDR6_sentence_checklist.json', 34707827), ('DDR6_MRR_example.json', 310604), ('validation_results.json', 1880), ('DDR6_checklist_bundle.zip', 4992615), ('MANIFEST.sha256', 2448), ('DDR6_checklist.schema.json', 5645)]

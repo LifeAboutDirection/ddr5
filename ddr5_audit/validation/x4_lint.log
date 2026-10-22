@@ -1,0 +1,57 @@
+%Warning-ASCRANGE: rtl/ddr5_device.sv:52:15: Ascending bit range vector: left < right of bit range: [-1:0]
+                                           : ... note: In instance 'ddr5_device'
+   52 |   input  wire [(DQ_BITS/8)-1:0]    DM_n,
+      |               ^
+                   ... For warning description see https://verilator.org/warn/ASCRANGE?v=0.000
+                   ... Use "/* verilator lint_off ASCRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:503:80: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'cfg_WL' generates 32 bits.
+                                               : ... note: In instance 'ddr5_device'
+  503 |         if (t_wr_bg[bg] != NEVER && t_wr_bg[bg] >= t_wr_dend - longint'(cfg_WL + T.BL/2))
+      |                                                                                ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=0.000
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:503:86: Operator DIVS expects 64 bits on the LHS, but LHS's STRUCTSEL 'BL' generates 32 bits.
+                                               : ... note: In instance 'ddr5_device'
+  503 |         if (t_wr_bg[bg] != NEVER && t_wr_bg[bg] >= t_wr_dend - longint'(cfg_WL + T.BL/2))
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1069:13: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1069 |         col = {d.col[COL_BITS-1:4], off[3:0]};
+      |             ^
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1082:62: Operator DIVS expects 64 bits on the LHS, but LHS's STRUCTSEL 'bl' generates 32 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1082 |     t_rd_dend     = cur_ck + longint'(cfg_RL) + longint'(d.bl/2);
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1105:62: Operator DIVS expects 64 bits on the LHS, but LHS's STRUCTSEL 'bl' generates 32 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1105 |     t_wr_dend     = cur_ck + longint'(cfg_WL) + longint'(d.bl/2);
+      |                                                              ^
+%Error: rtl/ddr5_device.sv:1236:39: Replication value of < 0 or X/Z not legal (IEEE 1800-2023 11.4.12.1): '32'hfffffffc'
+                                  : ... note: In instance 'ddr5_device'
+ 1236 |       rd_data[i] = {{(DQ_BITS-OP_BITS){1'b0}}, mr[int'(d.mra)]};
+      |                                       ^
+        ... See the manual at https://verilator.org/verilator_doc.html?v=0.000 for more assistance.
+%Warning-WIDTHTRUNC: rtl/ddr5_device.sv:1236:18: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's REPLICATE generates 9 bits.
+                                               : ... note: In instance 'ddr5_device'
+ 1236 |       rd_data[i] = {{(DQ_BITS-OP_BITS){1'b0}}, mr[int'(d.mra)]};
+      |                  ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=0.000
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1581:55: Operator DIVS expects 64 bits on the LHS, but LHS's STRUCTSEL 'nbeats' generates 32 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1581 |         wr_close_ck = ck_cnt + longint'(wr_pend.nbeats/2) + 3;
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1637:15: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1637 |           col = {wr_pend.col_base[COL_BITS-1:4], off[3:0]};
+      |               ^
+%Error-ZEROREPL: rtl/ddr5_device.sv:1635:34: Replication value of 0 is only legal under a concatenation (IEEE 1800-2023 11.4.12.1)
+                                           : ... note: In instance 'ddr5_device'
+ 1635 |         if (DM_n === {(DQ_BITS/8){1'b1}}) begin    
+      |                                  ^
+                 ... For error description see https://verilator.org/warn/ZEROREPL?v=0.000
+%Warning-WIDTHEXPAND: rtl/ddr5_device.sv:1635:18: Operator EQCASE expects 2 bits on the RHS, but RHS's REPLICATE generates 1 bits.
+                                                : ... note: In instance 'ddr5_device'
+ 1635 |         if (DM_n === {(DQ_BITS/8){1'b1}}) begin    
+      |                  ^~~
+%Error: Exiting due to 2 error(s)

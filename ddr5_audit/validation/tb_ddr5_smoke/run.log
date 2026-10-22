@@ -1,0 +1,27 @@
+33544000 [U_DRAM] ck=72 MPC bank=0
+37295000 [U_DRAM] ck=81 MPC bank=1
+41045000 [U_DRAM] ck=90 MPC bank=2
+1083212000 [U_DRAM] ck=2591 MPC bank=2
+1113214000 [U_DRAM] initialisation complete
+--- MRW MR0: BL16, RL=40 ---
+1117381000 [U_DRAM] MRW MR0 <= 0x24
+1117381000 [U_DRAM] ck=2673 MRW bank=0 row=0 col=0 bl=16 ap=0
+--- ACT bg0 ba0 row 0x1234 ---
+1134882000 [U_DRAM] ck=2715 ACT bank=0 row=4660 col=0 bl=16 ap=0
+--- WR col 0x040 ---
+1154467000 [U_DRAM] ck=2762 WR bank=0 row=0 col=64 bl=16 ap=0
+--- RD col 0x040 ---
+1211555000 [U_DRAM] ck=2898 RD bank=0 row=0 col=64 bl=16 ap=0
+PASS: BL16 write/read data matched on DQ
+1256559000 [U_DRAM] ck=3006 PREpb bank=0
+--- negative test: RD 10 nCK after ACT (tRCD=39) ---
+1276144000 [U_DRAM] ck=3053 ACT bank=4 row=85 col=0 bl=16 ap=0
+1279477000 [U_DRAM] TIMING VIOLATION tRCD: ACT->CAS bank 4: need 39 nCK, saw 8 (ck=3060)
+1279477000 [U_DRAM] ck=3061 RD bank=4 row=0 col=0 bl=16 ap=0
+PASS: tRCD violation was caught (1 new errors)
+=== tb_ddr5_smoke: 0 functional failures ===
+=== SMOKE TEST PASSED ===
+- tb/tb_ddr5_smoke.sv:314: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 1us; walltime 0.001 s; speed 945.151 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

@@ -1,0 +1,29 @@
+{
+  "pdf_pages": 527,
+  "chapter_count": 17,
+  "section_count": 544,
+  "extracted_sentence_candidates": 3442,
+  "body_sentence_candidates": 3415,
+  "draft_notices": 291,
+  "clause_fragment_candidates": 92,
+  "checklist_records": 3825,
+  "source_reviewed_example_records": 24,
+  "automatically_generated_records": 3801,
+  "detected_grids": 781,
+  "supplementary_grid_rows": 4612,
+  "supplementary_fragments": 2909,
+  "native_text_lines": 50101,
+  "eligible_nonempty_lines": 47991,
+  "accounted_eligible_lines": 47991,
+  "uncovered_line_ids": [],
+  "excluded_line_counts": {
+    "rotated_text_or_watermark": 549,
+    "running_footer": 514,
+    "running_header": 998
+  },
+  "records_with_open_issues": 2033,
+  "implementation_assessed_records": 0,
+  "implementation_rate": null,
+  "coverage_meaning_ko": "모든 native text line을 원장에 보존하고 제외/문장/표/fragment/header에 배정했는지의 기계적 검사이다. 문장 분할·그림 해석·요구사항 분해·참조 의미의 100% 정확성을 뜻하지 않는다."
+}
+UNMATCHED CURATED []

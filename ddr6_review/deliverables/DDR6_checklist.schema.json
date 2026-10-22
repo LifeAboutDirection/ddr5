@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DDR6 sentence implementation-review checklist",
+  "type": "object",
+  "required": [
+    "format_version",
+    "source",
+    "purpose_ko",
+    "assessment_policy",
+    "statistics",
+    "methodology",
+    "chapters",
+    "table_supplements",
+    "page_ledger"
+  ],
+  "properties": {
+    "format_version": {
+      "const": "1.0.0"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "sha256",
+        "pdf_pages"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "pdf_pages": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "assessment_policy": {
+      "type": "object",
+      "required": [
+        "current_status",
+        "implementation_rate"
+      ],
+      "properties": {
+        "current_status": {
+          "const": "not_assessed_no_rtl"
+        },
+        "implementation_rate": {
+          "type": "null"
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "required": [
+        "checklist_records",
+        "implementation_assessed_records",
+        "implementation_rate"
+      ],
+      "properties": {
+        "implementation_assessed_records": {
+          "const": 0
+        },
+        "implementation_rate": {
+          "type": "null"
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "sections",
+          "records",
+          "record_count"
+        ],
+        "properties": {
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/record"
+            }
+          }
+        }
+      }
+    },
+    "table_supplements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rows",
+          "review_checks_ko"
+        ],
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "cells",
+                "source_line_ids",
+                "status"
+              ],
+              "properties": {
+                "status": {
+                  "const": "not_assessed_no_rtl"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "page_ledger": {
+      "type": "array",
+      "minItems": 527,
+      "maxItems": 527
+    }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": [
+        "id",
+        "chapter_id",
+        "section_id",
+        "record_kind",
+        "source",
+        "draft",
+        "scope",
+        "parsed_candidates",
+        "checks",
+        "verification_plan",
+        "dependency_review",
+        "provenance",
+        "assessment"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^D6-P[0-9]{3}-[0-9]{4}$"
+        },
+        "record_kind": {
+          "enum": [
+            "sentence_candidate",
+            "draft_notice",
+            "clause_fragment_candidate"
+          ]
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "pdf_page",
+            "original_text",
+            "source_line_ids"
+          ],
+          "properties": {
+            "pdf_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 527
+            },
+            "original_text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source_line_ids": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "draft": {
+          "type": "object",
+          "required": [
+            "style_runs",
+            "candidate_is_authoritative"
+          ],
+          "properties": {
+            "candidate_is_authoritative": {
+              "const": false
+            }
+          }
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "method",
+              "check_ko"
+            ]
+          }
+        },
+        "verification_plan": {
+          "type": "object",
+          "required": [
+            "status",
+            "baseline",
+            "boundary",
+            "combinations"
+          ],
+          "properties": {
+            "status": {
+              "const": "proposed_not_executed"
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "required": [
+            "semantic_review_status",
+            "independent_per_sentence_inference_performed"
+          ],
+          "properties": {
+            "semantic_review_status": {
+              "enum": [
+                "selected_source_reviewed_example",
+                "generated_requires_sentence_review"
+              ]
+            },
+            "independent_per_sentence_inference_performed": {
+              "const": false
+            }
+          }
+        },
+        "assessment": {
+          "type": "object",
+          "required": [
+            "status",
+            "verdict",
+            "evidence"
+          ],
+          "properties": {
+            "status": {
+              "const": "not_assessed_no_rtl"
+            },
+            "verdict": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3168 @@
+{
+  "format_version": "1.0.0",
+  "source": {
+    "original_filename": "TG423_1^20260914^1905.99A^Micron^DDR6_Standard_Draft_Rev0.x_R0(1).pdf",
+    "sha256": "f4d3758dab5a2e6200d6cfe006ddf41f75ee5576759fbdc035e9935eced54b6a",
+    "pdf_pages": 527,
+    "draft_date": "2026-09-14",
+    "created_date": "2026-10-21",
+    "pdf_page_indexing": "1-based PDF page number",
+    "logical_body_page_note": "PDF25가 본문1쪽. 홀수 PDF 페이지의 footer가 Page of <chapter-end> 형태로 깨져 있어 logical_body_page는 PDF_page−24로 제공.",
+    "source_is_task_data_not_instructions": true
+  },
+  "assessment_policy": {
+    "current_status": "not_assessed_no_rtl",
+    "implementation_rate": null,
+    "reason_ko": "DDR6 대응 RTL·testbench·실행 결과가 제공되지 않아 구현 여부와 구현률을 산출하지 않음.",
+    "future_statuses": {
+      "implemented": "확정된 유효 요구의 적용 조건·필수 하위 체크 전체에 코드와 검증 근거가 있음",
+      "partial": "일부 조건·하위 동작만 입증됨; 미충족 범위를 명시",
+      "not_implemented": "정의된 범위의 정적 추적 또는 재현 가능한 test에서 필요한 동작 부재가 확인됨",
+      "contradicted": "동일 전제에서 구현 동작이 요구와 반대임을 재현",
+      "unverified": "코드/실행/조건 coverage 근거 부족; 미구현과 구분",
+      "spec_unresolved": "미정 값·번호·개정 상태·서로 충돌하는 규정 해결 필요",
+      "not_applicable": "검토된 구성 또는 책임 범위에서 적용되지 않으며 근거가 기록됨",
+      "analog_evidence_required": "물리 측정/모델 근거 필요; 디지털 부분과 분리"
+    },
+    "future_rate_policy_ko": "미리 정의한 동일 가중치의 유효 디지털 요구 단위 중 implemented 비율을 기본으로 하고 partial/unverified/host/optional/초안 보류를 따로 공개한다. 문장 수는 의무 수와 다르며 행·그림·중복 문장 처리 기준도 고정해야 한다."
+  },
+  "methodology": {
+    "common_steps": [
+      {
+        "id": "S1",
+        "title_ko": "원문·개정 상태 확정",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "PDF 위치와 색상·취소선 후보를 대조한다. 채택할 초안 기준을 정하고 삭제/참고 문구와 신규 제안을 분리한다."
+      },
+      {
+        "id": "S2",
+        "title_ko": "검증 단위 분해",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "문장 경계, 표의 행/열/주석, 조건절, 주체, 수량, AND/OR, 예외를 확정한다. 한 문장에 여러 의무가 있으면 별도 assertion으로 분리한다."
+      },
+      {
+        "id": "S3",
+        "title_ko": "적용 범위 확정",
+        "method": "semantic_review",
+        "action_ko": "DRAM·host·PHY/아날로그 중 책임 주체와 PSD/FSP/속도/밀도/모드 적용 조합을 결정한다. 디지털 타이밍과 host 의무를 임의로 제외하지 않는다."
+      },
+      {
+        "id": "S4",
+        "title_ko": "참조 조항 연결",
+        "method": "rule_based_then_semantic_review",
+        "action_ko": "번호로 후보를 찾은 뒤 제목·내용·개정 상태가 맞는지 검토한다. 전제·예외·정의·표 매핑을 연결한다. 존재하는 번호라는 이유만으로 올바른 참조라고 확정하지 않는다."
+      },
+      {
+        "id": "S5",
+        "title_ko": "구현 경로 추적",
+        "method": "static_analysis_required",
+        "action_ko": "명령 수신/디코드 → 상태·MR 선택 → 내부 처리 → 출력·부수 효과 경로를 추적한다. 선언·이름 검색·상수 하나만으로 구현되었다고 판정하지 않는다."
+      },
+      {
+        "id": "S6",
+        "title_ko": "관측 가능한 검증 작성",
+        "method": "verification_design_required",
+        "action_ko": "정상, 경계, 반대 조건, 모드 간 조합, 예외를 test/assertion으로 만든다. 내부 변수와 최종 DQ/DQS/ALERT·MR readback·array 상태를 구분한다."
+      },
+      {
+        "id": "S7",
+        "title_ko": "근거와 반례 기록",
+        "method": "evidence_required",
+        "action_ko": "RTL revision/file/line, 신호, 실행한 test, 실제/기대 값, waveform, 관측 범위를 보존한다. 진단 출력과 명령 차단은 서로 다른 동작이다."
+      },
+      {
+        "id": "S8",
+        "title_ko": "판정과 미해결점 분리",
+        "method": "rule_based_after_evidence",
+        "action_ko": "확정된 적용 조건 전체와 필요한 하위 체크가 충족되어야 implemented를 부여한다. 부족한 근거, 초안 모호함, 부분 구현, 범위 밖을 각각 구분한다."
+      }
+    ],
+    "rule_catalog": [
+      {
+        "id": "R_CONDITION",
+        "pattern": "\\b(if|when|while|unless|during|after|before|until|provided|except|regardless)\\b",
+        "purpose": "조건·예외 구간 후보를 보존; 문장 의미/조건 범위는 검토 필요"
+      },
+      {
+        "id": "R_NORMATIVE",
+        "pattern": "\\b(shall|must|required|prohibited|illegal|only|cannot)\\b",
+        "purpose": "의무/금지 후보 표시; 평서문도 요구사항일 수 있으므로 비매칭을 제외 근거로 사용하지 않음"
+      },
+      {
+        "id": "R_PERMISSION",
+        "pattern": "\\b(may|can|should|recommended|optional)\\b",
+        "purpose": "허용·능력·권고 구분 요청; may를 모든 경우 필수 동작으로 바꾸지 않음"
+      },
+      {
+        "id": "R_QUANTIFIER",
+        "pattern": "\\b(all|every|each|any|both|only|at least|at most|minimum|maximum|regardless|independent)\\b",
+        "purpose": "전칭/한정/독립성 범위와 반례 테스트 후보 표시"
+      },
+      {
+        "id": "R_TIMING",
+        "pattern": "\\bt[A-Z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)?\\b|\\b(?:[np]?s|nCK|tCK|UI|cycles?)\\b",
+        "purpose": "타이밍 이름·단위 후보 추출; 기준 edge/rounding/min/max는 본문과 표로 확정"
+      },
+      {
+        "id": "R_REGISTER",
+        "pattern": "(?:PG\\[[^\\]]+\\])?MR[0-9A-Fa-fxXyY]+(?:\\s*(?:OP)?\\s*\\[[^\\]]+\\])?",
+        "purpose": "MR 주소·필드 검색 후보; 16진수·새/구 번호·취소선을 확인하고 주소 확정"
+      },
+      {
+        "id": "R_REFERENCE",
+        "pattern": "\\b(Sections?|Tables?|Figures?|Chapters?)\\s+([0-9xX]+(?:\\.[0-9xXyY]+)*)",
+        "purpose": "명시적 번호 참조 후보 생성; 번호가 맞아도 내용 일치 여부는 별도 검토"
+      },
+      {
+        "id": "R_DRAFT",
+        "pattern": "\\b(TBD|TBC|TBS|Unballoted|DIRECTIONAL|To be balloted)\\b|MR[xXyY]+|[xX]\\.[xX]\\.[yYxX]",
+        "purpose": "미정값·미투표·임시주소/번호를 확정 판정의 blocker로 기록"
+      },
+      {
+        "id": "R_RESERVED",
+        "pattern": "\\b(RFU|reserved|undefined|unknown|don.t care|ignored)\\b",
+        "purpose": "reserved/undefined/don’t-care/ignore의 서로 다른 의미를 구분하도록 체크 생성"
+      },
+      {
+        "id": "R_NEGATION",
+        "pattern": "\\b(not|never|no|without|cannot|prohibited|illegal)\\b",
+        "purpose": "부정/금지 동작 후보 검출; 경고만 출력하고 실행하는 경로를 별도 점검"
+      }
+    ],
+    "domains": [
+      {
+        "id": "architecture",
+        "title": "PSD·구성·주소 구조",
+        "sections": [
+          "2.1",
+          "2.2"
+        ],
+        "related": [
+          "2.1.4",
+          "2.1.5",
+          "7.1.1"
+        ],
+        "checks": [
+          "1p6/1p12/2p3/2p6별 PSD 수·DQ 수·bank/bank-group/row/column 비트가 선언뿐 아니라 디코드와 실제 저장 위치에 일치하는지 확인한다.",
+          "공유 CK/DQS와 PSD별 명령·데이터 경로를 구분하고, 한 PSD 동작이 다른 PSD의 MR/array/state를 잘못 덮어쓰지 않는지 확인한다.",
+          "주소 최솟값·최댓값·서로 다른 bank/PSD를 대상으로 alias, 데이터 분리, 구성별 미사용 비트 처리를 검사한다. 패키지 ball 위치와 실리콘 구조 보증은 별도 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "metadata",
+        "title": "BL24 패킷·Metadata",
+        "sections": [
+          "2.3",
+          "7.4.5"
+        ],
+        "related": [
+          "2.3",
+          "7.4.5",
+          "7.9.8.4"
+        ],
+        "checks": [
+          "BL24의 UI와 DQ lane별 data/metadata/non-data/CRC 위치를 해당 구성의 그림·표와 일대일 대응시킨다.",
+          "MD_OFF/MD_8b/MD_16b와 저장 CRC 여부별 array 저장 비트, 주소 carve-out, readback, zero padding을 구분한다.",
+          "데이터와 metadata를 독립적으로 변화시켜 round-trip 및 경계 주소를 검사한다. 미정 MRxx 값을 임의의 기존 DDR5 주소로 대체하지 않는다."
+        ]
+      },
+      {
+        "id": "clock",
+        "title": "CK·DQS 샘플링과 동기화",
+        "sections": [
+          "3",
+          "7.2"
+        ],
+        "related": [
+          "3",
+          "7.1.1",
+          "7.2"
+        ],
+        "checks": [
+          "CA의 SDR 샘플링 edge, CS의 시작 위상, CK_t/CK_c와 DQS_t/DQS_c의 역할을 구분하여 실제 event control과 비교한다.",
+          "2/4/6 cycle 명령의 시작·연속 cycle·마지막 cycle에서 주소와 opcode를 잘못 섞지 않는지 확인한다.",
+          "동기화 전/후, 허용 위상, 주파수 변경 및 파형의 경계에서 디코드 재개 시점과 양 PSD 일관성을 검사한다. 아날로그 eye 정렬 자체는 디지털 샘플러만으로 입증하지 않는다."
+        ]
+      },
+      {
+        "id": "initialization",
+        "title": "초기화·reset",
+        "sections": [
+          "4.1.1",
+          "4.1.2",
+          "4.1.3"
+        ],
+        "related": [
+          "4.1",
+          "6.6",
+          "6.7"
+        ],
+        "checks": [
+          "전원 ramp, RESET_n, 안정 클록, 필수 MR 설정의 순서와 대기 시간별 상태 전이를 확인한다. 전원 안정 조건은 모델의 입력 가정으로 명시한다.",
+          "power-up/reset/정상 동작 중 reset의 MR default, array 보존 여부, pending command, 출력 enable을 각각 추적한다.",
+          "각 대기 시간의 직전/정확한 경계/직후와 초기화 미완료 상태의 명령을 검사한다. 실제 전압 ramp 품질은 RTL 검증 결과와 분리한다."
+        ]
+      },
+      {
+        "id": "fsp",
+        "title": "FSP 전환·shadow 적용",
+        "sections": [
+          "4.1.4",
+          "4.2.5"
+        ],
+        "related": [
+          "4.1.4",
+          "4.2.5",
+          "6.6.1.1",
+          "7.8.3"
+        ],
+        "checks": [
+          "FSP-WR의 MR read/write 선택과 FSP-OP의 동작 set 선택이 독립인지, 두 set이 같은 저장 변수를 잘못 공유하지 않는지 확인한다.",
+          "inactive set 변경 중 active 동작 불변성, Full PDE/주파수 변경 순서, 전환 시 여러 파라미터의 동시 적용을 검사한다.",
+          "MRUPDATE shadow의 공유 여부와 Apply 시점 FSP-WR 대상 선택을 추적한다. 전환 전후 readback·latency·ODT 제어를 관측한다."
+        ]
+      },
+      {
+        "id": "mcme",
+        "title": "Multi-cycle CS·MRUPDATE",
+        "sections": [
+          "4.2.1",
+          "7.8.3"
+        ],
+        "related": [
+          "4.2.1",
+          "7.8.3",
+          "4.1.4"
+        ],
+        "checks": [
+          "MCME 진입이 multi-cycle CS와 MRUPDATE의 기준 cycle을 어떻게 초기화하는지 확인한다.",
+          "4개 CA cycle의 주소/OP 조립과 CA4 조합을 검사한다. 모두 HIGH, 모두 LOW, 혼합 조합을 분리하고 혼합 시 잘못된 MR 쓰기가 없는지 확인한다.",
+          "tMC_Setup/tMC_CSPW/tMC_Hold를 측정하고 shadow 저장과 Apply/종료 시 효과를 분리하여 검증한다."
+        ]
+      },
+      {
+        "id": "pda",
+        "title": "PDA·DQ swizzle discovery",
+        "sections": [
+          "4.2.2",
+          "4.2.4"
+        ],
+        "related": [
+          "4.2.2",
+          "4.2.4",
+          "6.7.2",
+          "6.7.3"
+        ],
+        "checks": [
+          "PDA enumeration ID 프로그램과 select ID 비교, 선택되지 않은 device의 무반응을 다중 device 환경에서 확인한다.",
+          "DSDM 진입/출력 매핑/종료와 정상 read/write 경로의 차이를 표에서 확정하고 각 DQ lane permutation을 검사한다.",
+          "reset 기본 ID, 중복/불일치 ID, PSD별 선택 범위 및 종료 뒤 정상 매핑 복귀를 확인한다."
+        ]
+      },
+      {
+        "id": "zq",
+        "title": "ZQ 보정 제어",
+        "sections": [
+          "4.2.3"
+        ],
+        "related": [
+          "4.2.3",
+          "6.6.1.8"
+        ],
+        "checks": [
+          "시작·백그라운드·정지·reset·결과 latch 상태와 MR 제어를 추적하고 요구된 대기 시간에 맞는 완료/적용 시점을 검사한다.",
+          "ZQ 공유, 다중 die, VDDQ off 조건에서 host 제약과 device 제어 책임을 분리한다.",
+          "디지털 완료 플래그나 코드 갱신은 검증하되 저항·용량·보정 정확도는 analog 모델/측정 근거가 있어야 충족으로 판정한다."
+        ]
+      },
+      {
+        "id": "ca_training",
+        "title": "CSTM·CATM",
+        "sections": [
+          "4.2.6",
+          "4.2.8"
+        ],
+        "related": [
+          "4.2.6",
+          "4.2.8",
+          "7.8.3",
+          "7.7"
+        ],
+        "checks": [
+          "훈련 진입/종료 opcode, command/train 상태 전이, DQ feedback mapping과 mode별 허용 명령을 추적한다.",
+          "비교 대상 CS/CA, edge, per-lane/위상별 feedback, PRBS tap·seed·shift 방향을 본문/그림과 독립 참조 모델로 비교한다.",
+          "정상 mode와 훈련 mode의 경로 격리, 종료 후 복귀, WUCS·MRUPDATE 관련 예외를 교차 검사한다."
+        ]
+      },
+      {
+        "id": "analog_control",
+        "title": "VREF·CTLE·DFE·DCA 제어와 아날로그 효과",
+        "sections": [
+          "4.2.7",
+          "4.2.9",
+          "4.2.10",
+          "4.2.12",
+          "4.2.14",
+          "4.2.16",
+          "4.2.18",
+          "7.9.7"
+        ],
+        "related": [
+          "6.6",
+          "6.7",
+          "8.5"
+        ],
+        "checks": [
+          "공통 코드+per-pin offset, enable/disable, 지원 여부, signed encoding, reserved code와 MR readback을 해당 정의 표로 확인한다.",
+          "lane/phase 선택, 범위·포화·default·update/latch delay를 디지털 동작으로 검사한다. MR 저장만 있고 기능 선택에 연결되지 않은 경우를 구분한다.",
+          "mV·ps·gain·tap coefficient·eye margin 등 물리적 효과에는 별도 analog/real-number 모델 또는 측정이 필요하다. 논리 코드 검증과 물리 정확도를 합산하지 않는다."
+        ]
+      },
+      {
+        "id": "write_leveling",
+        "title": "Write leveling",
+        "sections": [
+          "4.2.11"
+        ],
+        "related": [
+          "4.2.11",
+          "6.6.1.16",
+          "6.6.1.17"
+        ],
+        "checks": [
+          "external WL, internal cycle/phase alignment의 진입·종료와 feedback 입력/출력 lane·edge를 각각 추적한다.",
+          "DQS pulse에 따른 CK 샘플 결과와 지연, MR 설정별 출력, 기능 종료 뒤 정상 write 복귀를 검사한다.",
+          "훈련 중 ODT 제어와 host DQS 제공 책임을 분리하고 필요한 setup/hold·pulse 간격 경계를 확인한다."
+        ]
+      },
+      {
+        "id": "hrt",
+        "title": "Host Receiver Training",
+        "sections": [
+          "4.2.13"
+        ],
+        "related": [
+          "4.2.13",
+          "6.6.1.18"
+        ],
+        "checks": [
+          "user pattern/PRBS 선택, 24-bit Fibonacci LFSR의 tap·seed·shift·lane 지연·inversion을 그림과 비교한다.",
+          "HRT 진입/종료 MR opcode와 idle/read 중 출력 조건, 훈련 중 정상 명령 처리 여부를 검증한다.",
+          "연속 패턴과 재진입의 seed 복원, PSD/lane 독립성 및 DQ/DQS 파형을 검사한다. 본문 MRDD/MR05 등 주소와 최신 MR map 간 불일치는 먼저 해결한다."
+        ]
+      },
+      {
+        "id": "preamble_training",
+        "title": "Read preamble training",
+        "sections": [
+          "4.2.15"
+        ],
+        "related": [
+          "4.2.15",
+          "7.4.1"
+        ],
+        "checks": [
+          "진입/종료 MR 설정과 DQS 정적/토글 구간, DQ 유효 여부를 구분해 출력 state machine을 검사한다.",
+          "정상 read의 preamble/postamble과 훈련 전용 파형을 혼동하지 않는지 확인한다.",
+          "모드 전환 경계에서 출력 enable·첫 edge·마지막 edge와 정상 read 복귀를 검증한다."
+        ]
+      },
+      {
+        "id": "wtm",
+        "title": "Write Training Mode",
+        "sections": [
+          "4.2.17"
+        ],
+        "related": [
+          "4.2.17",
+          "4.2.13.5",
+          "6.7.95"
+        ],
+        "checks": [
+          "PSD별 24-bit LFSR 또는 user pattern의 기대값, per-pin 실제 수신 데이터 비교, seed·phase·inversion을 독립 모델로 검증한다.",
+          "lane/phase별 오류 count의 증가·포화·초기화·readback과 오류가 없는 경우를 검사한다.",
+          "WTM 진입/종료·정상 write array 부수 효과·다른 PSD의 격리와 재훈련 시 상태 초기화를 확인한다."
+        ]
+      },
+      {
+        "id": "state_diagram",
+        "title": "상태 전이도",
+        "sections": [
+          "5"
+        ],
+        "related": [
+          "5",
+          "7.1",
+          "7.6",
+          "7.8"
+        ],
+        "checks": [
+          "그림의 각 node/edge를 상태·허용 명령·guard 조건으로 전사하고 본문에 더 구체적인 예외가 있는지 확인한다.",
+          "진입·종료·reset 전이를 최소 한 번 실행하고 금지 edge와 진행 중 명령의 부수 효과를 검사한다.",
+          "단순화된 그림에 없다는 이유만으로 본문에 허용된 동작을 금지하지 않는다. 이미지 안의 화살표는 텍스트 추출만으로 검증되지 않는다."
+        ]
+      },
+      {
+        "id": "mode_register",
+        "title": "MR 저장·접근 속성",
+        "sections": [
+          "6"
+        ],
+        "related": [
+          "6.1",
+          "6.2",
+          "6.3",
+          "7.8"
+        ],
+        "checks": [
+          "주소/bit 범위, reset 값, RW/RO/WO/W1C/read-clear 등 표에 정의된 접근 속성, reserved read value를 각각 확인한다.",
+          "shared/PSD별 공간, MRA[7], FSP별 저장/적용 선택을 실제 MRW/MRR/MRUPDATE 경로와 연결한다. page 관련 삭제 후보는 유효 요구인지 먼저 확인한다.",
+          "read/write 접근의 허용 상태와 부수 효과를 검사한다. 무조건 mr[address]=value인 구현이나 선언만 된 bit는 속성 구현의 근거가 아니다."
+        ]
+      },
+      {
+        "id": "command",
+        "title": "명령 수신·truth table",
+        "sections": [
+          "7.1"
+        ],
+        "related": [
+          "7.1.1",
+          "7.1.2",
+          "7.2",
+          "7.9.14"
+        ],
+        "checks": [
+          "CA0~CA5/CS와 C0~C5의 truth-table 행을 명령·주소·PSD·CID·parity 디코드와 대조한다.",
+          "2N 모드와 2/4/6 cycle 조립, DES/NOP, 무효·중단 시퀀스에서 부분 명령 실행이 없는지 검사한다.",
+          "불법 동작 뒤 요구되는 host reset 절차와 device가 명시적으로 차단해야 하는 동작을 구분한다. 미규정 동작의 임의 파형을 fail로 단정하지 않는다."
+        ]
+      },
+      {
+        "id": "row",
+        "title": "ACT·Precharge",
+        "sections": [
+          "7.3"
+        ],
+        "related": [
+          "7.3",
+          "8.1",
+          "9.1"
+        ],
+        "checks": [
+          "PSD/bank/group/row별 open-row 상태와 ACT/PRE 대상 집합을 확인한다. per/dual/quad/all-bank를 구분한다.",
+          "tRCD_R/W, tRAS, tRP, tRC, tRRD, tFAW 및 activation counter 관련 시간을 상태별로 검사한다.",
+          "auto-precharge의 예약/실행 시점과 pending read/write, last ACT/last data edge 조건을 구분해 경계에서 데이터 유실을 검사한다."
+        ]
+      },
+      {
+        "id": "read_write",
+        "title": "Read·Write·DQS·latency",
+        "sections": [
+          "7.4.1",
+          "7.4.2",
+          "7.4.3",
+          "7.4.4"
+        ],
+        "related": [
+          "2.3",
+          "7.4",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "명령 주소에서 array 데이터, burst/UI/lane 매핑까지 추적하고 실제 DQ/DQS의 첫·마지막 유효 edge와 beat 수를 측정한다.",
+          "RL/WL, preamble/postamble/interamble, back-to-back·turnaround·동일/다른 bank-group의 경계 조건을 검사한다.",
+          "metadata·CRC·RMW·FSP·PSD 구성에 따른 경로 차이를 검사한다. pending slot 한 개 덮어쓰기, beat off-by-one, data mask 범위 오류를 반례로 찾는다."
+        ]
+      },
+      {
+        "id": "refresh",
+        "title": "Refresh·Self-refresh",
+        "sections": [
+          "7.5.1",
+          "7.5.2"
+        ],
+        "related": [
+          "7.5.1",
+          "7.5.2",
+          "6.6.1.5",
+          "8",
+          "9"
+        ],
+        "checks": [
+          "REFab/REFdb/REFqb별 대상 bank 집합과 내부 bank/row counter 업데이트, reset·SRX·REFab 동기화를 추적한다.",
+          "정해진 refresh window/간격·busy 시간·bank 재방문 금지와 허용 reorder를 검사한다. REFab 하나를 모든 유형의 구현으로 간주하지 않는다.",
+          "self-refresh entry/exit·power-down 병행·온도/모드 관련 주기를 검사한다. 논리 retention 모델과 물리적 전하 보존 보증은 구분한다."
+        ]
+      },
+      {
+        "id": "prac",
+        "title": "PRAC·ACI·ABO·RFM",
+        "sections": [
+          "7.5.3"
+        ],
+        "related": [
+          "7.5.3",
+          "6.6.1.53",
+          "6.6.1.54",
+          "9.1"
+        ],
+        "checks": [
+          "row별 activation count와 활성 지속 시간 기여, ACI 시작/완료/재시작, counting·ABO gating을 추적한다.",
+          "threshold/BAT, PRFM, ABO 발생·해제·지연·우선순위, 대응 refresh 순서를 각각 검증한다.",
+          "threshold 바로 아래/같음/초과, 여러 row·PSD 경쟁, 오류/재초기화, host 대응 지연을 검사한다. RFM을 일반 REF에 단순 연결한 것은 PRAC 전체 근거가 아니다."
+        ]
+      },
+      {
+        "id": "power",
+        "title": "Power-down",
+        "sections": [
+          "7.6"
+        ],
+        "related": [
+          "7.6",
+          "4.2.5",
+          "7.7"
+        ],
+        "checks": [
+          "Full-PD/ODT-PD, PSD별 entry/exit, clock 유지/정지와 ODT 상태의 차이를 state machine에서 확인한다.",
+          "entry 전 pending 동작 완료, exit 명령·대기 시간·첫 유효 명령, FSP/주파수 변경 허용 순서를 검사한다.",
+          "한 PSD만 power-down이거나 다른 PSD가 동작 중인 조합에서 공유 자원·출력·MR 보존을 확인한다. 실제 소비전력은 별도 측정이다."
+        ]
+      },
+      {
+        "id": "wucs",
+        "title": "Wake-up CS",
+        "sections": [
+          "7.7"
+        ],
+        "related": [
+          "7.7",
+          "7.8.3",
+          "4.2.6"
+        ],
+        "checks": [
+          "CS pre-command wake-up과 post-command inactivity timer의 시작/재시작/만료 조건 및 MR enable을 확인한다.",
+          "timeout 직전/동일 시점/직후 명령과 연속 명령, idle→wake-up 지연을 검사한다.",
+          "MRUPDATE/CSTM 예외와 tCS_POST 값의 초기 제안 주석을 함께 검토한다. 잠정 64/128/256 값을 최종 고정 표준으로 간주하지 않는다."
+        ]
+      },
+      {
+        "id": "mrr",
+        "title": "Mode Register Read",
+        "sections": [
+          "7.8.1"
+        ],
+        "related": [
+          "7.8.1",
+          "6.3",
+          "7.1.1",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "MRR decode→shared/PSD/FSP 대상 선택→OP byte→DQ serializer→DQS 종료까지 추적한다. BL24, OP의 UI8~23 배치·2UI 반복 및 DQ1 반전을 별도 체크한다. page 관련 문구는 삭제 후보를 먼저 확인한다.",
+          "2p3/2p6/1p6/1p12와 shared/PSD MR별 mapping 표를 대조한다. valid-but-undefined lane에 고정 값을 요구하지 않는다.",
+          "RL+tCK2DQO의 관측 기준, tMRR/tMRD·DES-only 구간과 후속 명령을 검사한다. Table 1~8 등 잔존 참조를 현재 번호와 의미 대조한다."
+        ]
+      },
+      {
+        "id": "mrw",
+        "title": "Mode Register Write",
+        "sections": [
+          "7.8.2"
+        ],
+        "related": [
+          "7.8.2",
+          "6.2",
+          "6.3",
+          "8.1.4",
+          "8.2"
+        ],
+        "checks": [
+          "6-cycle/구성별 MRW 주소·OP 조립, PSD 대상, FSP-WR 선택과 허용 상태를 확인한다.",
+          "write 완료/파라미터 적용 시점과 readback, 접근 속성에 따른 무시/clear 부수 효과를 검사한다.",
+          "MRW 전후 명령 간격 및 MR 변경 중 동작 일관성을 검사하고 미정/개정 주소는 최신 표와 먼저 정합한다."
+        ]
+      },
+      {
+        "id": "odt",
+        "title": "ODT 상태·타이밍",
+        "sections": [
+          "7.9.1"
+        ],
+        "related": [
+          "7.9.1",
+          "6.6",
+          "6.7",
+          "7.6"
+        ],
+        "checks": [
+          "read/write/non-target/park/power-down/training 상태별 ODT 선택 코드를 상태 표와 대조한다.",
+          "ODT on/off 지연, FSP별 적용, PSD/공유 DQS 관계를 파형에서 검사한다.",
+          "디지털 ODT enable과 저항의 전압·온도 의존 특성을 분리한다. enable 신호만으로 Ron/Rtt 허용오차 충족을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "sensor",
+        "title": "온도 센서·interval oscillator",
+        "sections": [
+          "7.9.2",
+          "7.9.3"
+        ],
+        "related": [
+          "7.9.2",
+          "7.9.3",
+          "6.6"
+        ],
+        "checks": [
+          "시작/정지/완료, counter 폭·오버플로, 결과 latch와 다중 byte readback의 일관성을 확인한다.",
+          "온도 코드/offset 또는 oscillator count가 입력 가정·기간·lane·clock 선택에 맞는지 참조 모델과 비교한다.",
+          "sample/update 지연과 연속/중단/재시작 경계를 검사한다. 물리 온도 정확도·지연 drift는 센서/analog 모델 근거를 요구한다."
+        ]
+      },
+      {
+        "id": "repair",
+        "title": "hPPR·sPPR·MBIST/mPPR",
+        "sections": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6"
+        ],
+        "related": [
+          "7.9.4",
+          "7.9.5",
+          "7.9.6",
+          "6.6.1.49",
+          "6.7"
+        ],
+        "checks": [
+          "guard key, resource availability, mode entry, ACT/WRA/PRE 주소와 선택 device, busy/program time 및 exit를 추적한다.",
+          "row remapping과 resource 소모/readback, hPPR 영구성·sPPR undo/lock/reset 특성을 각각 확인한다.",
+          "잘못된 key·자원 없음·다른 PSD active·시간 미충족·재시도·MBIST 결과 처리의 부수 효과를 검사한다. 물리 fuse 수명은 디지털 모델의 외부 범위다."
+        ]
+      },
+      {
+        "id": "crc",
+        "title": "CRC 계산·packet·오류 보고",
+        "sections": [
+          "7.9.8"
+        ],
+        "related": [
+          "7.9.8",
+          "2.3",
+          "7.4.5",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "선택된 CRC-4/CRC-8 다항식, 입력 길이·bit order·초기값·metadata/zero pad·lane mapping을 독립 참조 계산과 비교한다. CRC-4-SC-8 삭제 후보를 유효 요구와 섞지 않는다.",
+          "read와 write enable 독립성, stored/unstored CRC·MD 모드·구성별 허용 조합, latency adder를 확인한다.",
+          "1-bit/다중 bit 오류를 data와 checksum 위치에 주입하고 ALERT 극성·지연·폭, sticky status·clear를 검사한다. host retry 책임과 DRAM data write 허용 여부를 구분한다."
+        ]
+      },
+      {
+        "id": "ecc",
+        "title": "ECC·bounded fault·ECS",
+        "sections": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "related": [
+          "7.9.9",
+          "7.9.10",
+          "7.9.11"
+        ],
+        "checks": [
+          "오류 모델, correction/detection 범위와 array 저장·read 반환·status 업데이트를 분리해 검증한다.",
+          "bounded fault의 영향을 받는 data bit 수와 sub-packet 수를 fault injection 모델로 확인한다. 물리 fault 제한은 RTL만으로 증명되지 않는다.",
+          "DIRECTIONAL/To be balloted 상태와 아직 정의되지 않은 ECS 동작은 확정 요구로 생성하지 않는다. 검증 조건이 없는 항목은 spec_unresolved로 보류한다."
+        ]
+      },
+      {
+        "id": "fault",
+        "title": "ALERT·fault register",
+        "sections": [
+          "7.9.12",
+          "7.9.13"
+        ],
+        "related": [
+          "7.9.12",
+          "7.9.13",
+          "7.5.3",
+          "7.9.8"
+        ],
+        "checks": [
+          "fault source별 status set, enable mask, 요약 OR, ALERT 극성과 clear 조건을 추적한다.",
+          "read-clear/reset/power-off/PRAC 예외, 동시 fault·우선순위·retrigger를 검사한다.",
+          "Unballoted/참고 회색 문구와 최신 MR map의 주소·기능 충돌을 먼저 해결한다. 레지스터 배열이 있다는 이유로 미정 fault protocol의 구현을 주장하지 않는다."
+        ]
+      },
+      {
+        "id": "parity",
+        "title": "CA parity·command blocking",
+        "sections": [
+          "7.9.14"
+        ],
+        "related": [
+          "7.9.14",
+          "7.1.1",
+          "6.6.1.2"
+        ],
+        "checks": [
+          "2/4/6-cycle별 PAR1/PAR2 XOR 대상, CA5 지원 조건, even parity와 parity bit 제외 규칙을 독립 계산으로 비교한다.",
+          "disable/nonblocking/blocking 모드별 parity latency와 erroneous command의 실제 실행/차단·pending cancel을 추적한다.",
+          "각 CA cycle bit 오류와 연속 오류를 주입하여 ALERT·C0~C5 log·clear·후속 명령 복구를 검사한다. 경고 호출만으로 blocking 구현을 판정하지 않는다."
+        ]
+      },
+      {
+        "id": "ignore",
+        "title": "Command Ignore",
+        "sections": [
+          "7.10"
+        ],
+        "related": [
+          "7.10",
+          "6.6.1.15",
+          "7.1.1"
+        ],
+        "checks": [
+          "2p3 지원 범위, MR0E enable/polarity, C0:CA4 ignore 해석을 truth table과 대조한다.",
+          "ACT/READ/WRITE/PRE 각각에서 무시될 때 array·bank state·pending response에 부수 효과가 없는지 확인한다.",
+          "disable 시 ignore bit 무효, polarity 0/1의 양쪽 경우, 다른 구성·다른 명령 예외를 검사한다."
+        ]
+      },
+      {
+        "id": "timing",
+        "title": "명령 제약·AC core timing",
+        "sections": [
+          "8",
+          "9"
+        ],
+        "related": [
+          "8",
+          "9.1",
+          "7.1",
+          "7.4"
+        ],
+        "checks": [
+          "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+          "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+          "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다."
+        ]
+      },
+      {
+        "id": "electrical",
+        "title": "전기·패키지·측정 조건",
+        "sections": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "related": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ],
+        "checks": [
+          "전압·전류·임피던스·capacitance·jitter·eye·slew 규격의 측정 지점, 부하, 온도, 주파수와 min/max를 확인한다.",
+          "문장 안에 MR 제어·논리 level·샘플링·시간 조건이 있으면 디지털 하위 요구로 분리해 검사한다. chapter만 보고 모든 문장을 제외하지 않는다.",
+          "나머지 물리 요구에는 SPICE/AMS/real-number 모델 또는 측정 결과를 연결한다. 순수 0/1 RTL 시뮬레이션 성공은 물리적 적합 근거가 아니다."
+        ]
+      },
+      {
+        "id": "context",
+        "title": "범위·목차·개정 이력",
+        "sections": [
+          "FRONT",
+          "1",
+          "17"
+        ],
+        "related": [
+          "1",
+          "17"
+        ],
+        "checks": [
+          "설명·정의·개정 이력인지 실제 동작 의무인지 먼저 분류한다. 과거 ballot 제목을 현재 동작 요구로 세지 않는다.",
+          "용어/문서 범위/색상 범례가 기술 문장 해석에 영향을 주는 경우 참조 근거로 연결한다.",
+          "구현률 분모에는 승인된 적용성 결정을 거친 요구만 포함한다. 이 자료는 현재 RTL 구현률을 계산하지 않는다."
+        ]
+      }
+    ],
+    "inference_explanation_ko": "규칙은 문장 경계/토큰/표 위치/번호 후보와 기능별 체크 템플릿을 생성한다. 의미 검토는 주어·조건 범위·전칭·허용/의무·예외·참조 우선순위를 확정한다. 모든 문장에 별도 추론을 실행했다는 뜻이 아니다. 선택된 예시의 근거 요약은 source_reviewed_notes로 구분한다. 8단계는 재현 가능한 외부 검토 절차이며 내부 사고 과정의 로그/횟수가 아니다.",
+    "dependency_explanation_ko": "다른 문장은 전제, 예외, 용어 정의, MR attribute, timing 값, mapping 표를 제공한다. 번호/인접/동일 표행 연결은 규칙 기반 후보이고 실제 의미 관계는 검토가 필요하다. 다른 문장의 구현 상태를 현재 문장에 전파하지 않는다.",
+    "limitations_ko": [
+      "전체 527쪽의 native PDF text를 처리했다. OCR/모든 그림의 도형·색상 면적·화살표 의미 전사는 수행하지 않았다.",
+      "sentence_candidate는 자동 분할 후보이며 확정된 요구사항 수가 아니다. 절 경계·cross-page 문장·표 셀의 병합/각주·superscript를 원문과 대조해야 한다.",
+      "개별 semantic review가 없는 항목은 generated_requires_sentence_review로 명시한다. 체크 템플릿 적용은 독립적인 문장별 검토 완료를 의미하지 않는다.",
+      "색상과 취소선 후보를 보존하지만 개정 문구 자동 채택은 하지 않는다. candidate_after_strike_removal은 검토 편의용이다.",
+      "디지털/물리/host 범위는 후보 분류다. 물리 chapter라도 MR·timing·논리 요구는 별도로 검토해야 한다.",
+      "각 문장의 기능별 체크 목록은 연관 확인 항목이다. 모든 목록이 그 한 문장에 규정된 의무라는 뜻은 아니다.",
+      "코드 검색·정적 분석·simulation·formal proof를 DDR6 대상으로 실행하지 않았다. 모든 구현 상태는 not_assessed_no_rtl이다."
+    ]
+  },
+  "chapter": {
+    "id": "9",
+    "title": "Core Timings",
+    "sections": [
+      {
+        "id": "9",
+        "title": "Core Timings",
+        "pdf_page": 460,
+        "y": 67.0,
+        "level": 1
+      },
+      {
+        "id": "9.1",
+        "title": "DDR6 Core AC Timing Parameters",
+        "pdf_page": 460,
+        "y": 101.0,
+        "level": 2
+      }
+    ],
+    "record_count": 3,
+    "sentence_candidate_count": 2,
+    "table_ids": [
+      "P460-T001",
+      "P461-T001"
+    ],
+    "records": [
+      {
+        "id": "D6-P461-0002",
+        "chapter_id": "9",
+        "section_id": "9.1",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 461,
+          "logical_body_page": 437,
+          "bbox": [
+            78.0,
+            648.42,
+            449.33,
+            671.87
+          ],
+          "source_line_ids": [
+            "P461-B0019-L001",
+            "P461-B0019-L002"
+          ],
+          "origin": "table_cell",
+          "original_text": "NOTE 2: \"RU\" means Round-Up",
+          "raw_text": "NOTE 2: \"RU\" means Round-Up\n",
+          "table_id": "P461-T001",
+          "row_index": 12,
+          "cell_index": 1
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 27
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "NOTE 2: \"RU\" means Round-Up",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "NOTE 2: \"RU\" means Round-Up",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": true,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "needs_semantic_scope_review",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [],
+          "commands": [],
+          "configurations": [],
+          "signals": [],
+          "numeric_literals": [
+            "2"
+          ],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "NOTE 2: \"RU\" means Round-Up"
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "timing",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "NOTE 2: \"RU\" means Round-Up",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_timing_1",
+            "method": "section_selected_review_template",
+            "check_ko": "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_2",
+            "method": "section_selected_review_template",
+            "check_ko": "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_3",
+            "method": "section_selected_review_template",
+            "check_ko": "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "TABLE_CONTEXT",
+            "method": "rule_based_geometry_then_semantic_review",
+            "table_id": "P461-T001",
+            "row_index": 12,
+            "cell_index": 1,
+            "check_ko": "같은 행의 label/attribute/default와 열 header·footnote를 결합해 이 문장의 주어·범위를 확정한다. 병합 셀은 PDF에서 확인한다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [],
+            "expected_property_source": "NOTE 2: \"RU\" means Round-Up",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [],
+            "literal_numeric_candidates": [
+              "2"
+            ],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [],
+            "next_ids": [
+              "D6-P461-0003"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "8",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "9.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.4",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "sentence_boundary_or_fragment_review",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P461-0003",
+        "chapter_id": "9",
+        "section_id": "9.1",
+        "record_kind": "sentence_candidate",
+        "source": {
+          "pdf_page": 461,
+          "logical_body_page": 437,
+          "bbox": [
+            78.0,
+            659.42,
+            449.33,
+            682.87
+          ],
+          "source_line_ids": [
+            "P461-B0019-L002",
+            "P461-B0019-L003"
+          ],
+          "origin": "table_cell",
+          "original_text": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)",
+          "raw_text": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)\n",
+          "table_id": "P461-T001",
+          "row_index": 12,
+          "cell_index": 1
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 91
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)",
+              "color": "#000000",
+              "strike_candidate": false
+            },
+            {
+              "text": "\n",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": true,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [
+            "tCCD_L",
+            "tRRD_L"
+          ],
+          "commands": [],
+          "configurations": [],
+          "signals": [],
+          "numeric_literals": [
+            "3",
+            "4800Mbps",
+            "2",
+            "5ns"
+          ],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)"
+          ],
+          "condition_candidates": [
+            {
+              "keyword": "If",
+              "text": "If DDR6 operates below 4800Mbps",
+              "binding_verified": false
+            }
+          ],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "timing",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_timing_1",
+            "method": "section_selected_review_template",
+            "check_ko": "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_2",
+            "method": "section_selected_review_template",
+            "check_ko": "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_3",
+            "method": "section_selected_review_template",
+            "check_ko": "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "TIMING_BINDING",
+            "method": "rule_based_token_binding_then_test_design",
+            "parameters": [
+              "tCCD_L",
+              "tRRD_L"
+            ],
+            "check_ko": "각 timing 이름의 정의·min/max·단위·speed/FSP·기준 edge를 표에서 확정한다. 허용되는 관측 단위에서 경계−ε/경계/경계+ε를 비교한다. ε는 시간 해상도나 1cycle 중 요구에 맞게 선택한다."
+          },
+          {
+            "id": "TABLE_CONTEXT",
+            "method": "rule_based_geometry_then_semantic_review",
+            "table_id": "P461-T001",
+            "row_index": 12,
+            "cell_index": 1,
+            "check_ko": "같은 행의 label/attribute/default와 열 header·footnote를 결합해 이 문장의 주어·범위를 확정한다. 병합 셀은 PDF에서 확인한다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [
+              "If DDR6 operates below 4800Mbps"
+            ],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [],
+            "expected_property_source": "NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns)",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [
+              "tCCD_L",
+              "tRRD_L"
+            ],
+            "literal_numeric_candidates": [
+              "3",
+              "4800Mbps",
+              "2",
+              "5ns"
+            ],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P461-0002"
+            ],
+            "next_ids": [
+              "D6-P461-0004"
+            ],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "8",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "9.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.4",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_CONDITION",
+              "matched_text": [
+                "If"
+              ]
+            },
+            {
+              "rule_id": "R_TIMING",
+              "matched_text": [
+                "tCCD_L",
+                "tRRD_L"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "sentence_boundary_or_fragment_review",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      },
+      {
+        "id": "D6-P461-0004",
+        "chapter_id": "9",
+        "section_id": "9.1",
+        "record_kind": "clause_fragment_candidate",
+        "source": {
+          "pdf_page": 461,
+          "logical_body_page": 437,
+          "bbox": [
+            78.0,
+            670.41,
+            349.63,
+            682.87
+          ],
+          "source_line_ids": [
+            "P461-B0019-L003"
+          ],
+          "origin": "table_cell",
+          "original_text": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+          "raw_text": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+          "table_id": "P461-T001",
+          "row_index": 12,
+          "cell_index": 1
+        },
+        "draft": {
+          "color_character_counts": {
+            "#000000": 63
+          },
+          "strike_candidate_characters": 0,
+          "flags": [],
+          "candidate_after_strike_removal": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+          "candidate_is_authoritative": false,
+          "policy_ko": "원문 색상 범례(PDF1)에 따른 후보 분류. 취소선은 텍스트 중앙을 가로지르는 vector 선으로 탐지하므로 PDF 시각 확인 필요. 삭제 후보를 제거한 문자열은 편의용이며 채택된 규범 문구가 아니다.",
+          "style_runs": [
+            {
+              "text": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+              "color": "#000000",
+              "strike_candidate": false
+            }
+          ],
+          "inherited_notice_record_ids": []
+        },
+        "boundary": {
+          "review_required": true,
+          "possible_predecessor_id": null,
+          "possible_continuation_id": null
+        },
+        "scope": {
+          "kind": "digital_behavior_candidate",
+          "owner_candidate": "device_or_unspecified",
+          "rule_basis": "lexical_signals_plus_context_chapter",
+          "confirmed": false,
+          "implementation_denominator_inclusion": null
+        },
+        "parsed_candidates": {
+          "registers": [],
+          "timings": [
+            "tWTP",
+            "tCCD_L",
+            "tCK"
+          ],
+          "commands": [],
+          "configurations": [],
+          "signals": [],
+          "numeric_literals": [
+            "4"
+          ],
+          "modal_words": [],
+          "atomic_clause_candidates": [
+            "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU"
+          ],
+          "condition_candidates": [],
+          "subject_effect_binding_status": "semantic_review_required"
+        },
+        "applicability_questions_ko": [
+          "상위 절과 앞뒤 문장의 전제·정의·예외를 확인하여 적용 범위를 확정한다."
+        ],
+        "common_step_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "domain_id": "timing",
+        "checks": [
+          {
+            "id": "LOCAL_REQUIREMENT",
+            "method": "source_statement_to_property_requires_semantic_review",
+            "check_ko": "아래 원문을 전제 ⇒ 관측 결과 형태로 확정하고, 각 절의 AND/OR·부정·허용 여부를 유지한다.",
+            "source_statement": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+            "evidence_expected_ko": "적용 조건, 코드 경로, 기대/실제 값 및 관측 신호. 원문을 반복하는 주석만으로 충족 처리하지 않음."
+          },
+          {
+            "id": "D_timing_1",
+            "method": "section_selected_review_template",
+            "check_ko": "current/next command, same/different bank/group/PSD/rank와 mode 조건별 timing matrix 행을 대조한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_2",
+            "method": "section_selected_review_template",
+            "check_ko": "ns/nCK/UI의 단위, RU/EVEN/Max, min/max, 기준 edge 및 주파수별 rounding을 확인한다. 산식 상수 하나만 비교하지 않는다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "D_timing_3",
+            "method": "section_selected_review_template",
+            "check_ko": "각 제한의 직전·정확한 값·직후와 여러 제한이 겹치는 경우를 검사한다. assertion/host scheduler/DRAM model 중 책임 주체를 명시하고 물리적인 setup/hold 보증과 분리한다.",
+            "applicability": "문장이 이 기능의 해당 세부 동작을 규정할 때 적용; 모든 목록을 이 문장의 의무로 간주하지 않음"
+          },
+          {
+            "id": "TIMING_BINDING",
+            "method": "rule_based_token_binding_then_test_design",
+            "parameters": [
+              "tWTP",
+              "tCCD_L",
+              "tCK"
+            ],
+            "check_ko": "각 timing 이름의 정의·min/max·단위·speed/FSP·기준 edge를 표에서 확정한다. 허용되는 관측 단위에서 경계−ε/경계/경계+ε를 비교한다. ε는 시간 해상도나 1cycle 중 요구에 맞게 선택한다."
+          },
+          {
+            "id": "TABLE_CONTEXT",
+            "method": "rule_based_geometry_then_semantic_review",
+            "table_id": "P461-T001",
+            "row_index": 12,
+            "cell_index": 1,
+            "check_ko": "같은 행의 label/attribute/default와 열 header·footnote를 결합해 이 문장의 주어·범위를 확정한다. 병합 셀은 PDF에서 확인한다."
+          }
+        ],
+        "verification_plan": {
+          "status": "proposed_not_executed",
+          "baseline": {
+            "condition_quotes": [],
+            "command_candidates": [],
+            "setup_register_candidates": [],
+            "observable_candidates": [],
+            "expected_property_source": "NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+            "action_ko": "조건·주체·효과를 확정한 뒤 합법 자극을 만들고 이 문장의 결과를 관측한다. 주어/상태가 생략되어 있으면 인접 문장 또는 표 행에서 보충한다."
+          },
+          "boundary": {
+            "timing_candidates": [
+              "tWTP",
+              "tCCD_L",
+              "tCK"
+            ],
+            "literal_numeric_candidates": [
+              "4"
+            ],
+            "action_ko": "추출된 숫자가 값/주소/index/표 번호 중 무엇인지 먼저 구분한다. 유효 범위·시간의 경계−ε/경계/경계+ε를 검사하며 주소나 표 번호를 무조건 경계값으로 사용하지 않는다."
+          },
+          "combinations": {
+            "explicit_configurations": [],
+            "quantifier_candidates": [],
+            "action_ko": "명시된 적용 구성과 상위 절의 숨은 전제를 포함해 coverage matrix를 만든다. 지원하지 않는 조합과 undefined 결과는 별도 분류한다."
+          },
+          "counterexample_design_ko": "이 문장의 전제가 참인데 요구 결과가 빠지거나 반대로 나타나는 최소 반례를 정의한다. 허용/권고 문장은 mandatory 결과로 바꾸지 않는다.",
+          "evidence_completion_required": [
+            "rtl_revision",
+            "rtl_locations",
+            "test_ids_or_assertion_ids",
+            "expected_and_actual_observations",
+            "covered_configurations"
+          ]
+        },
+        "dependency_review": {
+          "explicit_number_references": [],
+          "neighbor_context": {
+            "previous_ids": [
+              "D6-P461-0003"
+            ],
+            "next_ids": [],
+            "method": "same_section_document_order_context_candidate",
+            "meaning_verified": false
+          },
+          "related_section_candidates": [
+            {
+              "id": "8",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "9.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.1",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            },
+            {
+              "id": "7.4",
+              "method": "domain_review_template",
+              "requiredness": "candidate_requires_semantic_confirmation"
+            }
+          ],
+          "source_reviewed_links": [],
+          "rule_ko": "번호·같은 행·인접 문장은 기계적으로 연결 가능. 실제 전제/예외/정의 관계와 우선순위는 의미 검토가 필요하며 다른 문장 pass/fail을 복사하지 않는다."
+        },
+        "provenance": {
+          "generation": "deterministic_extraction_and_check_templates",
+          "matched_rules": [
+            {
+              "rule_id": "R_TIMING",
+              "matched_text": [
+                "tWTP",
+                "tCCD_L",
+                "tCK"
+              ]
+            }
+          ],
+          "semantic_review_status": "generated_requires_sentence_review",
+          "source_reviewed_notes": [],
+          "independent_per_sentence_inference_performed": false
+        },
+        "open_issues": [
+          {
+            "type": "sentence_boundary_or_fragment_review",
+            "resolution": null
+          }
+        ],
+        "assessment": {
+          "status": "not_assessed_no_rtl",
+          "verdict": null,
+          "evidence": {
+            "rtl_revision": null,
+            "rtl_locations": [],
+            "test_ids": [],
+            "assertion_ids": [],
+            "expected_observations": [],
+            "actual_observations": [],
+            "waveform_paths": [],
+            "covered_configurations": [],
+            "counterexamples": [],
+            "reviewer": null
+          }
+        }
+      }
+    ]
+  },
+  "table_supplements": [
+    {
+      "id": "P460-T001",
+      "pdf_page": 460,
+      "section_id": "9.1",
+      "bbox": [
+        71.92,
+        169.88,
+        540.06,
+        673.05
+      ],
+      "row_count": 14,
+      "column_count": 6,
+      "rows": [
+        {
+          "row": 1,
+          "cells": [
+            {
+              "text": "Parameter",
+              "source_line_ids": [
+                "P460-B0006-L000"
+              ]
+            },
+            {
+              "text": "Symbol",
+              "source_line_ids": [
+                "P460-B0006-L001"
+              ]
+            },
+            {
+              "text": "Min/Max",
+              "source_line_ids": [
+                "P460-B0006-L002"
+              ]
+            },
+            {
+              "text": "Value",
+              "source_line_ids": [
+                "P460-B0006-L003"
+              ]
+            },
+            {
+              "text": "Unit",
+              "source_line_ids": [
+                "P460-B0006-L004"
+              ]
+            },
+            {
+              "text": "Notes",
+              "source_line_ids": [
+                "P460-B0006-L005"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0006-L000",
+            "P460-B0006-L001",
+            "P460-B0006-L002",
+            "P460-B0006-L003",
+            "P460-B0006-L004",
+            "P460-B0006-L005"
+          ],
+          "id": "P460-T001-R001",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Parameter | Symbol | Min/Max | Value | Unit | Notes",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 2,
+          "cells": [
+            {
+              "text": "ACTIVATE to PRECHARGE delay time",
+              "source_line_ids": [
+                "P460-B0007-L000",
+                "P460-B0007-L001",
+                "P460-B0007-L002"
+              ]
+            },
+            {
+              "text": "tRAS",
+              "source_line_ids": [
+                "P460-B0007-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0007-L004"
+              ]
+            },
+            {
+              "text": "20",
+              "source_line_ids": [
+                "P460-B0007-L005"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0007-L006"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0007-L000",
+            "P460-B0007-L001",
+            "P460-B0007-L002",
+            "P460-B0007-L003",
+            "P460-B0007-L004",
+            "P460-B0007-L005",
+            "P460-B0007-L006"
+          ],
+          "id": "P460-T001-R002",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to PRECHARGE delay time | tRAS | Min | 20 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 3,
+          "cells": [
+            null,
+            null,
+            {
+              "text": "Max",
+              "source_line_ids": [
+                "P460-B0008-L000"
+              ]
+            },
+            {
+              "text": "300",
+              "source_line_ids": [
+                "P460-B0008-L001"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0008-L002"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0008-L000",
+            "P460-B0008-L001",
+            "P460-B0008-L002"
+          ],
+          "id": "P460-T001-R003",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": " |  | Max | 300 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 4,
+          "cells": [
+            {
+              "text": "Activation Counter Update time",
+              "source_line_ids": [
+                "P460-B0009-L000",
+                "P460-B0009-L001",
+                "P460-B0009-L002"
+              ]
+            },
+            {
+              "text": "tACU",
+              "source_line_ids": [
+                "P460-B0009-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0009-L004"
+              ]
+            },
+            {
+              "text": "22",
+              "source_line_ids": [
+                "P460-B0009-L005"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0009-L006"
+              ]
+            },
+            {
+              "text": "4",
+              "source_line_ids": [
+                "P460-B0009-L007"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0009-L000",
+            "P460-B0009-L001",
+            "P460-B0009-L002",
+            "P460-B0009-L003",
+            "P460-B0009-L004",
+            "P460-B0009-L005",
+            "P460-B0009-L006",
+            "P460-B0009-L007"
+          ],
+          "id": "P460-T001-R004",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Activation Counter Update time | tACU | Min | 22 | ns | 4",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            {
+              "text": "Row Precharge time (all Banks)",
+              "source_line_ids": [
+                "P460-B0010-L000",
+                "P460-B0010-L001"
+              ]
+            },
+            {
+              "text": "tRPab",
+              "source_line_ids": [
+                "P460-B0010-L002"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0010-L003"
+              ]
+            },
+            {
+              "text": "nACU + 21ns",
+              "source_line_ids": [
+                "P460-B0010-L004"
+              ]
+            },
+            {
+              "text": "-",
+              "source_line_ids": [
+                "P460-B0010-L005"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0010-L000",
+            "P460-B0010-L001",
+            "P460-B0010-L002",
+            "P460-B0010-L003",
+            "P460-B0010-L004",
+            "P460-B0010-L005"
+          ],
+          "id": "P460-T001-R005",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Row Precharge time (all Banks) | tRPab | Min | nACU + 21ns | - | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            {
+              "text": "Row Precharge time (Single/Dual)",
+              "source_line_ids": [
+                "P460-B0011-L000",
+                "P460-B0011-L001",
+                "P460-B0011-L002"
+              ]
+            },
+            {
+              "text": "tRPpb/db",
+              "source_line_ids": [
+                "P460-B0011-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0011-L004"
+              ]
+            },
+            {
+              "text": "nACU + 18ns",
+              "source_line_ids": [
+                "P460-B0011-L005"
+              ]
+            },
+            {
+              "text": "-",
+              "source_line_ids": [
+                "P460-B0011-L006"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0011-L000",
+            "P460-B0011-L001",
+            "P460-B0011-L002",
+            "P460-B0011-L003",
+            "P460-B0011-L004",
+            "P460-B0011-L005",
+            "P460-B0011-L006"
+          ],
+          "id": "P460-T001-R006",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Row Precharge time (Single/Dual) | tRPpb/db | Min | nACU + 18ns | - | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 7,
+          "cells": [
+            {
+              "text": "ACTIVATE to ACTIVATE delay time for same bank",
+              "source_line_ids": [
+                "P460-B0012-L000",
+                "P460-B0012-L001",
+                "P460-B0012-L002",
+                "P460-B0012-L003"
+              ]
+            },
+            {
+              "text": "tRC",
+              "source_line_ids": [
+                "P460-B0013-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0013-L001"
+              ]
+            },
+            {
+              "text": "tRAS+tRPab with all-bank precharge tRAS+tRPpb with per-bank precharge",
+              "source_line_ids": [
+                "P460-B0014-L000",
+                "P460-B0014-L001",
+                "P460-B0014-L002",
+                "P460-B0014-L003",
+                "P460-B0014-L004",
+                "P460-B0014-L005"
+              ]
+            },
+            {
+              "text": "-",
+              "source_line_ids": [
+                "P460-B0015-L000"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0012-L000",
+            "P460-B0012-L001",
+            "P460-B0012-L002",
+            "P460-B0012-L003",
+            "P460-B0013-L000",
+            "P460-B0013-L001",
+            "P460-B0014-L000",
+            "P460-B0014-L001",
+            "P460-B0014-L002",
+            "P460-B0014-L003",
+            "P460-B0014-L004",
+            "P460-B0014-L005",
+            "P460-B0015-L000"
+          ],
+          "id": "P460-T001-R007",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to ACTIVATE delay time for same bank | tRC | Min | tRAS+tRPab with all-bank precharge tRAS+tRPpb with per-bank precharge | - | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 8,
+          "cells": [
+            {
+              "text": "ACTIVATE to READ delay time",
+              "source_line_ids": [
+                "P460-B0016-L000",
+                "P460-B0016-L001"
+              ]
+            },
+            {
+              "text": "tRCD_R",
+              "source_line_ids": [
+                "P460-B0016-L002"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0016-L003"
+              ]
+            },
+            {
+              "text": "18",
+              "source_line_ids": [
+                "P460-B0016-L004"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0016-L005"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0016-L000",
+            "P460-B0016-L001",
+            "P460-B0016-L002",
+            "P460-B0016-L003",
+            "P460-B0016-L004",
+            "P460-B0016-L005"
+          ],
+          "id": "P460-T001-R008",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to READ delay time | tRCD_R | Min | 18 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 9,
+          "cells": [
+            {
+              "text": "ACTIVATE to WRITE delay time",
+              "source_line_ids": [
+                "P460-B0017-L000",
+                "P460-B0017-L001",
+                "P460-B0017-L002"
+              ]
+            },
+            {
+              "text": "tRCD_W",
+              "source_line_ids": [
+                "P460-B0017-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0017-L004"
+              ]
+            },
+            {
+              "text": "18",
+              "source_line_ids": [
+                "P460-B0017-L005"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0017-L006"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0017-L000",
+            "P460-B0017-L001",
+            "P460-B0017-L002",
+            "P460-B0017-L003",
+            "P460-B0017-L004",
+            "P460-B0017-L005",
+            "P460-B0017-L006"
+          ],
+          "id": "P460-T001-R009",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to WRITE delay time | tRCD_W | Min | 18 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 10,
+          "cells": [
+            {
+              "text": "ACTIVATE to WRITE delay time WRITE not RMW",
+              "source_line_ids": [
+                "P460-B0018-L000",
+                "P460-B0018-L001",
+                "P460-B0018-L002",
+                "P460-B0018-L003"
+              ]
+            },
+            {
+              "text": "tRCD_W2",
+              "source_line_ids": [
+                "P460-B0019-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0019-L001"
+              ]
+            },
+            {
+              "text": "8",
+              "source_line_ids": [
+                "P460-B0019-L002"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0019-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0018-L000",
+            "P460-B0018-L001",
+            "P460-B0018-L002",
+            "P460-B0018-L003",
+            "P460-B0019-L000",
+            "P460-B0019-L001",
+            "P460-B0019-L002",
+            "P460-B0019-L003"
+          ],
+          "id": "P460-T001-R010",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to WRITE delay time WRITE not RMW | tRCD_W2 | Min | 8 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 11,
+          "cells": [
+            {
+              "text": "Read Latency",
+              "source_line_ids": [
+                "P460-B0020-L000"
+              ]
+            },
+            {
+              "text": "RL",
+              "source_line_ids": [
+                "P460-B0020-L001"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0020-L002"
+              ]
+            },
+            {
+              "text": "21",
+              "source_line_ids": [
+                "P460-B0020-L003"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0020-L004"
+              ]
+            },
+            {
+              "text": "1",
+              "source_line_ids": [
+                "P460-B0020-L005"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0020-L000",
+            "P460-B0020-L001",
+            "P460-B0020-L002",
+            "P460-B0020-L003",
+            "P460-B0020-L004",
+            "P460-B0020-L005"
+          ],
+          "id": "P460-T001-R011",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Read Latency | RL | Min | 21 | ns | 1",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 12,
+          "cells": [
+            {
+              "text": "Write Latency",
+              "source_line_ids": [
+                "P460-B0021-L000"
+              ]
+            },
+            {
+              "text": "WL",
+              "source_line_ids": [
+                "P460-B0021-L001"
+              ]
+            },
+            {
+              "text": "-",
+              "source_line_ids": [
+                "P460-B0021-L002"
+              ]
+            },
+            {
+              "text": "RL-4",
+              "source_line_ids": [
+                "P460-B0021-L003"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P460-B0021-L004"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0021-L000",
+            "P460-B0021-L001",
+            "P460-B0021-L002",
+            "P460-B0021-L003",
+            "P460-B0021-L004"
+          ],
+          "id": "P460-T001-R012",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Write Latency | WL | - | RL-4 | nCK | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 13,
+          "cells": [
+            {
+              "text": "WRITE to PRECHARGE delay time",
+              "source_line_ids": [
+                "P460-B0022-L000",
+                "P460-B0022-L001",
+                "P460-B0022-L002"
+              ]
+            },
+            {
+              "text": "tWTP",
+              "source_line_ids": [
+                "P460-B0022-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0022-L004"
+              ]
+            },
+            {
+              "text": "WL +RU(tCCD_L/tC K) + RU(12ns/tCK)",
+              "source_line_ids": [
+                "P460-B0023-L000",
+                "P460-B0023-L001",
+                "P460-B0023-L002",
+                "P460-B0023-L003"
+              ]
+            },
+            {
+              "text": "nCk",
+              "source_line_ids": [
+                "P460-B0024-L000"
+              ]
+            },
+            {
+              "text": "2, 4",
+              "source_line_ids": [
+                "P460-B0024-L001"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0022-L000",
+            "P460-B0022-L001",
+            "P460-B0022-L002",
+            "P460-B0022-L003",
+            "P460-B0022-L004",
+            "P460-B0023-L000",
+            "P460-B0023-L001",
+            "P460-B0023-L002",
+            "P460-B0023-L003",
+            "P460-B0024-L000",
+            "P460-B0024-L001"
+          ],
+          "id": "P460-T001-R013",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "WRITE to PRECHARGE delay time | tWTP | Min | WL +RU(tCCD_L/tC K) + RU(12ns/tCK) | nCk | 2, 4",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 14,
+          "cells": [
+            {
+              "text": "READ to PRECHARGE delay time",
+              "source_line_ids": [
+                "P460-B0025-L000",
+                "P460-B0025-L001",
+                "P460-B0025-L002"
+              ]
+            },
+            {
+              "text": "tRTP",
+              "source_line_ids": [
+                "P460-B0025-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P460-B0025-L004"
+              ]
+            },
+            {
+              "text": "10",
+              "source_line_ids": [
+                "P460-B0025-L005"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P460-B0025-L006"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P460-B0025-L000",
+            "P460-B0025-L001",
+            "P460-B0025-L002",
+            "P460-B0025-L003",
+            "P460-B0025-L004",
+            "P460-B0025-L005",
+            "P460-B0025-L006"
+          ],
+          "id": "P460-T001-R014",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "READ to PRECHARGE delay time | tRTP | Min | 10 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        }
+      ],
+      "kind": "detected_grid_may_be_table_or_diagram",
+      "caption_candidate_id": "H01616",
+      "caption_link_verified": false,
+      "domain_id": "timing",
+      "common_step_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "review_checks_ko": [
+        "행·열 header, 병합 셀, 단위, 주석 번호와 개정 색상을 PDF에서 확인하고 유효 요구를 확정한다.",
+        "encoding 표는 모든 legal/reserved code와 default/속성을, timing 표는 command pair·bank 관계·min/max·단위·산식을, mapping 표는 lane×UI별 bit 위치를 점검한다.",
+        "표 내부 문장이 별도 record로도 추출된 경우 같은 요구를 구현률에 중복 합산하지 않는다.",
+        "격자 탐지는 timing diagram·그림의 matrix도 포함할 수 있다. table/figure 구분과 도형의 의미는 원문에서 확인한다."
+      ]
+    },
+    {
+      "id": "P461-T001",
+      "pdf_page": 461,
+      "section_id": "9.1",
+      "bbox": [
+        71.92,
+        103.89,
+        540.06,
+        687.09
+      ],
+      "row_count": 12,
+      "column_count": 6,
+      "rows": [
+        {
+          "row": 1,
+          "cells": [
+            {
+              "text": "Parameter",
+              "source_line_ids": [
+                "P461-B0021-L000"
+              ]
+            },
+            {
+              "text": "Symbol",
+              "source_line_ids": [
+                "P461-B0021-L001"
+              ]
+            },
+            {
+              "text": "Min/Max",
+              "source_line_ids": [
+                "P461-B0021-L002"
+              ]
+            },
+            {
+              "text": "Value",
+              "source_line_ids": [
+                "P461-B0021-L003"
+              ]
+            },
+            {
+              "text": "Unit",
+              "source_line_ids": [
+                "P461-B0021-L004"
+              ]
+            },
+            {
+              "text": "Notes",
+              "source_line_ids": [
+                "P461-B0021-L005"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0021-L000",
+            "P461-B0021-L001",
+            "P461-B0021-L002",
+            "P461-B0021-L003",
+            "P461-B0021-L004",
+            "P461-B0021-L005"
+          ],
+          "id": "P461-T001-R001",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Parameter | Symbol | Min/Max | Value | Unit | Notes",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 2,
+          "cells": [
+            {
+              "text": "ACTIVATE to ACTIVATE delay time for same bank group",
+              "source_line_ids": [
+                "P461-B0003-L000",
+                "P461-B0003-L001",
+                "P461-B0003-L002",
+                "P461-B0003-L003"
+              ]
+            },
+            {
+              "text": "tRRD_L",
+              "source_line_ids": [
+                "P461-B0004-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0004-L001"
+              ]
+            },
+            {
+              "text": "5",
+              "source_line_ids": [
+                "P461-B0004-L002"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P461-B0004-L003"
+              ]
+            },
+            {
+              "text": "3",
+              "source_line_ids": [
+                "P461-B0004-L004"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0003-L000",
+            "P461-B0003-L001",
+            "P461-B0003-L002",
+            "P461-B0003-L003",
+            "P461-B0004-L000",
+            "P461-B0004-L001",
+            "P461-B0004-L002",
+            "P461-B0004-L003",
+            "P461-B0004-L004"
+          ],
+          "id": "P461-T001-R002",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to ACTIVATE delay time for same bank group | tRRD_L | Min | 5 | ns | 3",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 3,
+          "cells": [
+            {
+              "text": "ACTIVATE to ACTIVATE delay time for different bank group",
+              "source_line_ids": [
+                "P461-B0005-L000",
+                "P461-B0005-L001",
+                "P461-B0005-L002",
+                "P461-B0005-L003"
+              ]
+            },
+            {
+              "text": "tRRD_S",
+              "source_line_ids": [
+                "P461-B0006-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0006-L001"
+              ]
+            },
+            {
+              "text": "12",
+              "source_line_ids": [
+                "P461-B0006-L002"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P461-B0006-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0005-L000",
+            "P461-B0005-L001",
+            "P461-B0005-L002",
+            "P461-B0005-L003",
+            "P461-B0006-L000",
+            "P461-B0006-L001",
+            "P461-B0006-L002",
+            "P461-B0006-L003"
+          ],
+          "id": "P461-T001-R003",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "ACTIVATE to ACTIVATE delay time for different bank group | tRRD_S | Min | 12 | nCK | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 4,
+          "cells": [
+            {
+              "text": "Four bank ACTIVATE window",
+              "source_line_ids": [
+                "P461-B0007-L000",
+                "P461-B0007-L001",
+                "P461-B0007-L002"
+              ]
+            },
+            {
+              "text": "tFAW",
+              "source_line_ids": [
+                "P461-B0007-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0007-L004"
+              ]
+            },
+            {
+              "text": "Max (4 *tRRD_S, 7.5ns)",
+              "source_line_ids": [
+                "P461-B0007-L005",
+                "P461-B0007-L006"
+              ]
+            },
+            {
+              "text": "ns, nCK",
+              "source_line_ids": [
+                "P461-B0007-L007"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0007-L000",
+            "P461-B0007-L001",
+            "P461-B0007-L002",
+            "P461-B0007-L003",
+            "P461-B0007-L004",
+            "P461-B0007-L005",
+            "P461-B0007-L006",
+            "P461-B0007-L007"
+          ],
+          "id": "P461-T001-R004",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "Four bank ACTIVATE window | tFAW | Min | Max (4 *tRRD_S, 7.5ns) | ns, nCK | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            {
+              "text": "WRITE to READ delay time for same bank group",
+              "source_line_ids": [
+                "P461-B0008-L000",
+                "P461-B0008-L001",
+                "P461-B0008-L002"
+              ]
+            },
+            {
+              "text": "tWTR_L",
+              "source_line_ids": [
+                "P461-B0008-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0008-L004"
+              ]
+            },
+            {
+              "text": "WL + RU(tCCD_L/tCK ) +RU(12ns/tCK)",
+              "source_line_ids": [
+                "P461-B0008-L005",
+                "P461-B0008-L006",
+                "P461-B0008-L007"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P461-B0008-L008"
+              ]
+            },
+            {
+              "text": "2",
+              "source_line_ids": [
+                "P461-B0008-L009"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0008-L000",
+            "P461-B0008-L001",
+            "P461-B0008-L002",
+            "P461-B0008-L003",
+            "P461-B0008-L004",
+            "P461-B0008-L005",
+            "P461-B0008-L006",
+            "P461-B0008-L007",
+            "P461-B0008-L008",
+            "P461-B0008-L009"
+          ],
+          "id": "P461-T001-R005",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "WRITE to READ delay time for same bank group | tWTR_L | Min | WL + RU(tCCD_L/tCK ) +RU(12ns/tCK) | nCK | 2",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            {
+              "text": "WRITE to READ delay time for different bank group",
+              "source_line_ids": [
+                "P461-B0009-L000",
+                "P461-B0009-L001",
+                "P461-B0009-L002",
+                "P461-B0009-L003"
+              ]
+            },
+            {
+              "text": "tWTR_S",
+              "source_line_ids": [
+                "P461-B0010-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0010-L001"
+              ]
+            },
+            {
+              "text": "WL + tCCD_S + RU(6.25ns/tCK)",
+              "source_line_ids": [
+                "P461-B0010-L002",
+                "P461-B0010-L003"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P461-B0010-L004"
+              ]
+            },
+            {
+              "text": "2",
+              "source_line_ids": [
+                "P461-B0010-L005"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0009-L000",
+            "P461-B0009-L001",
+            "P461-B0009-L002",
+            "P461-B0009-L003",
+            "P461-B0010-L000",
+            "P461-B0010-L001",
+            "P461-B0010-L002",
+            "P461-B0010-L003",
+            "P461-B0010-L004",
+            "P461-B0010-L005"
+          ],
+          "id": "P461-T001-R006",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "WRITE to READ delay time for different bank group | tWTR_S | Min | WL + tCCD_S + RU(6.25ns/tCK) | nCK | 2",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 7,
+          "cells": [
+            {
+              "text": "PRECHARGE to PRECHARGE delay time",
+              "source_line_ids": [
+                "P461-B0011-L000",
+                "P461-B0011-L001",
+                "P461-B0011-L002"
+              ]
+            },
+            {
+              "text": "tPPD",
+              "source_line_ids": [
+                "P461-B0011-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0011-L004"
+              ]
+            },
+            {
+              "text": "8",
+              "source_line_ids": [
+                "P461-B0011-L005"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P461-B0011-L006"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0011-L000",
+            "P461-B0011-L001",
+            "P461-B0011-L002",
+            "P461-B0011-L003",
+            "P461-B0011-L004",
+            "P461-B0011-L005",
+            "P461-B0011-L006"
+          ],
+          "id": "P461-T001-R007",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "PRECHARGE to PRECHARGE delay time | tPPD | Min | 8 | nCK | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 8,
+          "cells": [
+            {
+              "text": "READ to READ or WRITE to WRITE delay time for different bank group",
+              "source_line_ids": [
+                "P461-B0012-L000",
+                "P461-B0012-L001",
+                "P461-B0012-L002",
+                "P461-B0012-L003",
+                "P461-B0012-L004"
+              ]
+            },
+            {
+              "text": "tCCD_S",
+              "source_line_ids": [
+                "P461-B0013-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0013-L001"
+              ]
+            },
+            {
+              "text": "12",
+              "source_line_ids": [
+                "P461-B0013-L002"
+              ]
+            },
+            {
+              "text": "nCK",
+              "source_line_ids": [
+                "P461-B0013-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0012-L000",
+            "P461-B0012-L001",
+            "P461-B0012-L002",
+            "P461-B0012-L003",
+            "P461-B0012-L004",
+            "P461-B0013-L000",
+            "P461-B0013-L001",
+            "P461-B0013-L002",
+            "P461-B0013-L003"
+          ],
+          "id": "P461-T001-R008",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "READ to READ or WRITE to WRITE delay time for different bank group | tCCD_S | Min | 12 | nCK | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 9,
+          "cells": [
+            {
+              "text": "READ to READ delay time for same bank group",
+              "source_line_ids": [
+                "P461-B0014-L000",
+                "P461-B0014-L001",
+                "P461-B0014-L002"
+              ]
+            },
+            {
+              "text": "tCCD_L",
+              "source_line_ids": [
+                "P461-B0014-L003"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0014-L004"
+              ]
+            },
+            {
+              "text": "5",
+              "source_line_ids": [
+                "P461-B0014-L005"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P461-B0014-L006"
+              ]
+            },
+            {
+              "text": "3",
+              "source_line_ids": [
+                "P461-B0014-L007"
+              ]
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0014-L000",
+            "P461-B0014-L001",
+            "P461-B0014-L002",
+            "P461-B0014-L003",
+            "P461-B0014-L004",
+            "P461-B0014-L005",
+            "P461-B0014-L006",
+            "P461-B0014-L007"
+          ],
+          "id": "P461-T001-R009",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "READ to READ delay time for same bank group | tCCD_L | Min | 5 | ns | 3",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 10,
+          "cells": [
+            {
+              "text": "WRITE to WRITE delay time for same bank group",
+              "source_line_ids": [
+                "P461-B0015-L000",
+                "P461-B0015-L001",
+                "P461-B0015-L002",
+                "P461-B0015-L003"
+              ]
+            },
+            {
+              "text": "tCCD_L_WR",
+              "source_line_ids": [
+                "P461-B0016-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0016-L001"
+              ]
+            },
+            {
+              "text": "20",
+              "source_line_ids": [
+                "P461-B0016-L002"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P461-B0016-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0015-L000",
+            "P461-B0015-L001",
+            "P461-B0015-L002",
+            "P461-B0015-L003",
+            "P461-B0016-L000",
+            "P461-B0016-L001",
+            "P461-B0016-L002",
+            "P461-B0016-L003"
+          ],
+          "id": "P461-T001-R010",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "WRITE to WRITE delay time for same bank group | tCCD_L_WR | Min | 20 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 11,
+          "cells": [
+            {
+              "text": "WRITE to WRITE delay time for same bank group, second WRITE not RMW",
+              "source_line_ids": [
+                "P461-B0017-L000",
+                "P461-B0017-L001",
+                "P461-B0017-L002",
+                "P461-B0017-L003",
+                "P461-B0017-L004",
+                "P461-B0017-L005"
+              ]
+            },
+            {
+              "text": "tCCD_L_WR2",
+              "source_line_ids": [
+                "P461-B0018-L000"
+              ]
+            },
+            {
+              "text": "Min",
+              "source_line_ids": [
+                "P461-B0018-L001"
+              ]
+            },
+            {
+              "text": "10",
+              "source_line_ids": [
+                "P461-B0018-L002"
+              ]
+            },
+            {
+              "text": "ns",
+              "source_line_ids": [
+                "P461-B0018-L003"
+              ]
+            },
+            {
+              "text": "",
+              "source_line_ids": []
+            }
+          ],
+          "source_line_ids": [
+            "P461-B0017-L000",
+            "P461-B0017-L001",
+            "P461-B0017-L002",
+            "P461-B0017-L003",
+            "P461-B0017-L004",
+            "P461-B0017-L005",
+            "P461-B0018-L000",
+            "P461-B0018-L001",
+            "P461-B0018-L002",
+            "P461-B0018-L003"
+          ],
+          "id": "P461-T001-R011",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [],
+          "literal_row": "WRITE to WRITE delay time for same bank group, second WRITE not RMW | tCCD_L_WR2 | Min | 10 | ns | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        },
+        {
+          "row": 12,
+          "cells": [
+            {
+              "text": "NOTE 1: tAA_min (READ to data out) = RL_min +tCK2DQO_min NOTE 2: \"RU\" means Round-Up NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns) NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU",
+              "source_line_ids": [
+                "P461-B0019-L000",
+                "P461-B0019-L001",
+                "P461-B0019-L002",
+                "P461-B0019-L003"
+              ]
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "source_line_ids": [
+            "P461-B0019-L000",
+            "P461-B0019-L001",
+            "P461-B0019-L002",
+            "P461-B0019-L003"
+          ],
+          "id": "P461-T001-R012",
+          "status": "not_assessed_no_rtl",
+          "linked_record_ids": [
+            "D6-P461-0002",
+            "D6-P461-0003",
+            "D6-P461-0004"
+          ],
+          "literal_row": "NOTE 1: tAA_min (READ to data out) = RL_min +tCK2DQO_min NOTE 2: \"RU\" means Round-Up NOTE 3: If DDR6 operates below 4800Mbps, tCCD_L and tRRD_L are calculated as Max(BL/2, 5ns) NOTE 4: Write Recovery time = tWTP - WL - RU(tCCD_L/tCK) + nACU |  |  |  |  | ",
+          "checks_to_apply": [
+            "table.review_checks_ko",
+            "domains.timing.checks"
+          ]
+        }
+      ],
+      "kind": "detected_grid_may_be_table_or_diagram",
+      "caption_candidate_id": "H01618",
+      "caption_link_verified": false,
+      "domain_id": "timing",
+      "common_step_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "review_checks_ko": [
+        "행·열 header, 병합 셀, 단위, 주석 번호와 개정 색상을 PDF에서 확인하고 유효 요구를 확정한다.",
+        "encoding 표는 모든 legal/reserved code와 default/속성을, timing 표는 command pair·bank 관계·min/max·단위·산식을, mapping 표는 lane×UI별 bit 위치를 점검한다.",
+        "표 내부 문장이 별도 record로도 추출된 경우 같은 요구를 구현률에 중복 합산하지 않는다.",
+        "격자 탐지는 timing diagram·그림의 matrix도 포함할 수 있다. table/figure 구분과 도형의 의미는 원문에서 확인한다."
+      ]
+    }
+  ],
+  "source_ledger_companion": "../DDR6_source_ledger.json",
+  "global_references_note_ko": "다른 chapter/record/caption 참조는 DDR6_sentence_checklist.json에서 찾는다. 각 chapter 파일은 전체의 중복 부분집합이다."
+}

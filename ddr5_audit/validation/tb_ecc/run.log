@@ -1,0 +1,11 @@
+PASS: 128 distinct non-unit H columns
+PASS: all 128 single-bit errors located exactly
+PASS: clean code word is silent
+PASS: double-bit errors -- 915 DUE, 301 miscorrected, 0 silent
+PASS: CRC catches all 64 single-bit errors
+=== tb_ecc: 0 failures ===
+=== ECC/CRC TEST PASSED ===
+- tb/tb_ecc.sv:82: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 0s; walltime 0.003 s; speed 0.000 s/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

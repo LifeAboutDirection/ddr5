@@ -1,0 +1,1229 @@
+P039-025 §2.7 NOTE 1 For non-binary memory densities, a quarter of the row address space is invalid.
+P039-026 §2.7 When the MSB address bit is “HIGH”, the MSB-1 address bit shall be “LOW”.
+P041-001 §3.1 This Simplified State Diagram is intended to provide an overview of the possible state transitions and the commands to control them.
+P041-002 §3.1 In particular, situations involving more than one bank, the enabling or disabling of on-die termination, and some other events are not captured in full detail.
+P041-045 §3.1 PDA Select ID Mode
+P042-001 §3.2 The DDR5 SDRAM is a high-speed dynamic random-access memory.
+P042-002 §3.2 To ease transition from DDR4 to DDR5, the introductory density (8Gb) shall be internally configured as 16-bank, 8 bank group with 2 banks for each bank group for x4/x8 and 8-bank, 4 bank group with 2 banks for each bank group for x16 DRAM.
+P042-003 §3.2 When the industry transitions to higher densities (=>16Gb), it doubles the bank resources and internally be configured as 32-bank, 8 bank group with 4 banks for each bank group for x4/x8 and 16-bank, 4 bank group with 4 banks for each bank group for x16 DRAM.
+P042-005 §3.2 The 16n prefetch architecture is combined with an interface designed to transfer two data words per clock cycle at the I/O pins.
+P042-006 §3.2 A single read or write operation for the DDR5 SDRAM consists of a single 16n-bit wide, eight clock data transfer at the internal DRAM core and sixteen corresponding n-bit wide, one-half clock cycle data transfers at the I/O pins.
+P042-007 §3.2 Read and write operation to the DDR5 SDRAM are burst oriented, start at a selected location, and continue for a burst length of sixteen or a ‘chopped’ burst of eight in a programmed sequence.
+P042-008 §3.2 Operation begins with the registration of an ACTIVATE Command, which is then followed by a Read or Write command.
+P042-009 §3.2 The address bits registered with the ACTIVATE Command are used to select the bank and row to be activated (i.e. in a 16Gb part, BG0-BG2 in a x4/8 and BG0-BG1 in x16 select the bank group; BA0-BA1 select the bank; R0-R17 select the row; refer to “DDR5 SDRAM Addressing” for specific requirements).
+P042-010 §3.2 The address bits registered with the Read or Write command are used to select the starting column location for the burst operation, determine if the auto precharge command is to be issued (CA10=L), and select BC8 on-the-fly (OTF), fixed BL16, fixed BL32 (optional), or BL32 OTF (optional) mode if enabled in the mode register.
+P042-011 §3.2 Prior to normal operation, the DDR5 SDRAM must be powered up and initialized in a predefined manner.
+P042-012 §3.2 The following clauses provide detailed information covering device reset and initialization, register definition, command descriptions, and device operation.
+P043-001 §3.3 For power-up and reset initialization, in order to prevent DRAM from functioning improperly, default values for the following MR settings need to be defined.
+P043-025 §3.3.1 The following sequence shall be used to power up the DDR5 device.
+P043-026 §3.3.1 Unless specified otherwise, these steps are mandatory.
+P043-027 §3.3.1 1. While applying power (after Ta), RESET_n is recommended to be LOW (≤0.2 x VDDQ) and all other inputs may be undefined.
+P043-028 §3.3.1 The device outputs remain disabled while RESET_n is held LOW.
+P043-030 §3.3.1 VPP shall ramp at the same time or earlier than VDD.
+P043-037 §3.3.1 4) Power ramp duration (Tb-Ta) shall not exceed tINIT0.
+P043-038 §3.3.1 2. Following the completion of the voltage ramp (Tb), RESET_n shall be maintained LOW.
+P043-041 §3.3.1 3. Beginning at Tb, RESET_n shall be maintained LOW for a minimum of tINIT1 (Tb to Tc), after which RESET_n may be deasserted to HIGH (Tc).
+P043-042 §3.3.1 At least tINIT2 before RESET_n de-assertion, CS_n is required to be set LOW.
+P043-043 §3.3.1 All other input signals are “Don’t Care”.
+P043-044 §3.3.1 The DRAM shall support the ability for RESET_n to be held indefinitely.
+P044-004 §3.3.1 Power Ramp Reset Initialization Configuration ODT Async On CS CMOS Registration &
+P044-094 §3.3.1 1. From time point (Td) until (Te), the command/address (CA) bus shall be held high in a NOP encoded state.
+P044-095 §3.3.1 2. From time point (Te) until (Tf), NOP commands shall be applied on the command/address (CA) bus.
+P044-096 §3.3.1 3. From time point (Tf) until (Tk), DES commands must be applied between legal commands (MRR, MRW, MPC, VREFCS & VREFCA).
+P044-097 §3.3.1 MRR and MRW command, while legal, may not execute properly until CS and CA training routines are completed.
+P044-098 §3.3.1 4. Prior to ZQcal completion at (Tk), MPC commands shall be Multi-Cycle as described in the MPC command Timings section.
+P044-099 §3.3.1 5. From time point (Tk) until (Tl) all MPC, VREFCS and VREFCA commands prior to CS and CA training successfully completing, shall be Multi-Cycle (MR2:OP[4]=0) as described in the MPC, VREFCS, and VREFCA timing sections.
+P044-100 §3.3.1 6. At time point (Tl), with successful completion of CS and CA training, an MRW command setting MR2:OP[4] =1 is recommended and allows for MPC, VREFCS, VREFCA commands to be single-cycle, improving training duration.
+P044-101 §3.3.1 7. From time point (Tk) until (Tz), DES commands shall be applied between legal commands (MRR, MRW, MPC, VREFCS & VREFCA).
+P044-102 §3.3.1 8. Starting at TI, MRW Commands shall be issued to all Mode Registers that require defined settings.
+P044-103 §3.3.1 9. Default ODT tolerances are wider prior to ZQ calibration.
+P044-104 §3.3.1 10, All MPC/MRW/MRR to MPC/MRW/MRR commands shall meet the timing restrictions required.
+P044-105 §3.3.1 4. After RESET_n is de-asserted (Tc), wait at least tINIT3 before driving CS_n high.
+P044-106 §3.3.1 5. After setting CS_n high (Td), wait a minimum of tINIT4 to allow the DRAM CMOS based receiver to register the exit and allow the CS_n, CK, CA, DQ and DQS ODT to go to the defined strap or MRS state (Te).
+P044-107 §3.3.1 Clock (CK_t, CK_c) is required to be started and stabilized for tCKSRX before exit of tINIT4 (Te).
+P044-108 §3.3.1 Upon the completion of Te, all ODT states (CA, CS_n, CK, DQ and DQS ODT) should be valid and the DRAM’s CS_n receiver should no longer be in its CMOS based mode.
+P044-109 §3.3.1 ODT termination states will be uncalibrated until completion of ZQcal at (Tj)
+P045-001 §3.3.1 6. Upon (Te), NOP commands shall be issued for a minimum of tINIT5 to conclude exit of initialization process and start tXPR timer at (Tf).
+P045-002 §3.3.1 The system shall wait at least tXPR before issuing any legal configuration commands (Tg).
+P045-003 §3.3.1 During early configuration steps (Tg to Tk), only MRR, MRW, MPC, VREFCS and VREFCA commands are legal.
+P045-004 §3.3.1 MRR and MRW command, while legal, may not execute properly until CS and CA training routines are completed.
+P045-005 §3.3.1 7. Between (Tg to Tj), the following initial configuration modes shall be completed prior to other training modes: - MPC for setting MR13 (tCCD_L*/tDLLK) shall be issued before the MPC command to reset the DLL. - MPC to execute DLL RESET shall be issued before ZQCal Start - MPC to execute ZQCal Start followed by ZQCal Latch shall be issued before any other training modes such as VrefCS, VrefCA, CS and CA Training.
+P045-006 §3.3.1 8. Between (Tk to Tz), any number of legal configuration commands are allowed.
+P045-007 §3.3.1 Many training based commands are optional and may be done at the system architect’s discretion and may vary depending on the systems, though proper setting of certain registers, such as those related to Write Leveling Training, is required.
+P045-008 §3.3.1 The host shall follow Multi-Cycle MPC timing requirements in cases where the alignment between CS_n, CA, and CK is unknown, (ie., prior to successfully completing VREFCS, VREFCA, CS, and CA training commands or host provided successful training solutions).
+P045-009 §3.3.1 MRW and MRR commands can be used once the alignment between CS_n, CA and CK are known.
+P045-010 §3.3.1 Single-cycle CS_n assertion are allowed after setting MR2:OP[4]=1.
+P045-011 §3.3.1 9. After (Tz), and the completion of any training or calibration timing parameters (i.e. tZQLAT is satisfied), the DDR5 device is ready for normal operation and is able to accept any valid command.
+P045-012 §3.3.1 Any additional mode registers that have not previously been set up for normal operation should be written at this time.
+P045-015 §3.3.1 DRAM will drive ALERT_n to HIGH to indicate that this operation is completed.
+P045-016 §3.3.1 After ALERT_n is driven high, the DRAM is immediately ready to receive valid commands.
+P045-018 §3.3.1 Please refer to Ch.
+P045-030 §3.3.1 NOTE 1 Min number of NOP commands issued after CS_n High (tINIT4).
+P046-001 §3.3.2 The following sequence is required for RESET at no power interruption initialization as shown in Figure 4.
+P046-002 §3.3.2 1. Assert RESET_n below 0.2 x VDDQ anytime when reset is needed.
+P046-003 §3.3.2 RESET_n needs to be maintained for a minimum of tPW_RESET.
+P046-004 §3.3.2 CS_n shall be pulled LOW at least tINIT2 before de-asserting RESET_n.
+P046-009 §3.3.2 Reset Initialization Configuration ODT Async On CS CMOS Registration &
+P046-111 §3.3.2 1. From time point (Td) until (Te), the command/address (CA) bus shall be held high in a NOP encoded state.
+P046-112 §3.3.2 2. From time point (Te) until (Tf), NOP commands shall be applied on the command/address (CA) bus.
+P046-113 §3.3.2 3. From time point (Tf) until (Tk), DES commands shall be applied between legal commands (MRR, MRW, MPC, VREFCS & VREFCA).
+P046-114 §3.3.2 MRR and MRW command while legal, may not execute properly until CS and CA training routines are completed.
+P046-115 §3.3.2 4. Prior to ZQcal completion at (Tk), MPC commands shall be Multi-Cycle as described in the MPC command Timings section.
+P046-116 §3.3.2 5. From time point (Tk) until (Tl) all MPC, VREFCS and VREFCA commands prior to CS and CA training successfully completing, shall be Multi-Cycle (MR2:OP[4]=0) as described in the MPC, VREFCS, and VREFCA timing sections.
+P046-117 §3.3.2 6. At time point (Tl), with successful completion of CS and CA training, an MRW command setting MR2:OP[4] =1 is recommended and allows for MPC, VREFCS, VREFCA commands to be single-cycle, improving training duration.
+P046-118 §3.3.2 7. From time point (Tk) until (Tz), DES commands shall be applied between legal commands (MRR, MRW, MPC, VREFCS & VREFCA).
+P046-119 §3.3.2 8. Starting at Tl, MRW Commands shall be issued to all Mode Registers that require defined settings.
+P046-120 §3.3.2 9. Default ODT tolerances are wider prior to ZQ calibration.
+P046-121 §3.3.2 10.All MPC/MRW/MRR to MPC/MRW/MRR commands shall meet the timing restrictions required.
+P046-122 §3.3.2 11. MRR is legal after DLL_reset.
+P047-018 §3.3.3 NOTE 2 1 Mhz bandwidth limited measurement
+P047-019 §3.3.3 NOTE 3 VPP shall be equal to or greater than VDD/VDDQ at all times.
+P047-020 §3.3.3 NOTE 4 During ramp up and ramp down [VDDQ-VDD] must be equal or less than 200mV.
+P047-021 §3.3.3 NOTE 5 After tINIT0, all supplies shall be within their specified tolerance, as defined in the DC Operating Tables.
+P048-001 §3.4.1 The Mode Register Read (MRR) command is used to read configuration and status data from the DDR5-SDRAM registers.
+P048-011 §3.4.1 MRR termination control and ODT timings are the same as for the Read command.
+P048-042 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P049-010 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P049-028 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P050-018 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P050-019 §3.4.1 NOTE 2 Output of mode register data is only duplicated and inverted across the first 8 bits of a x16 device.
+P050-038 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P050-039 §3.4.1 NOTE 2 Output of mode register data is only duplicated and inverted across the first 8 bits of a x16 device when reading from a DFE register associated with a lower byte DQ or DML.
+P050-040 §3.4.1 NOTE 3 Output map is ONLY for per bit DFE, DCA and VrefDQ mode registers (MR103 through MR255)
+P051-018 §3.4.1 NOTE 1 The read pre-amble and post-amble of MRR are same as normal read.
+P051-019 §3.4.1 NOTE 2 Output of mode register data is only duplicated and inverted across the last 8 bits of a x16 device when reading from a DFE register associated with an upper byte DQ or DMU.
+P051-020 §3.4.1 NOTE 3 Output map is ONLY for per bit DFE, DCA and VrefDQ mode registers (MR103 through MR255)
+P053-028 §3.4.4 tODTLoff_RD_DQS = CL-1-tRPRE-(Read DQS offset)
+P053-032 §3.4.4 tODTLon_RD_DQS = CL+BL/2-0.5+tRPST-(Read DQS offset)
+P053-063 §3.4.4 Read DQS Offset programmed at 0.
+P054-022 §3.4.4 NOTE 1 All data should be completed before entry into self refresh or power down.
+P054-024 §3.4.4 NOTE 3 Minimum delay is 1 clock after the burst or until the ODT offset requirements for DQS/DQ are met.
+P054-025 §3.4.4 NOTE 4 During Read Training, MRR to MRR command spacing can be tMRR_p
+P056-001 §3.5 With DDR5, the utilization and programming method shall change from the traditional addressing scheme found in DDR3 and DDR4, and shall move to the method used by LPDDR, where the Mode Register Addresses (MRA) and Payload placed in Op Codes (OP) are all packeted in the command bus encoding method.
+P056-002 §3.5 Please refer to the Command Truth Table 31 for Mode Register Read (MRR) and Mode Register Write (MRW) command protocol.
+P056-003 §3.5 For DDR5, the SDRAM shall support up to 8 MRA’s, each with a byte-wide payload.
+P056-006 §3.5.1 Each bit in a register byte (MR#) is denoted as "R" if it can be read but not written, "W" if it can be written but reads shall always produce a ZERO for those specific bits, and "R/W" if it can be read and written.
+P056-008 §3.5.1 This bit allows the DRAM to return a defined status during a read of that bit (SR = Status Read), independent of what the Host may have written to the bit.
+P056-009 §3.5.1 A defined register byte (MR#), is any MR# that has at least one of the bits defined.
+P056-011 §3.5.1 These undefined mode registers (completely empty bytes, not individual bits of an MR) may not be supported in the DRAM.
+P056-014 §3.5.1 For cases in which a mode register is specific to a particular device configuration (x16, x8, x4) and/or density (32 Gb, 16 Gb, 8 Gb), the following rules shall be applied: - When the DRAM is configured as a x4/x8, an entire MR# used only for a x16 shall be considered RFU.
+P056-015 §3.5.1 These bits are don’t care for reads and writes, and they may be unsupported. - When a bit field within a register is used by a different configuration or density than a given DRAM, the host may write/read programmed values to these fields, but DRAM operation will not be affected.
+P056-016 §3.5.1 A Mode Register Read command is used to read a mode register.
+P056-017 §3.5.1 A Mode Register Write command is used to write a mode register
+P065-012 §3.5.4 NOTE 1 To enter WL Training Mode the MR field must be programmed to 1.
+P065-013 §3.5.4 WL Training Mode is used when Internal Write Timing = 0 (External WL Training) and when Internal Write Timing = 1 (Internal WL Training).
+P065-014 §3.5.4 NOTE 2 To exit WL Training Mode the MR field must be programmed to 0.
+P065-015 §3.5.4 NOTE 3 MRR’s are not supported during Write Leveling.
+P065-016 §3.5.4 NOTE 4 This mode register is programmed via an explicit MPC command only.
+P065-017 §3.5.4 NOTE 5 This is set during WL Training, after the host DQS has been aligned to the ideal External WL timings.
+P065-018 §3.5.4 The Internal Write Timing is enabled and the WL Internal Timing Alignment is set to ensure the internal Write Enable aligns within tDQS2CK of the external WL Trained location.
+P065-019 §3.5.4 When Internal Write Timing is Disabled, the WL Internal Cycle Alignment setting does not change the behavior of the write timings
+P066-006 §3.5.5 NOTE 1 This is set during WL Training, after the host DQS has been aligned to the ideal External WL timings.
+P066-007 §3.5.5 The Internal Write Timing is enabled and the WL Internal Timing Alignment is set to ensure the internal Write Enable aligns within tDQS2CK of the external WL Trained location.
+P066-008 §3.5.5 When Internal Write Timing is Disabled, the WL Internal Cycle Alignment setting does not change the behavior of the write timings.
+P066-009 §3.5.5 NOTE 2 The DRAM implementation may optionally have the same behavior when the Internal Write Timing is enabled vs disabled.
+P066-011 §3.5.5 The WL Internal Cycle Alignment setting must still support pulling the Internal WL Pulse earlier so that the same WL Training Flow will produce the correct result.
+P066-012 §3.5.5 NOTE 3 Lower Byte WL Internal Cycle Alignment is intended for x4, x8, and x16 configurations.
+P066-013 §3.5.5 NOTE 4 Upper Byte WL Internal Cycle Alignment is intended for x16 configuration only.
+P066-014 §3.5.5 Although training of the Lower and Upper Bytes is independent, contact the DRAM vendor regarding recommendations for setting the WICA values to the same offset.
+P066-015 §3.5.5 NOTE 5 Optional OPcode may be needed for certain speed bins.
+P068-001 §3.5.6 NOTE 1 The minimum required refresh rate for each OP[2:0] setting applies to tREFI1 and tREFI2.
+P068-002 §3.5.6 Each OP[2:0] setting specifies a nominal temperature range.
+P068-003 §3.5.6 The ranges defined by OP[2:0] are determined by temperature thresholds used by the system for proper operation.
+P068-004 §3.5.6 NOTE 2 When OP[5]=0, the four temperature thresholds are nominally at 80°C, 85°C, 90°C and 95°C.
+P068-005 §3.5.6 The <80°C threshold has no minimum value specified and the >95°C threshold has no maximum temperature value specified.
+P068-006 §3.5.6 When OP[5]=1, the six temperature thresholds are nominally at 75°C, 80°C, 85°C, 90°C, 95°C, and 100°C.
+P068-007 §3.5.6 The <75°C threshold has no minimum value specified and the >100°C threshold has no maximum temperature value specified
+P068-008 §3.5.6 NOTE 3 DRAM vendors must report all of the possible settings over the operating temperature range of the device.
+P068-009 §3.5.6 Each vendor guarantees that their device will work at any temperature within the range when the system refresh interval follows there guidelines:
+P068-010 §3.5.6 Threshold ≤ 85 °C: tREFI x1 (1x Refresh Rate) or faster may be used
+P068-011 §3.5.6 Threshold > 85 °C: tREFI /2 (2x Refresh Rate) or faster is required
+P068-012 §3.5.6 Data integrity at thresholds >95°C is not assured regardless of refresh rate
+P068-013 §3.5.6 NOTE 4 The 2x Refresh Rate must be provided by the system before the DRAM Tj has gone up by more than 2°C (Temperature Margin) since the first report out of OP[2:0]=011B.
+P068-014 §3.5.6 This condition is reset when OP[2:0] is equal to 010B.
+P068-015 §3.5.6 NOTE 5 The device may not operate properly when OP[2:0]=101B, if the DRAM Tj has gone up by more than 2°C (Temperature Margin) since the first report out of OP[2:0]=101B.
+P068-016 §3.5.6 This condition is reset when OP[2:0] is equal to 100B.
+P068-017 §3.5.6 OP[2:0]=101B must be a temporary condition of the DRAM, to be addressed by immediately reducing the Tj of the DRAM by throttling its power, and/or the power of nearby devices.
+P068-019 §3.5.6 OP[2:0] bits are valid after initialization sequence (Te).
+P068-021 §3.5.6 NOTE 8 Support for wide range temperature sensor ranges does not indicate that the DDR5 DRAM device may operate properly at temperature ranges above 95°C – side effects may include loss of data integrity
+P070-006 §3.5.8 NOTE 1 tWR,min is defined in the “Timing Parameters” tables (Table 323 - Table 325).
+P070-007 §3.5.8 Host must operate with MR settings resulting in tCK * MR6:OP[3:0] >= tWR,min.
+P070-008 §3.5.8 NOTE 2 tRTP, min is defined in the “Timing Parameters” tables (Table 323 - Table 325).
+P070-009 §3.5.8 Host must operate with MR settings resulting in tCK * MR6:OP[7:4]>= tRTP,min.
+P070-010 §3.5.8 NOTE 3 All nCK conversions require rounding algorithm consideration.
+P071-007 §3.5.9 NOTE 1 The WICA 0.5 tCK offset is a positive adjustment to the target WICA value.
+P071-010 §3.5.9 NOTE 2 Lower Byte WL Internal Cycle Alignment is intended for x4, x8, and x16 configurations.
+P071-011 §3.5.9 NOTE 3 Upper Byte WL Internal Cycle Alignment is intended for x16 configuration only.
+P071-012 §3.5.9 Although training of the Lower and Upper Bytes is independent, contact the DRAM vendor regarding recommendations for setting the WICA values to the same offset.
+P072-009 §3.5.10 NOTE 1 Please refer to the Preamble Specification for details on the Read Preamble modes and patterns.
+P073-008 §3.5.11 NOTE 1 DDR5 SPD Byte 14 Bits[2:1] indicates if feature is supported and will also indicate whether to use MR9 or MR15 for enabling the modes.
+P075-007 §3.5.13 NOTE 2 Since the state of CA12 is used to differentiate the VrefCA vs VrefCS command, the MR11/12 OP[7] value is defined as valid.
+P076-007 §3.5.14 NOTE 2 Since the state of CA12 is used to differentiate the VrefCA vs VrefCS command, the MR11/12 OP[7] value is defined as valid.
+P079-012 §3.5.17 NOTE 3 If the Automatic ECS in Self-Refresh is enabled, transparency mode-registers updated cannot be controlled by the number of Manual ECS operation MPC command since the ECS counter is increased by both manual ECS command and the Automatic ECS Operation in Self-Refresh mode.
+P079-013 §3.5.17 NOTE 4 DDR5 SPD Byte 14 Bits[2:1] indicates if feature is supported and will also indicate whether to use MR9 or MR15 for enabling the modes.
+P086-012 §3.5.28 The default value for the Read Training Pattern Data0/LFSR0 register setting is: 0x5A.
+P086-025 §3.5.29 NOTE 1 The default value for the Read Training Pattern Data1/LFSR1 register setting is: 0x3C.
+P087-012 §3.5.30 The default value for the Read Training Pattern Invert DQL7:0 (DQ7:0) register setting is: 0x00.
+P088-012 §3.5.31 The default value for the Read Training Pattern Invert DQU7:0 (DQ15:8) register setting is: 0x00.
+P089-012 §3.5.32 The default value for the Read LFSR Assignments register setting is: 0xFE.
+P098-001 §3.5.42 This byte is used for configuring the DRAM to support different HOST receiver designs.
+P098-007 §3.5.42 NOTE 1 When operating at low speed(CL <= 30), tRPRE + Read DQS Offset >= 5 Clocks cannot be supported.
+P106-012 §3.5.51 NOTE 1 When at least one of the two write CRC enable bits is set to ‘1’ in x8, the timing of write CRC enable mode is applied to the entire device (i.e. both nibbles).
+P106-013 §3.5.51 When write CRC is enabled in one nibble and disabled in the other nibble in x8, then the DRAM does not check CRC errors on the disabled nibble, and hence the ALERT_n signal and any internal status bit related to CRC error is not impacted by the disabled nibble.
+P106-014 §3.5.51 NOTE 2 The host shall disable Write CRC, if it was enabled, prior to entering Write Leveling Training mode.
+P113-007 §3.5.59 NOTE 1 Refresh Management settings are vendor specific by the MR settings.
+P113-008 §3.5.59 NOTE 2 Only applicable if the Refresh Management Required bit is set to “1” (MR58 OP[0]=1)
+P118-001 §3.5.64 This MR is used by the host controller to read back Control Words from the RCD.
+P118-002 §3.5.64 Control Words are the RCD equivalent of the DRAM MR registers.
+P118-003 §3.5.64 The DRAM implements MR63 as a simple read/write register, writable via an MRW to address 3Fh, and readable via an MRR to address 3Fh.
+P118-008 §3.5.64 NOTE 1 The contents of this register have no function in the DRAM.
+P118-009 §3.5.64 Details for this function can be found in the DDR5 RCD01 Specification.
+P118-010 §3.5.64 The following data is just for reference and is not part of the DRAM specification.
+P118-011 §3.5.64.1 The method to read an RCD Control Word is as follows:
+P118-012 §3.5.64.1 The host controller writes to the RCD’s CW Read Pointer, which selects the RCD control word to be read.
+P118-013 §3.5.64.1 The host controller then does an MRW to DRAM MR63.
+P118-014 §3.5.64.1 This MRW passes through the RCD to the DRAMs, but is modified by the RCD.
+P118-015 §3.5.64.1 The RCD will detect this write to MR63 and replace the data from the host controller with the contents of the RCD register pointed to by the CW Read Pointer.
+P118-016 §3.5.64.1 The host controller will then read the DRAM’s MR63, which now contains the value from the desired RCD control word.
+P118-017 §3.5.64.1 All DRAMs in the rank will return this same value to the host controller
+P118-018 §3.5.65 This MR is reserved for NVRAM paging.
+P119-005 §3.5.66 NOTE 1 The serial number of 0x00 in all bytes is not allowed
+P119-006 §3.5.66 NOTE 2 This byte definition is optional feature, but expect mandatory implementation upon next DDR5 DRAM die release.
+P119-011 §3.5.67 NOTE 1 The serial number of 0x00 in all bytes is not allowed
+P119-012 §3.5.67 NOTE 2 This byte definition is optional feature, but expect mandatory implementation upon next DDR5 DRAM die release.
+P119-017 §3.5.68 NOTE 1 The serial number of 0x00 in all bytes is not allowed
+P119-018 §3.5.68 NOTE 2 This byte definition is optional feature, but expect mandatory implementation upon next DDR5 DRAM die release.
+P120-005 §3.5.69 NOTE 1 The serial number of 0x00 in all bytes is not allowed
+P120-006 §3.5.69 NOTE 2 This byte definition is optional feature, but expect mandatory implementation upon next DDR5 DRAM die release.
+P120-011 §3.5.70 NOTE 1 The serial number of 0x00 in all bytes is not allowed
+P120-012 §3.5.70 NOTE 2 This byte definition is optional feature, but expect mandatory implementation upon next DDR5 DRAM die release.
+P121-001 §3.5.71 The following mode registers are used to configure the Decision Feedback Equalization (DFE), Per Bit Duty Cycle Adjuster and Per Bit VrefDQ features of the DRAM.
+P121-002 §3.5.71 The Mode Registers MA[7:0]=70-FFH are organized in a way such that mode registers for programming of DFE, DCA & VrefDQ configuration per DQ or DM are grouped together.
+P121-005 §3.5.71 Looking further into the 8-bit binary encoding, MA[6:3] is defined as a direct mapping for DQL0 to DQU7, i.e., MA[7:0]=1000:0XXXb for DQ0, MA[7:0]=1000:1XXXb for DQ1, : MA[7:0]=1111:0XXXb for DQU6 MA[7:0]=1111:1XXXb for DQU7.
+P149-002 §3.5.121 There are currently no plans to utilize these MR addresses.
+P150-001 §4.1 (a) Notes 1, 2, and 14 apply to the entire Command truth table (b) To improve command decode time, the table has been optimized to orient all 1-cycle commands together and all 2-cycle commands together; allowing CA1 to be used to identify the difference between a 1-cycle and a 2-cycle command.
+P151-008 §4.1 NOTE 1 V means H or L (a defined logic level).
+P151-009 §4.1 X means don't care in which case the signal may be floated.
+P151-011 §4.1 NOTE 3 The Refresh All and Refresh Management All commands are applied to all banks in all bank groups.
+P151-012 §4.1 CA6 and CA7 are required to be valid (“V”)
+P151-014 §4.1 The bank bits, BA0 and BA1 on CA6 and CA7, respectively, specify the bank within each bank group.
+P151-017 §4.1 The bank bits specify the bank within each bank group.
+P151-024 §4.1 NOTE 12 WR command with WR_Partial (WR_P) = Low indicates a partial write command.
+P151-025 §4.1 This is to help DRAM start an internal read for 'read modify write'.
+P151-032 §4.1 NOTE 15 If CA5:BL*=L, the command places the DRAM into the alternate Burst mode described by MR0[1:0] instead of the default Burst Length 16 mode.
+P151-033 §4.1 NOTE 16 ODT=L is defined to allow On Die Termination (ODT) to persist when the device is in Power Down Mode.
+P151-035 §4.1 These usages are mutually exclusive.
+P151-036 §4.1 NOTE 18 Write Pattern only supports BL16 and BL32.
+P151-037 §4.1 NOTE 19 When CID3 is not used, its required to be Valid (“V”).
+P151-038 §4.1 NOTE 20 In the case of a DRAM where the density or stacking doesn't require CA[13] the ball location for that function (considering the state of MIR) shall be connected to VDDQ, and the DRAM shall decode CA[13]=L so that the proper selection of die and RA is provided.
+P151-040 §4.1 NOTE 22 When host issue MRR with CRC enabled, data comes out with CRC bit.
+P151-041 §4.1 NOTE 23 If the Refresh Management Required bit is “0” (MR58 OP[0]=0), CA9 is only required to be valid (“V”) for a REF command, and the DRAM will treat a RFM command as a REF command.
+P151-042 §4.1 If MR58 OP[0]=1, a REF command requires CA9=H.
+P151-043 §4.1 NOTE 24 If the Refresh Interval Rate indicator bit is disabled (MR4:OP[3]=0) by the host, CA8 is only required to be valid (“V”).
+P151-044 §4.1 If the Refresh Interval Rate indicator bit is enabled (MR4:OP[3]=1) by the host, the host is required to set CA8=H for REF commands issued at the 1x refresh interval rate and CA8=L for REF commands issued at the 2x refresh interval rate.
+P151-045 §4.1 If the host issues 2x REF commands with CA8=L while MR4:OP[3]=1, but the Refresh rate requirement is 1x as determined internally by the DRAM, the DRAM may internally align to the 1x refresh rate.
+P151-047 §4.1 NOTE 26 Unlike DES, NOP is considered a valid command, and timing from a preceding valid command must satisfy any associated command timings.
+P152-001 §4.1.1 DDR5 DRAM commands ACT, WRP, WRPA and MRW are 2-cycle commands without associated ODT control requirements.
+P153-002 §4.2 The ordering of accesses within a burst is determined by the burst length and the starting column address as shown in Table 35.
+P153-020 §4.2 NOTE 1 T: Output driver for data and strobes are in RTT_PARK.
+P154-006 §4.2.1 NOTE 1 In case of BL16 in BL32 OTF mode by setting MR0[OP1:0=11], the internal write operation starts eight cycles earlier than for BL32 mode.
+P154-007 §4.2.1 This means that the starting point for tWR and tWTR shall be pulled in by eight clocks.
+P155-002 §4.3 The bank(s) shall be available for a subsequent row activation a specified time (tRP) after the PRECHARGE command is issued.
+P155-004 §4.3 A PRECHARGE command is allowed if there is no open row in that bank (idle state) or if the previously open row is already in the process of precharging.
+P155-007 §4.3 This feature allows the precharge operation to be partially or completely hidden during burst read cycles (dependent upon CAS latency) thus improving system performance for random data access.
+P155-009 §4.3 Auto-precharge is also implemented during Write commands.
+P155-010 §4.3 The precharge operation engaged by the Auto precharge command shall not begin until the last data of the burst write sequence is properly stored in the memory array.
+P155-011 §4.3 The bank shall be available for a subsequent row activation a specified time (tRP) after hidden PRECHARGE command (AutoPrecharge) is issued to that bank.
+P155-012 §4.3 The precharge to precharge delay is defined by tPPD in the core timing tables.
+P155-013 §4.3 tPPD applies to any combination of precharge commands (PREab, PREsb, PREpb).
+P155-023 §4.3.1 NOTE See Command Truth Table for details
+P156-001 §4.4 DDR5 shall support programmable preambles and postambles.
+P156-003 §4.4.1 Read Preamble is configured as 1tCK, 2tCK (two unique modes), 3tCK and 4tCK via MR8:OP[2:0].
+P156-007 §4.4.1 NOTE: DQS shall have an option to drive early by x-tCK to accommodate different HOST receiver designs as controlled by the Read DQS Offset in MR40:OP[2:0].
+P157-026 §4.4.1 Read DQS Offset MR40:OP[2:0] 3 tCK Offset Example
+P158-002 §4.4.3 These timing requirements apply to all configurations of the Write preamble set by MR8 OP[4:3], which is 2tCK, 3tCK, and 4tCK Write preamble, for Write to Write operations as well as for normal Write operations.
+P158-022 §4.4.3 tDQSH_pre and tDQSL_pre are shown, and apply to all toggles during the preamble.
+P158-024 §4.4.3 2nd preamble during Write to Write operation shall follow the same requirement.
+P159-013 §4.4.3 NOTE 1 The 2tCK Write Preamble is valid for the DDR5-3200/3600/4000/4400/4800 speed grades.
+P159-014 §4.4.3 NOTE 2 The 3tCK Write Preamble is valid for the DDR5-4000/4400/4800/5200/5600/6000/6400 speed grades.
+P159-015 §4.4.3 NOTE 3 The 4tCK Write Preamble is valid for the DDR5-5600/6000/6400/6800/7200/7600/8000/8400 speed grades.
+P160-013 §4.4.3 NOTE 1 The 2tCK Write Preamble is valid for the DDR5-3200/3600/4000/4400/4800 speed grades.
+P160-014 §4.4.3 NOTE 2 The 3tCK Write Preamble is valid for the DDR5-4000/4400/4800/5200/5600/6000/6400 speed grades.
+P160-015 §4.4.3 NOTE 3 The 4tCK Write Preamble is valid for the DDR5-5600/6000/6400/6800/7200/7600/8000/8400 speed grades.
+P165-014 §4.6 NOTE See Command Truth Table for details
+P166-001 §4.7 The Read Operation causes the DRAM to retrieve and output data stored in its array.
+P166-002 §4.7 The Read Operation is initiated by the Read Command during which the beginning column address and bank/group address for the data to be retrieved from the array is provided.
+P166-003 §4.7 The data is driven by the DRAM on its DQ pins RL (CL) cycles after the Read Command along with the proper waveform on the DQS inputs.
+P166-004 §4.7 Read Latency (RL or CL) is defined from the Read command to data and is not affected by the Read DQS offset timing (MR40 OP[2:0]).
+P166-005 §4.7.1 During a READ or WRITE command, DDR5 shall support BC8, BL16, BL32 (optional) and BL32 OTF (optional) during the READ or WRITE.
+P166-006 §4.7.1 MR0[1:0] is used to select burst operation mode.
+P166-025 §4.7.1 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P166-026 §4.7.1 3. In this example, Read DQS Offset Timing is set to 0 Clocks.
+P166-046 §4.7.1 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P166-047 §4.7.1 3. In this example, Read DQS Offset Timing is set to 0 Clocks
+P167-004 §4.7.1 READ-0 DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES CMD
+P167-006 §4.7.1 Matched - Read DQS Offset Timing set to 0 Clock
+P167-024 §4.7.1 Unmatched - Read DQS Offset Timing set to 1 Clock
+P167-045 §4.7.1 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P167-046 §4.7.1 3. Two different examples are shown side by side, the top with the default setting for Read DQS Offset = 0 Clock, the lower with a 1 Clock setting.
+P167-047 §4.7.1 In the lower case, the DQS is started 1 clock earlier than normal with respect to RL (CL).
+P167-048 §4.7.1 4. In both cases, the Data does not move
+P168-001 §4.7.2 The minimum external Read command to Precharge command spacing to the same bank is equal to tRTP with tRTP being the Internal Read Command to Precharge Command Delay.
+P168-002 §4.7.2 Note that the minimum ACT to PRE timing, tRAS, must be satisfied as well.
+P168-003 §4.7.2 The minimum value for the Internal Read Command to Precharge Command Delay is given by tRTP.min. A new bank active command may be issued to the same bank if the following two conditions are satisfied simultaneously:
+P168-004 §4.7.2 1. The minimum RAS precharge time (tRP.MIN) has been satisfied from the clock at which the precharge begins.
+P168-005 §4.7.2 2. The minimum RAS cycle time (tRC.MIN) from the previous bank activation has been satisfied.
+P168-006 §4.7.2 Examples of Read commands followed by Precharge are shown in Figure 33 and Figure 34.
+P168-035 §4.7.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P168-037 §4.7.2 MIN is satisfied at Precharge command time(ta+1) and that tRC.
+P168-038 §4.7.2 MIN is satisfied at the next Active command time(tc+2) .
+P168-039 §4.7.2 Figure 33 — READ to PRECHARGE with 1tCK Preamble
+P168-065 §4.7.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P168-067 §4.7.2 MIN is satisfied at Precharge command time(ta+1) and that tRC.
+P168-068 §4.7.2 MIN is satisfied at the next Active command time(tc+2).
+P169-001 §4.7.2.1 The parameters in Table 41 and Table 42 shall be defined for CK to read DQS timings.
+P169-006 §4.7.2.1 NOTE 1 Measured over full VDD and Temperature spec ranges.
+P169-007 §4.7.2.1 NOTE 2 Measured for a given DRAM part, and for each DQS_t/DQS_c pair in case of x16 (part variation is excluded).
+P169-008 §4.7.2.1 NOTE 3 These parameters are verified by design and characterization, and may not be subject to production test.
+P169-012 §4.7.2.1 NOTE 6 Measured at a fixed and constant VDD and Temperature condition.
+P169-017 §4.7.2.1 NOTE 1 Measured over full VDD and Temperature spec ranges.
+P169-018 §4.7.2.1 NOTE 2 Measured for a given DRAM part, and for each DQS_t/DQS_c pair in case of x16 (part variation is excluded).
+P169-019 §4.7.2.1 NOTE 3 These parameters are verified by design and characterization, and may not be subject to production test.
+P169-023 §4.7.2.1 NOTE 6 Measured at a fixed and constant VDD and Temperature condition.
+P171-001 §4.7.3 The read timing diagrams in Figure 36 and Figure 37 cover read timings for fixed BL32 BL32 in BL32 OTF mode, and BL16 in BL32 OTF mode for x4 devices only.
+P171-002 §4.7.3 In these read timing diagrams, for clarity of illustration, CK and DQS are shown aligned.
+P171-003 §4.7.3 As well, DQS and DQ are shown edge-aligned.
+P171-004 §4.7.3 Offset between CK and DQS, and between DQS and DQ may be appropriate.
+P171-005 §4.7.3 A dummy CAS command is required for second half of the transfer of BL32.
+P171-018 §4.7.3 DES DES DES DES DES DES DES DES DES DES DES DES DES DES READ (Dummy) DES
+P171-026 §4.7.3 1. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P171-027 §4.7.3 2. A dummy RD command is required for the second half of the transfer with a delay of 8 clocks from the first RD command.
+P171-028 §4.7.3 3. The figure also shows a dummy ODT command being issued to non-target rank 1 for the second half of the transfer.
+P171-029 §4.7.3 4. C10 is used for burst ordering and can be LOW or HIGH for the first RD command.
+P171-030 §4.7.3 C10 for the dummy RD command must be the opposite value from the first RD command.
+P171-031 §4.7.3 5. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P171-032 §4.7.3 6. CA bits other than C10 and AP in dummy CAS command are the same as the first CAS command.
+P171-050 §4.7.3 1. Figure shows BL16 read operation when MR0 is programmed to use BL32 OTF mode.
+P171-051 §4.7.3 In this case, no dummy RD command is required as transfer size is BL16.
+P171-052 §4.7.3 2. DES commands are shown for ease of illustration; other commands may be valid at these times including commands to allow data transfer from the same die after transfer of BL16.
+P171-053 §4.7.3 3. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P172-012 §4.7.3 DES DES DES DES DES DES DES DES DES DES DES DES DES DES READ DES
+P172-018 §4.7.3 1. Figure shows back to back BL16 writes to different bank groups.
+P172-019 §4.7.3 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P172-031 §4.7.3 DES DES DES DES DES DES DES DES DES DES DES DES DES DES READ DES
+P172-037 §4.7.3 1. Figure shows back to back BL16 reads to same bank group using a timing of tCCD_L_WR.
+P172-038 §4.7.3 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P172-046 §4.7.3 DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES READ (Dummy) DES
+P172-052 §4.7.3 1. AP bit must be set HIGH for first CAS and LOW for dummy CAS command.
+P172-053 §4.7.3 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P172-054 §4.7.3 3. CA bits other than C10 and AP in dummy CAS command are the same as the first CAS command.
+P173-016 §4.7.3 1. AP bit must be set to LOW with the CAS command.
+P173-017 §4.7.3 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P173-024 §4.7.4 NOTE 1 RBL: Read burst length associated with Read command
+P173-028 §4.7.4 NOTE 2 WBL: Write burst length associated with Write command
+P173-032 §4.7.4 NOTE 3 The following is considered for tRTW equation
+P173-033 §4.7.4 1tCK needs to be added due to tDQS2CK
+P173-034 §4.7.4 Read DQS offset timing can pull in the tRTW timing
+P173-037 §4.7.4 NOTE 5 tWTRA must be satisfied instead of tWTR_L for same bank access when Read w/AutoPrecharge
+P173-038 §4.7.4 NOTE 6 tWTRA = tWR - tRTP, allows the precharge generated by the Read AutoPrecharge to meet tWR from the preceding Write when it occurs within the same bank.
+P174-028 §4.7.4 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P174-029 §4.7.4 3. The write recovery time (tWR) is referenced from the first rising clock edge after the last write data shown at Ta+10.
+P174-030 §4.7.4 tWR specifies the last burst write cycle until the precharge command can be issued to the same bank.
+P174-057 §4.7.4 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P174-058 §4.7.4 3. The write recovery time (tWR) is referenced from the first rising clock edge after the last write data shown at Ta+10.
+P174-059 §4.7.4 The internal precharge after the Read AutoPrecharge command cannot begin before tWR is satisfied, which is equivalent to tWTRA + tRTP
+P174-063 §4.7.5 NOTE 1 DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P175-005 §4.7.5 NOTE 1 DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P175-010 §4.7.5 NOTE 1 DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P175-011 §4.7.5 DDR5 x8 and x16 devices will have different write to write same bank group timings, based on whether the second write requires a read-modify-write (RMW), the Burst Length mode of the device set by MR0: OP[1:0], and whether data masking is enabled by MR5:OP[5].
+P175-012 §4.7.5 BL16 Partial Writes and BC8 Writes require a RMW on x8/x16 devices.
+P175-013 §4.7.5 BL16 non-partial writes do not require RMW.
+P175-022 §4.7.5 NOTE 1 DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P179-014 §4.8 The Write Operation stores data to the DRAM.
+P179-015 §4.8 It is initiated by the Write command during which the beginning column address and bank/group address for the data to be written to the array is provided.
+P179-016 §4.8 The data is provided to the DRAM on the DQ inputs CAS Write Latency (CWL) cycles after the Write command along with the proper waveform on the DQS inputs.
+P179-017 §4.8 CAS Write Latency is defined and measured from final cycle of the Write command to the first effective rising DQS (excluding write preamble).
+P179-018 §4.8.1 One write data mask (DM_n) pin for each byte data group is supported on x8 and x16 DDR5 SDRAMs.
+P179-019 §4.8.1 The DM_n pin/function is enabled via mode register.
+P179-020 §4.8.1 For the x4 configuration SDRAM, the DM mode register setting must be disabled.
+P179-021 §4.8.1 The DM_n pin has identical timings and termination functionality on write operations as the DQ pins, as shown in Figure 43.
+P179-022 §4.8.1 The DM_n pin is not used for read cycles and the pin should behave like a DQ pin driving high or be terminated to RTT_PARK.
+P179-023 §4.8.1 When the DM function is disabled by MR, the DRAM disables the DM input and output receiver and does not expect nor drive any valid logic level.
+P179-025 §4.8.1 The WR_Partial (WR_P) = Low as part of the write command must be used in conjunction with the DM_n data.
+P179-026 §4.8.1 The WR_Partial (WR_P) = Low is to help DRAM start an internal read for 'read modify write' during masked writes.
+P179-027 §4.8.1 If WR_Partial (WR_P) = High during write, then the mask data on DM_n must be high.
+P179-028 §4.8.1 If DM is disabled, MR5 OP[5] = 0, WR_Partial (WR_P) must be “H”.
+P179-029 §4.8.1 DM_n may be high or low.
+P180-001 §4.8.2 Figure 44 through Figure 47 write timing diagrams are to help understand the meaning of each write parameter; the diagrams are just examples.
+P180-002 §4.8.2 The details of each parameter are defined separately.
+P180-003 §4.8.2 In these write timing diagrams, for clarity of illustration, CK and DQS are shown aligned.
+P180-004 §4.8.2 As well, DQS and DQ are shown center-aligned.
+P180-005 §4.8.2 Offset between CK and DQS, and between DQS and DQ may be appropriate.
+P180-023 §4.8.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P180-043 §4.8.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P181-029 §4.8.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P181-030 §4.8.2 3. The write recovery time (tWR) is referenced from the first rising clock edge after the last write data shown at Ta+10 tWR specifies the last burst write cycle until the precharge command can be issued to the same bank.
+P181-057 §4.8.2 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P181-058 §4.8.2 3. The write recovery time (WR) is referenced from the first rising clock edge after the last write data shown at Ta+10.
+P181-059 §4.8.2 WR specifies the last burst write cycle until the precharge command can be issued to the same bank.
+P182-002 §4.8.3 For a valid burst, all timing parameters for each edge of a burst must be satisfied.
+P182-007 §4.8.3 WRITE DES DES DES DES DES DES DES DES
+P182-038 §4.8.3 2. DES commands are shown for ease of illustration, other commands may be valid at these times.
+P182-040 §4.8.3 tDQSS must be met at each rising clock edge.
+P183-001 §4.8.4 Figure 49 and Figure 50 write timing diagrams cover write timings for fixed BL32, BL32 in BL32 OTF mode and BL16 in BL32 OTF mode for x4 devices only.
+P183-002 §4.8.4 In these write timing diagrams, for clarity of illustration, CK and DQS are shown aligned.
+P183-003 §4.8.4 As well, DQS and DQ are shown center-aligned.
+P183-004 §4.8.4 Offset between CK and DQS, and between DQS and DQ may be appropriate.
+P183-005 §4.8.4 A dummy CAS command is required for second half of the transfer of BL32.
+P183-018 §4.8.4 DES DES DES DES DES DES DES DES DES DES DES DES DES DES WRITE (Dummy)
+P183-034 §4.8.4 2. DES commands are shown for ease of illustration; other commands may be valid at these times.
+P183-035 §4.8.4 3. A dummy WR command is required for the second half of the transfer with a delay of 8 clocks from the first WR command.
+P183-036 §4.8.4 4. The figure also shows a dummy ODT command being issued to non-target rank 1 for the second half of the transfer.
+P183-037 §4.8.4 5. C10 is used for burst ordering and shall be LOW for the first WR command, and be HIGH for dummy WR command.
+P183-038 §4.8.4 6. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P183-039 §4.8.4 7. CA bits other than C10 and AP in dummy CAS command are the same as the first CAS command.
+P183-057 §4.8.4 1. Figure shows BL16 write operation when MR0 is programmed to use BL32 OTF mode.
+P183-058 §4.8.4 In this case, no dummy WR command is required as transfer size is BL16.
+P183-059 §4.8.4 2. DES commands are shown for ease of illustration; other commands may be valid at these times including commands to allow data transfer from the same die after transfer of BL16.
+P183-060 §4.8.4 3. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P184-012 §4.8.4 DES DES DES DES DES DES DES DES DES DES DES DES DES DES WRITE DES
+P184-018 §4.8.4 1. Figure shows back to back BL16 writes to different bank groups.
+P184-019 §4.8.4 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P184-031 §4.8.4 DES DES DES DES DES DES DES DES DES DES DES DES DES DES WRITE DES
+P184-037 §4.8.4 1. Figure shows back to back BL16 writes to same bank group using a timing of tCCD_L_WR.
+P184-038 §4.8.4 2. Back to Back BL32 writes to same bank group shall have a minimum separation of 16 clocks.
+P184-039 §4.8.4 3. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P184-047 §4.8.4 DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES WRITE (Dummy) DES
+P184-053 §4.8.4 1. AP bit must be set HIGH for first CAS and LOW for dummy CAS command.
+P184-054 §4.8.4 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P184-055 §4.8.4 3. CA bits other than C10 and AP in dummy CAS command are the same as the first CAS command.
+P185-016 §4.8.4 1. AP bit must be set to LOW with the CAS command.
+P185-017 §4.8.4 2. DDR5 DRAM supports an optional fixed BL32 mode and optional BL32 OTF (On the fly) mode for x4 devices only.
+P185-018 §4.8.5 DDR5 devices will have separate same bank group write timings, based on whether the second write requires an RMW (Read-Modify-Write) access or JW (Just-Write) access.
+P185-025 §4.8.5 NOTE 1 BC8 refers to BC8 OTF mode enabled by MR0 OP[1:0]=01B, where Write command is issued with BL=L in CA5.
+P185-026 §4.8.5 NOTE 2 Optional BL32 refers to BL32 fixed mode enabled by MR0 OP[1:0]=10B or BL32 OTF mode enabled by MR0 OP[1:]=11B, where Write command is issued with BL=L in CA5.
+P185-027 §4.8.5 Data Mask refers to Data Mask mode enabled by MR5 OP[5]=1B, where Write command is issued with WP=L in CA11.
+P185-034 §4.8.5 NOTE 1 BC8 refers to BC8 OTF mode enabled by MR0 OP[1:0]=01B, where Write command is issued with BL=L in CA5.
+P185-035 §4.8.5 NOTE 2 Optional BL32 refers to BL32 fixed mode enabled by MR0 OP[1:0]=10B or BL32 OTF mode enabled by MR0 OP[1:]=11B, where Write command is issued with BL=L in CA5.
+P185-036 §4.8.5 NOTE 3 In Optional BL32 case, this timing table affects to the 1st Write command only, not the dummy Write command.
+P185-037 §4.8.5 NOTE 4 There is no BL32 to BC8 case.
+P186-006 §4.8.5 NOTE 1 BC8 refers to BC8 OTF mode enabled by MR0 OP[1:0]=01B, where Write command is issued with BL=L in CA5.
+P186-007 §4.8.5 NOTE 2 Optional BL32 refers to BL32 fixed mode enabled by MR0 OP[1:0]=10B or BL32 OTF mode enabled by MR0 OP[1:]=11B, where Write command is issued with BL=L in CA5.
+P186-008 §4.8.5 NOTE 3 In Optional BL32 case, this timing table affects to the 1st Write command only, not the dummy Write command.
+P186-009 §4.8.5 NOTE 4 There is no BC8 to BL32 case.
+P186-015 §4.8.6 NOTE 1 BC8 refers to BC8 OTF mode enabled by MR0 OP[1:0]=01B, where Write command is issued with BL=L in CA5.
+P186-016 §4.8.6 NOTE 2 Optional BL32 refers to BL32 fixed mode enabled by MR0 OP[1:0]=10B or BL32 OTF mode enabled by MR0 OP[1:]=11B, where Write command is issued with BL=L in CA5.
+P186-017 §4.8.6 NOTE 3 In Optional BL32 case, this timing table affects to the 1st Write command only, not the dummy Write command.
+P186-018 §4.8.6 NOTE 4 There is no BC8 to BL32 case.
+P186-019 §4.8.7.1 Generally, if Write timing parameters are violated, a complete reset/initialization procedure has to be initiated to make sure that the DRAM works properly.
+P186-020 §4.8.7.1 However, it is desirable, for certain violations as specified below, the DRAM is guaranteed to not “hang up” and that errors are limited to that particular operation.
+P186-021 §4.8.7.1 For the following, it will be assumed that there are no timing violations with regards to the Write command itself (including ODT, etc.) and that it does satisfy all timing requirements not mentioned below.
+P186-022 §4.8.7.2 Should the required data to strobe timing or voltage parameters be violated (Such as: tRx_RDQ_tMargin, tRx_DQS2DQ_Skew, VRx- _DQS, VRx_DQ, etc.), for any of the data/strobe timing edges or data/strobe voltage limits associated with a write burst data eye, then incorrect data might be written to the memory locations addressed with this WRITE command.
+P186-023 §4.8.7.2 In the example, Figure X (add example timing diagram reference) the relevant strobe edges for a write burst are associated with the clock edges: Tn,Tn+0.5,Tn+1,...,Tn+8.5 Subsequent reads from that location might results in unpredictable read data, however the DRAM will work properly otherwise.
+P187-001 §4.8.7.3 Should the strobe timing requirements (tWPRE, tWPST) or the strobe to clock timing requirements (tDQSS, tDQSoffset) be violated for any of the strobe edges associated with a Write burst, then wrong data might be written to the memory location addressed with the offending WRITE command.
+P187-002 §4.8.7.3 Subsequent reads from that location might result in unpredictable read data, however the DRAM will work properly otherwise with the following constraints:
+P187-003 §4.8.7.3 (1) Both Write CRC and data burst OTF are disabled; timing specifications other than tWPRE, tWPST, tDQSS, tDQSoffset are not violated.
+P187-004 §4.8.7.3 (2) The offending write strobe (and preamble) arrive no earlier or later than six DQS transition edges from the Write-Latency position.
+P187-005 §4.8.7.3 (3) A Read command following an offending Write command from any open bank is allowed.
+P187-006 §4.8.7.3 (4) One or more subsequent WR or a subsequent WRA {to same bank as offending WR} may be issued tCCD_L later but incorrect data could be written; subsequent WR and WRA can be either offending or non-offending Writes.
+P187-007 §4.8.7.3 Reads from these Writes may provide incorrect data.
+P187-008 §4.8.7.3 (5) One or more subsequent WR or a subsequent WRA {to a different bank group} may be issued tCCD_S later but incorrect data could be written; subsequent WR and WRA can be either offending or non-offending Writes.
+P187-009 §4.8.7.3 Reads from these Writes may provide incorrect data.
+P187-010 §4.8.7.3 (6) Once one or more precharge commands (PREpb, PREsb, or PREab) are issued to DDR5 after offending WRITE command and all banks become precharged state (idle state), a subsequent, non-offending WR or WRA to any open bank shall be able to write correct data.
+P187-011 §4.8.7.3 (7) DQS strobes including preamble must align to each Write commands data burst length configuration.
+P187-012 §4.8.7.3 If the DRAM fails to capture or incorrectly de-serializes the incoming data stream because of misalignment or missing strobe edges, errors may occur.
+P187-013 §4.8.7.3 These errors will propagate indefinitely until the DRAM is put into an idle state, i.e., all banks are in the precharged state with tRP satisfied.
+P188-001 §4.8.8.1 The following specifies the relationship between the write enable timing window tWPRE_EN_ntck and the DRAM related DQS to CK drift window tDQSD as well as the system related DQS to CK drift window tDQSS around the final DQS to CK offset trained pass/fail point tDQS offset based on write leveling feedback in order to support n-tck pre-amble mode.
+P188-002 §4.8.8.1 Functional operation requires that the following condition is met:
+P189-009 §4.8.8.1 NOTE 1 Measured relative to the write leveling feedback, after write leveling training has been completed.
+P189-011 §4.8.8.1 NOTE 3 When measuring the tDQSoffset, tWLS/H are reflected in the tDQSoffset result.
+P189-012 §4.8.8.1 NOTE 4 DDR5-3200 timings apply for data rates <2933 MT/s.
+P190-001 §4.9 The Self-Refresh command can be used to retain data in the DDR5 SDRAM, even if the rest of the system is powered down.
+P190-003 §4.9 The DDR5 SDRAM device has a built-in timer to accommodate Self-Refresh operation.
+P190-005 §4.9 The internal average periodic refresh interval adjustment (increasing, decreasing or staying constant) does not require any external control.
+P190-006 §4.9 Self Refresh entry is command based (SRE), while the Self-Refresh Exit Command is defined by the transition of CS_n LOW to HIGH with a defined pulse width tCSH_SRexit, followed by three or more NOP commands (tCSL_SRexit) to ensure DRAM stability in recognizing the exit.
+P190-007 §4.9 This is described below in more detail.
+P190-008 §4.9 Before issuing the Self-Refresh-Entry command, the DDR5 SDRAM must be idle with all bank precharge state with tRP satisfied. ‘Idle state’ is defined as all banks are closed (tRP, etc. satisfied), no data bursts are in progress, and all timings from previous operations are satisfied (tMRD, tRFC, etc.).
+P190-009 §4.9 A Deselect command must be registered on the last positive clock edge before issuing Self Refresh Entry command.
+P190-010 §4.9 Once the Self Refresh Entry command is registered, Deselect commands must also be registered at the next positive clock edges until tCPDED is satisfied.
+P190-011 §4.9 After tCPDED has been satisfied, CS_n must transition low.
+P190-012 §4.9 After CS_n transitions low at the end of tCPDED, the CS_n shall stay low until exit.
+P190-013 §4.9 The DDR5 SDRAM may switch to a CMOS based receiver to save more power and that transition should coincide with CS_n going low.
+P190-014 §4.9 When the CS_n is held low, the DRAM automatically disables ODT termination and sets Hi-Z as termination state regardless RTT configuration for the duration of Self-Refresh mode.
+P190-015 §4.9 Upon exiting Self-Refresh, DRAM automatically enables ODT termination and set RTT_PARK (for DQs) asynchronously during tXSDLL when RTT_PARK is enabled.
+P190-016 §4.9 CA/CS/CK ODT shall revert to its strapped or its MR ODT Setting state if previously applied.
+P190-017 §4.9 During normal operation (DLL on) the DLL is automatically disabled upon entering Self-Refresh and is automatically enabled (including a DLL-Reset) upon exiting Self-Refresh.
+P190-018 §4.9 When the DDR5 SDRAM has entered Self-Refresh mode, all of the external control signals, except CS_n and RESET_n, are “don’t care.” For proper Self-Refresh operation, all power supply and reference pins (VDD, VDDQ, VSS, VSS and VPP) must be at valid levels.
+P190-019 §4.9 DRAM internal VrefDQ and/or VrefCA generator circuitry may remain ON or turned OFF depending on DRAM design.
+P190-020 §4.9 If DRAM internal VrefDQ and/or VrefCA circuitry is turned OFF in self refresh, when DRAM exits from self refresh state, it ensures that VrefDQ and/or VrefCA and generator circuitry is powered up and stable within tXS period.
+P190-021 §4.9 First Write operation or first Write Leveling Activity may not occur earlier than tXS after exit from Self Refresh.
+P190-023 §4.9 The clocks must stay on until tCKLCS but can be DON’T CARE after tCKLCS expires but it should be noted that shortly after tCPDED, the termination for the clocks will be off.
+P190-024 §4.9 The clock is internally disabled (in the DRAM) during Self-Refresh Operation to save power.
+P190-025 §4.9 The minimum time that the DDR5 SDRAM must remain in Self-Refresh mode is tCSL.
+P190-026 §4.9 The user may change the external clock frequency or halt the external clock tCKLCS after Self-Refresh entry is registered, however, the clock must be restarted and stable tCKSRX before the device can exit Self-Refresh operation.
+P190-027 §4.9 The procedure for exiting Self-Refresh requires a sequence of events.
+P190-028 §4.9 Since the DRAM will switch to a CMOS based driver to save power, the DRAM will trigger Self-Refresh exit upon seeing the CS_n transition from low to high and stay high for tCSH_SRExit.
+P190-029 §4.9 tCASRX prior to CS_n transitioning high, the CA bus must be driven high.
+P190-030 §4.9 Once tCSH_SRExit is satisfied, three NOP commands must be issued, otherwise the DRAM could be put into an unknown state.
+P190-031 §4.9 The clocks must be valid for tCKSRX prior to issuing the NOP commands that completes the Self Refresh exit sequence.
+P190-032 §4.9 Once a Self-Refresh Exit is registered, the following timing delay must be satisfied:
+P190-033 §4.9 1. Commands that do not require locked DLL: tXS - ACT, MPC, MRW, PDE, PDX, PRE(ab,sb,pb), REF(ab,sb), RFM(ab,sb), SRE, VREFCA & WRP
+P190-034 §4.9 2. Commands that require locked DLL: tXS_DLL - RD, MRR & WR
+P190-036 §4.9 To issue ZQ calibration commands, applicable timing requirements must be satisfied.
+P191-002 §4.9 One additional refresh shall be issued in addition to refreshes normally scheduled.
+P191-003 §4.9 This additional refresh is not counted toward the computation of the average refresh interval (tREFI).
+P191-004 §4.9 If this refresh isn’t issued by tREFI after CS_n rises with tCSH_SRexit, then it counts toward the maximum number of refreshes which may be postponed.
+P191-005 §4.9 This additional refresh does not replace the regularly periodic refresh that’s also scheduled at tREFI after CS_n rises with tCSH_SRexit (both of these refresh commands count toward the maximum number of refreshes which may be postponed).
+P191-006 §4.9 The additional refresh consists of a single REFab command or n * REFsb, where n is the number of banks in a bank group.
+P191-007 §4.9 If Self Refresh is to be re-entered and no regularly scheduled periodic refresh commands have been issued, the additional refresh shall be issued prior to Self Refresh re-entry.
+P191-008 §4.9 Plus, FGR mode may require extra Refresh command(s), in addition the aforementioned additional Refresh, depending on the condition of the Self Refresh entry (refer to Clause 4.13.7 for more information)
+P191-009 §4.9 The exit timing from self-refresh exit to first valid command not requiring a locked DLL is tXS.
+P191-010 §4.9 The value of tXS is (tRFC).
+P191-011 §4.9 This delay is to allow for any refreshes started by the DRAM to complete.
+P191-012 §4.9 tRFC continues to grow with higher density devices so tXS will grow as well.
+P191-032 §4.9 NOTES: 1 - While in 2N mode, tCSL_SRexit will not be statically held low (as shown above), as it will pulse for each 2 cycle period.
+P191-034 §4.9 2 - Both tCSH_SRexit and tCSL_SRexit timings must be satisfied to guarantee DRAM operation.
+P191-035 §4.9 3 - When tCSH_SRexit,min expires, the CA bus is allowed to transition from all bits High to any valid (V) level.
+P191-036 §4.9 Prior to CS_n being registered Low at tc+1, the CA bus must transition to NOP conforming to the CAI state of the DRAM and complying with applicable DRAM input timing parameters.
+P192-001 §4.9 NOTES: 1 - While in 2N mode, tCSL_SRexit will not be statically held low (as shown above), as it will pulse for each 2 cycle period.
+P192-003 §4.9 2 - Both tCSH_SRexit and tCSL_SRexit timings must be satisfied to guarantee DRAM operation.
+P192-004 §4.9 3 - When tCSH_SRexit,min expires, the CA bus is allowed to transition from all bits High to any valid (V) level.
+P192-005 §4.9 Prior to CS_n being registered Low at tc+1, the CA bus must transition to NOP conforming to the CAI state of the DRAM and complying with applicable DRAM input timing parameters.
+P192-017 §4.9 NOTE 1 While in 2N mode, tCSL_SRexit will not be statically held low, as it will pulse for each 2-cycle period for a min of 6nCK.
+P192-019 §4.9 NOTE 2 Upon exit from Self-Refresh, the 3D Stacked DDR5 SDRAM requires a minimum of one extra refresh command to all logical ranks before it is put back into Self-Refresh Mode.
+P192-024 §4.9.1 Only SRX, with a pulsing CS_n (NOP-DES-NOP- DES-NOP) during tCSL_SRexit, to a 1-cycle command is shown, but behavior is similar for SRX to a 2-cycle command.
+P192-025 §4.9.1 Behavior is similar for Frequency Change during Self Refresh, with or without VREF and/or ODT changes.
+P192-026 §4.9.1 Pulsing CS_n during tCSL_SRexit is not required for Self Refresh exit (e.g. CS_n may optionally be held low for the full tCSL_SRexit duration).
+P192-074 §4.9.1 NOTES: 1 - Both tCSH_SRexit and tCSL_SRexit timings must be satisfied to guarantee DRAM operation.
+P192-075 §4.9.1 2 - When tCSH_SRexit,min expires, the CA bus is allowed to transition from all bits High to any valid (V) level.
+P192-076 §4.9.1 Prior to CS_n being registered Low at tc+1, the CA bus must transition to NOP conforming to the CAI state of the DRAM and complying with applicable DRAM input timing parameters.
+P193-001 §4.9.2 DDR5 DRAMs may contain an optional feature that disables refresh to selected segments in each bank when in self refresh.
+P193-002 §4.9.2 The feature allows for lower self refresh power if portions of the DRAMs are not required to retain data.
+P193-003 §4.9.2 Each bank is divided into six or eight segments based on the three highest row address bits supported by the DRAM device’s density.
+P193-004 §4.9.2 Non-Binary density devices are divided into 6 segments as the 110 and 111 encodings of the PASR segment row bits are not used.
+P193-005 §4.9.2 Binary densities are divided into 8 segments.
+P193-006 §4.9.2 MR60 provides the segment mask for all banks, with one bit per segment.
+P193-007 §4.9.2 A 0 (default) in the bit position provides normal refresh operation for the segment while a 1 masks that segment.
+P193-008 §4.9.2 Masked segments are NOT refreshed during self refresh.
+P193-010 §4.9.2 All segments are refreshed by refresh command when out of self refresh.
+P193-011 §4.9.2 Segments which are masked are not guaranteed to retain their data if self refresh is entered.
+P193-012 §4.9.2 ECS Transparency will not produce accurate results if any mask bit is set, but ECS scrubbing will still occur if enabled.
+P193-013 §4.9.2 MR19 bit 7 is indicates whether the DRAM supports PASR.
+P194-001 §4.10 DDR5’s Power-Down mode is new to the DDR family, as it no longer has a CKE pin to control entry and exit.
+P194-004 §4.10 In PDE mode, it should be sampled on every edge.
+P194-005 §4.10.1 Power-Down is entered when the command is registered.
+P194-006 §4.10.1 Unlike Self Refresh Mode, CS_n will NOT be held low constantly while in Power-Down.
+P194-007 §4.10.1 Timing diagrams are shown in Figure 60 with details for entry and exit of Power-Down.
+P194-008 §4.10.1 The DLL should be in a locked state when Power-Down is entered for fastest Power-Down exit timing.
+P194-009 §4.10.1 SDRAM design provides all AC and DC timing and voltage specification as well as proper DLL operation as long as DRAM controller complies with SDRAM specifications.
+P194-010 §4.10.1 During Power-Down, if all banks are closed after any in-progress commands are completed, the device will be in Precharge Power-Down mode; if any bank is open after in-progress commands are completed, the device will be in active Power-Down mode.
+P194-013 §4.10.1 If CA11=H during the PDE command, only the PDX command, qualified by CS_n, is legal during Power-Down.
+P194-017 §4.10.1 When Power-Down is entered with ODT control enabled (CA11=L) the DRAM will continue to accept NT termination commands throughout the Power-Down process, including entry and exit.
+P194-018 §4.10.1 Upon entry, during the tCPDED period, the DRAM will be switching from decoding all CA bus command bits to only decoding CA1 and CA4.
+P194-019 §4.10.1 During this time all CA command bits must be valid when CS_n is asserted with the full Read or Write command, as the DRAM may still be decoding the full command.
+P194-020 §4.10.1 Following tCPDED, only CA1 and CA4 need be valid as the DRAM will be ignoring the others.
+P194-021 §4.10.1 Following the PDX command, all CA command bits must be valid for NT termination commands also, as the DRAM will be transitioning to decoding all bits.
+P194-022 §4.10.1 It is only the time between tCPDED completion and tXP start that CA13:5, 3:2, and 0 need not be valid
+P194-028 §4.10.1 CS used to trigger exit of PD
+P194-047 §4.10.1 1. There is no specific PDX command.
+P194-048 §4.10.1 In the case of systems with register using CAI, the encoding out of the register may be inverted from a NOP type command.
+P194-049 §4.10.1 2. Diagram above is shown with a valid 2-cycle command after tXP for simplicity.
+P194-050 §4.10.1 1-cycle valid commands are also legal.
+P195-001 §4.10.1 The DLL is kept enabled during Precharge Power-Down or Active Power-Down.
+P195-002 §4.10.1 (If RESET_n goes low during Power-Down, the DRAM will be out of PD mode and into reset state).
+P195-003 §4.10.1 Power-down duration is limited by tPD(max) of the device.
+P195-017 §4.10.1 NOTE 1 Power-Down command can be sent while operations such as Activation, Precharge, Auto-Precharge or Refresh are in progress but IDD spec will not be applied until the operations are finished.
+P195-018 §4.10.1 NOTE 2 WR is calculated from tWR by using the Rounding Algorithm.
+P195-020 §4.10.1 NOTE 3 WR in clock cycles as programmed in MR6.
+P195-021 §4.10.1 NOTE 4 Read/Write/MRR can refer to both Target command and Non-Target command when CA11=H during PDE command.
+P195-022 §4.10.1 NOTE 5 tMPC_delay is a valid timing parameter for all MPC commands except: a) Enter CS training Mode, Enter CA Training Mode, PDA Enumerate ID Program Mode because Power Down Entry is not supported for these MPC commands.
+P195-023 §4.10.1 b) Apply VrefCA, VrefCS and RTT_CA/CS/CK because this MPC command requires waiting for VrefCA_time/ VREFCS_time.
+P195-024 §4.10.1 NOTE 6 RBL: Read burst length associated with Read command a) RBL = 32 (36 w/ RCRC on) for fixed BL32 and BL32 in BL32 OTF mode b) RBL = 16 (18 w/ RCRC on) for fixed BL16 and BL16 in BL32 OTF mode c) RBL = 16 (18 w/ RCRC on) for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+P195-025 §4.10.1 NOTE 7 WBL: Write burst length associated with Write command a) WBL = 32 (36 w/ WCRC on) for fixed BL32 and BL32 in BL32 OTF mode b) WBL = 16 (18 w/ WCRC on) for fixed BL16 and BL16 in BL32 OTF mode c) WBL = 16 (18 w/ WCRC on) for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode tPD(max) shall always be less than or equal to 5*tREFI1(max) during Normal Refresh Mode and less than or equal to
+P195-026 §4.10.1 NOTE 8 9*tREFI2(max) during Fine Granularity Refresh Mode, and when using the rounding algorithms, nPD(max) shall always be less than or equal to 5*nREFI1(max) during Normal Refresh Mode and less than or equal to 9*nREFI2(max) during Fine Granularity Refresh Mode.
+P200-001 §4.13 The Refresh command (REF) is used during normal operation of the DDR5 SDRAMs.
+P200-002 §4.13 This command is non persistent, so it must be issued each time a refresh is required.
+P200-004 §4.13 There are three types of refresh operations supported by DDR5 SDRAMs.
+P200-009 §4.13 For Normal Refresh and Fine Granularity Refresh operations, all banks of the SDRAM must be precharged and idle for a minimum of the precharge time tRP(min) before the All Bank Refresh command (REFab) can be issued.
+P200-010 §4.13 The refresh addressing is generated by the internal refresh controller during the refresh cycle.
+P200-011 §4.13 The external address bus is only required to be in a valid state once this cycle has started.
+P200-012 §4.13 When the refresh cycle has completed, all banks of the SDRAM will be in the precharged (idle) state.
+P200-014 §4.13 Note that the tRFC timing parameter depends on memory density and the refresh mode setting, which can be set to Normal Refresh mode or Fine Granularity Refresh (FGR) mode.
+P200-031 §4.13 DRAM must be idle DRAM must be idle
+P200-035 §4.13 2. Time interval between two Refresh commands may be extended to a maximum of 5 x tREFI1.
+P200-052 §4.13 DRAM must be idle DRAM must be idle
+P200-056 §4.13 2. Time interval between two Refresh commands may be extended to a maximum of 9 x tREFI2.
+P201-001 §4.13.1 The DDR5 SDRAM has two different Refresh modes with two different refresh cycle time (tRFC) settings.
+P201-002 §4.13.1 There is a Normal Refresh mode setting and a Fine Granularity Refresh (FGR) mode setting.
+P201-003 §4.13.1 The FGR mode provides a shorter refresh cycle time (tRFC2) but also requires All Bank Refresh commands (REFab) to be provided twice as often (tREFI is divided by two, i.e., tREFI2 = tREFI1/2).
+P201-004 §4.13.1 The Refresh mode setting is programed by MRW command as shown in Table 69.
+P201-005 §4.13.1 The Refresh Modes are fixed until changed by MRW command to MR4 OP[4].
+P201-006 §4.13.1 No on-the-fly Refresh mode change is supported.
+P201-010 §4.13.2 If Refresh Mode is changed by MRW, the new tREFI and tRFC parameters would be applied from the moment of the rate change.
+P201-011 §4.13.2 As shown in Figure 66, when an All Bank Refresh command is issued to the DRAM in Normal Refresh mode, then tRFC1 and tREFI1 are applied from the time that the command (REFab) was issued.
+P201-012 §4.13.2 And when an All Bank Refresh command is issued in Fine Granularity Refresh (FGR) mode, then tRFC2 and tREFI2 should be satisfied.
+P201-014 §4.13.2 NOTE: Refresh mode is Normal Refresh mode before the MRW and FGR mode after the MRW
+P201-015 §4.13.2 The following conditions must be satisfied before the Refresh mode can be changed.
+P201-016 §4.13.2 Otherwise, data retention of DDR5 SDRAM cannot be guaranteed.
+P201-017 §4.13.2 1. In the Normal Refresh mode, the REFab command must complete and tRFC1 must be satisfied before issuing the MRW command to change the Refresh Mode.
+P201-018 §4.13.2 2. If performing REFab commands in the Fine Granularity Refresh mode, it is recommended that an even number of REFab commands are issued to the DDR5 SDRAM since the last change of the Refresh mode with an MRW command before the Refresh mode is changed again by another MRW command.
+P201-019 §4.13.2 If this condition is met, no additional Refresh commands are required upon the Refresh mode change.
+P201-020 §4.13.2 If this condition is not met, one extra REFab command is required to be issued to the DDR5 SDRAM upon Refresh mode change.
+P201-024 §4.13.2 3. If performing REFsb commands, it is recommended that all banks have received an even number of REFsb command since the last change of the Refresh mode with an MRW command before the Refresh mode is changed again by another MRW command, since a REFab command will reset the internal bank counter.
+P201-025 §4.13.2 If this condition is met, no additional refresh commands are required upon the Refresh mode change.
+P201-026 §4.13.2 If this condition is not met, one extra REFab command is required to be issued to the DDR5 SDRAM upon Refresh mode change.
+P202-020 §4.13.2 FGR 2x, even REFab count, to Normal 1x Refresh Mode (recommended)
+P203-016 §4.13.2 FGR 2x, all banks received REFsb and even REF count, to Normal 1x Refresh Mode (recommended)
+P204-001 §4.13.3 Same Bank Refresh command (REFsb) allows the DDR5 DRAM to apply the refresh process to a specific bank in each bank group unlike the All Bank Refresh command (REFab) which applies the refresh process to all banks in every bank group.
+P204-002 §4.13.3 The determination whether a Same Bank Refresh or an All Bank Refresh is executed by the DRAM depends on whether REFsb or REFab command is issued, as shown in the command truth table.
+P204-003 §4.13.3 The REFsb command is only allowed in FGR mode (MR4[OP4]=1).
+P204-004 §4.13.3 The first Same Bank Refresh command (REFsb) to each bank increments an internal bank counter and once the bank counter equals the number of available banks in a bank group, it will reset and start over on the next subsequent REFsb.
+P204-005 §4.13.3 Each time the internal bank counter resets and starts over on the next subsequent REFsb, the global refresh counter will also increment.
+P204-006 §4.13.3 A REFsb command can be issued to any bank and in any bank order.
+P204-007 §4.13.3 A subsequent REFsb command issued to the same bank prior to every bank receiving a REFsb command will repeat refreshing the same row since the SDRAM’s global refresh counter will not increment until all banks in a bank group receive a REFsb command.
+P204-008 §4.13.3 The first REFsb command issued is the “Synchronization” REFsb command and the “Synchronization” count resets the internal bank counter to zero when either (a) every bank has received one REFsb command, (b) RESET is applied, (c) entering/exiting self refresh mode, or (d) REFab is issued.
+P204-009 §4.13.3 The DRAM’s global refresh counter increments when either a REFab is issued or when all banks have received their one REFsb command and the “Synchronization” count reset to zero.
+P205-001 §4.13.3 The REFsb command must not be issued to the device until the following conditions are met: -tRFC1 or tRFC2 has been satisfied after the prior 1x or 2x REFab command(s), respectively -tRFCsb has been satisfied after the prior REFsb command -tRP has been satisfied after the prior PRECHARGE command to that bank -tRRD_L has been satisfied after the prior ACTIVATE command (e.g. tRRD_L has to be met from ACTIVATE of a different bank in the same bank group to the REFsb targeted at the same bank group)
+P205-002 §4.13.3 Additional restrictions for issuing the REFsb command: -tFAW has not been met (each REFsb counts as an ACTIVATE command for the four activate window timing restriction)
+P205-003 §4.13.3 Once a REFsb is issued, the target banks (one in each Bank Group) are inaccessible during the same-bank refresh cycle time (tRFCsb); however, the other banks in each bank group are accessible and can be addressed during this same-bank refresh cycle.
+P205-004 §4.13.3 When the same-bank refresh cycle has completed, the banks refreshed via the REFsb will be in idle state.
+P205-017 §4.13.3 NOTE 1 MR4(OP[4]) set to Normal Refresh mode.
+P205-018 §4.13.3 NOTE 2 MR4(OP[4]) set to FGR mode.
+P205-019 §4.13.3 REFsb command is valid only in FGR mode.
+P205-024 §4.13.4 This same tREFI/2 interval value is also appropriate if the refresh mode is set to Normal Refresh mode and REFab commands are issued (tRFC1) but 85 °C<Tcase<=95 °C.
+P205-026 §4.13.4 The DDR5 SDRAM includes an optional method for the host to indicate when Refresh commands are being issued at the 2x (tREFI2) refresh interval rate.
+P205-027 §4.13.4 The 2x Refresh Interval Rate indicator (MR4:OP[3]) alerts the DRAM if the host supports the refresh interval rate indication as part of the REF command using CA8.
+P205-028 §4.13.4 If enabled (MR4:OP[3]=1), the host will issue 1x REF commands with CA8=H (Tcase<=85 °C), and the host will issue 2x REF commands with CA8=L (Tcase any allowable temperature).
+P205-029 §4.13.4 MR4:OP[3] is a Status Read/Write “SR/W” MR bit which shows DDR5 SDRAM support of this optional feature.
+P205-030 §4.13.4 Reading MR4:OP[3] will return a “1” if the 2x Refresh Interval Rate indicator is supported.
+P205-031 §4.13.4 A “0” will be returned if not supported.
+P205-032 §4.13.4 tREFI is based on the 8,192 refresh commands that need to be issued within the baseline tREF=32 ms refresh period on the DDR5 SDRAM.
+P206-001 §4.13.5 Typical platforms are designed with the assumption that no more than one physical rank is refreshed at the same time.
+P206-002 §4.13.5 In order to limit the maximum refresh current (IDD5B1) for a 3D stacked SDRAM, it will be required to stagger the refresh commands to each logical rank in a stack.
+P206-003 §4.13.5 The tRFC time for a single logical rank is defined as tRFC_slr and is specified as the same value as for a monolithic DDR5 SDRAM of equivalent density.
+P206-004 §4.13.5 The minimum amount of stagger between refresh commands sent to different logical ranks (tRFC_dlr) or physical ranks (tRFC_dpr) is specified to be approximately tRFC_slr/3 - Table 74.
+P206-014 §4.13.5 Future densities such as 24Gb or 32Gb could require different tREFI requirements.
+P206-015 §4.13.5 NOTE 3 n is the number of banks in a bank group (e.g. 8G: n=2; 16G: n=4).
+P207-006 §4.13.6 In general, a Refresh command needs to be issued to the DDR5 SDRAM regularly every tREFI interval.
+P207-007 §4.13.6 To allow for improved efficiency in scheduling and switching between tasks, some flexibility in the absolute refresh interval is provided.
+P207-010 §4.13.6 At any given time, a maximum of 5 REFab commands can be issued within 1 x tREFI1 window.
+P207-014 §4.13.6 An additional REFab command is required after Self-Refresh exit (refer to Clause 4.9 for more information).
+P207-016 §4.13.6 At any given time, a maximum of 9 REFab commands can be issued within 1 x tREFI2 window.
+P207-018 §4.13.6 An additional REFab command is required after Self-Refresh exit (refer to Clause 4.9 for more information).
+P208-006 §4.13.7 DDR5 SDRAM can enter Self Refresh mode anytime in Normal Refresh and FGR mode without any restriction on the number of Refresh commands that have been issued during the mode before the Self Refresh entry.
+P208-007 §4.13.7 However, upon Self Refresh exit, one additional Refresh must be issued in addition to the normally scheduled Refresh commands (refer to Clause 4.9 for more information).
+P208-008 §4.13.7 Plus, extra Refresh command(s), in addition to the aforementioned additional Refresh, may also be required depending on the condition of the Self Refresh entry.
+P208-009 §4.13.7 The conditions and requirements for the extra Refresh command(s) are defined as follows:
+P208-010 §4.13.7 1. There are no special restrictions for the Normal Refresh mode.
+P208-011 §4.13.7 2. If performing REFab commands in FGR mode, it is recommended that there should be an even number of REFab commands before entry into Self Refresh since the last Self Refresh exit or MRW command that set the FGR mode.
+P208-012 §4.13.7 If this condition is met, no additional refresh commands are required upon Self Refresh exit.
+P208-013 §4.13.7 If this condition is not met, one extra REFab command is required to be issued to the DDR5 SDRAM upon Self Refresh exit.
+P208-018 §4.13.7 3. If performing REFsb commands, it is recommended that all banks have received a REFsb command prior to entering Self Refresh, since entering and exiting Self Refresh will reset the internal bank counter.
+P208-019 §4.13.7 If this condition is met, no additional refresh commands are required upon Self Refresh exit, and REFsb commands again can be issued to any bank in any bank order.
+P208-020 §4.13.7 If this condition is not met, one extra REFab command or an extra REFsb command to each bank is required to be issued to the DDR5 SDRAM upon Self Refresh exit.
+P209-024 §4.13.7 FGR 2x, even REF count, to Self Refresh (recommended)
+P210-026 §4.13.7 FGR 2x all banks received REFsb and even REF count, to Self Refresh (recommended)
+P214-002 §4.15.1 The MPC command is initiated with CS_n, and CA[4:0] asserted to the proper state at the rising edge of CK, as defined by the Command Truth Table.
+P214-003 §4.15.1 The MPC command has eight operands (OP[7:0]) that are decoded to execute specific commands in the SDRAM.
+P214-004 §4.15.1 The MPC command uses an encoding that includes the command encoding and the opcode payload in a single clock cycle.
+P214-005 §4.15.1 This enables the host to extend the setup and hold for the CA signals beyond the single cycle when the chip select asserts.
+P214-006 §4.15.1 In addition, the MPC command will support multiple cycles of CS_n assertion.
+P214-007 §4.15.1 The multiple cycles of CS_n assertion ensures the DRAM will capture the MPC command during at least one rising CK_t/CK_c edge.
+P214-011 §4.15.1 NOTE See Command Truth Table for details
+P215-001 §4.15.2 Table 81 specifies the opcode assignments for the MPC operations:
+P215-011 §4.15.2 NOTE 8 “Apply VrefCA, VrefCS and RTT_CA/CS/CK” applies the settings previously sent with the VrefCA or VrefCS command and “MPC Set RTT_CA/CS/CK”.
+P215-012 §4.15.2 Until this “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command is sent, the values are in a shadow register.
+P215-013 §4.15.2 Any MRR to the VrefCA, VrefCS and RTT_CA/CS/CK settings should return only the applied value.
+P215-014 §4.15.2 The shadow register shall retain the previously set value, so that any time the “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command is sent, there is no change in the applied value unless a new VrefCA , VrefCS or RTT_CA/CS/CK value was sent to the shadow register since the previous “MPC Apply VrefCA, VrefCS and RTT_CA/CS/CK” command.
+P215-015 §4.15.2 NOTE 9 The PDA Enumerate ID and PDA Select ID opcodes include a 4-bit value, designated by xxxxB in the table.
+P215-016 §4.15.2 This is the value that is programmed into the MR for these fields.
+P215-017 §4.15.2 The PDA Enumerate ID can only be changed while in PDA Enumerate Programming Mode.
+P215-018 §4.15.2 NOTE 10 For any MPC command that is associated with a Mode Register, the only way to program that Mode Register is via the MPC command.
+P215-019 §4.15.2 Those Mode Registers will be read only and will not support MRW.
+P215-020 §4.15.2 NOTE 11 MPC command “tDLLK/tCCD_L” sets the settings to the MR13 shadow registers and applies the settings to MR13 when the DRAM encounters MPC command “DLL RESET” or SRE with CA9=”L”.
+P217-001 §4.15.3 As shown in Figure 74 and Figure 75, the MPC CMD timings are extended when Multi-Cycle CS assertion mode (MR2:OP[4]) is set to zero.
+P217-002 §4.15.3 The CS_n is also asserted for multiple consecutive cycles, limited by tMPC_CS.
+P217-003 §4.15.3 All timings will be relative to the final rising CK_t/CK_c within the CS_n assertion window.
+P217-004 §4.15.3 The min delay from when the MPC command is captured to the next valid command is specified as tMPC_Delay.
+P217-005 §4.15.3 Prior to VrefCS, VrefCA, CS and CA Training completing successfully, the CA will be driven with additional setup and hold beyond the CS_n assertion.
+P217-006 §4.15.3 For the DRAM to latch the MPC command in cases where the alignment between CS_n, CA, and CK may be unknown, the CA inputs shall reach the proper command state and provide at least three cycles of setup prior to CS_n transitioning from high to low, CS_n shall remain low for tMPC_CS, and CA shall remain in the proper command state for and provide at least three cycles of hold after CS_n transitions from low to high.
+P217-007 §4.15.3 This additional setup and hold is only needed when MR2:OP[4] is set to 0 (Multi-Cycle CS assertion duration mode).
+P217-026 §4.15.3 The DDR5 DRAM will support a MR setting to indicate when a Multi-Cycle CS_n assertion may be used for the MPC, VrefCA and VrefCS commands.
+P217-027 §4.15.3 MR2:OP[4] defaults to “0” upon a reset.
+P217-028 §4.15.3 Once MR2:OP[4] =1 (single-cycle CS_n assertion) has been set, the host is required to change MR2:OP[4]=0 if any multi-cyle CS_n timings are used.
+P217-048 §4.15.3 Default value for the CS Assertion Duration is 0, which allows for Multi-Cycle CS assertions during training.
+P218-006 §4.15.3 NOTE 1 The minimum tMPC_CS constraint only applies when the CS Assertion Duration setting is 0.
+P218-007 §4.15.3 The CS Assertion Duration MR setting shall be set (MR2:OP[4]=1B) to enable single cycle MPC commands.
+P218-008 §4.15.3 The earliest time to set the CS Assertion Duration MR (MR2:OP[4]=1B) is after VrefCS, VrefCA, CS and CA training are complete, when MRW commands can be sent to the DRAM.
+P218-009 §4.15.3 NOTE 2 This applies only to Multi-Cycle MPC commands when MR2:OP[4]=0B
+P218-037 §4.15.3 NOTE 2 Selected MPC functions require all banks to be idle.
+P218-039 §4.15.3 NOTE 3 Non-target rank commands are required to meet the minimum ODT requirements for DQ/DQS
+P219-001 §4.16 DDR5 allows programmability of a given device on a rank.
+P219-002 §4.16 As an example, this feature can be used to program different ODT or Vref values on DRAM devices on a given rank.
+P219-004 §4.16 Some per DRAM settings will be required prior to any training of the CA and CS timings and the DQ write timings.
+P219-005 §4.16 The MPC, VrefCA, and VrefCS command timings with extended setup/hold and Multi-Cycle CS assertion may be used for PDA commands if the CA and CS timings have not yet been trained.
+P219-006 §4.16 DDR5 introduces a CA interface-only method for Per DRAM Addressability, by having a unique PDA Enumerate ID in each DRAM, and the ability to Group A PDA Select ID in all DRAMs.
+P219-007 §4.16 The unique PDA Enumerate ID requires the use of the DQ signals and a PDA Enumerate Programming Mode in the DRAM to program.
+P219-008 §4.16 Once the PDA Enumerate ID has been programmed, subsequent commands must not use the DQ signals (Legacy PDA mode) to designate which DRAM is selected for the command.
+P219-011 §4.16 There are a few MPC commands that do not use the PDA Select ID to determine if the command will be applied.
+P219-012 §4.16 Among these MPC commands that do not use the PDA Select ID are the MPC opcodes to set the PDA Enumerate ID and the opcode to set the PDA Select ID.
+P219-030 §4.16 NOTE 1 The PDA Enumerate ID is the only command that utilizes the PDA Enumerate ID Programming mode.
+P220-001 §4.16 The following mode register fields are associated with Per DRAM Addressable operation:
+P220-005 §4.16.1 1. PDA Enumerate Programming Mode is enabled by sending one or more MPC command cycles with OP[7:0]=0000 1011B.
+P220-006 §4.16.1 Data Mask and PDA Enumerate are not supported for use at the same time.
+P220-007 §4.16.1 Either data mask shall be disabled or DM_n driven high, while PDA Enumerate Programming Mode is enabled.
+P220-010 §4.16.1 An alternate method is shown in Figure where DQ is driven low and DQS toggles continuously starting prior to the SET PDA Enumerate ID command, and remains toggling until the Exit PDA Enumerate Programming Mode command has finished.
+P220-012 §4.16.1 The controller may choose to drive all the DQ bits.
+P220-013 §4.16.1 Only the MPC command with PDA Enumerate ID opcodes will be supported in PDA Enumerate Programming Mode, and the MPC command to exit PDA Enumerate Programming Mode does not require a DQ qualification.
+P220-014 §4.16.1 3. For the “don’t enumerate” case where the SDRAM ignores the PDA Enumerate ID MPC command in the PDA Enumerate Programming Mode, the DQS_t/DQS_c and DQ signals (DQSL_t/DQSL_c and DQL/DQU for x16) may be high (driven or due to RTT_PARK termination) prior to sending the MPC command to enter PDA Enumerate Programming Mode.
+P220-015 §4.16.1 After entering PDA Enumerate Programming Mode, the DQS and DQ signals must remain high (driven or due to RTT_PARK termination) until exiting PDA Enumerate Programming Mode.
+P220-016 §4.16.1 Holding the signals high will ensure that this DRAM is never set to a PDA Enumerate ID other than the default setting of 0xFH (15).
+P220-017 §4.16.1 Timing diagram example shown in Clause 4.16.1.2.
+P221-007 §4.16.1 NOTE 1 DQS_t/DQS_c are differential signals and small amounts of noise could appear as “toggling”, resulting in “Unknown” PDA Enumerate Results”.
+P221-008 §4.16.1 NOTE 2 When the DQS signals are high, the DQs shall be held high as well.
+P221-009 §4.16.1 NOTE 3 “Differentially Low” is defined as DQS_t low and DQS_c high (DQSL_t low and DQSL_c high for x16)
+P221-012 §4.16.1 Valid low time is defined as the time between tPDA_S and tPDA_H.
+P221-015 §4.16.1 The BC8 mode register setting in the DRAM is ignored while in PDA Enumerate Programming mode.
+P221-019 §4.16.1 Once PDA Enumerate Programming Mode is enabled in the DRAM, the host memory controller shall wait tMPC_Delay to the time the first PDA Enumerate ID MPC command is issued.
+P221-020 §4.16.1 6. In the PDA Enumerate Programming Mode, only PDA Enumerate ID MPC commands and Exit PDA Enumerate Programming Mode MPC command are allowed.
+P221-021 §4.16.1 7. In the PDA Enumerate Programming Mode, the default (or previously programmed) RTT_PARK value will be applied to the DQ signals.
+P221-022 §4.16.1 8. The MPC PDA Enumerate ID command cycle time is defined as tPDA_DELAY.
+P221-023 §4.16.1 This time is longer than the normal MPC_Delay and must be met in order to provide the DRAM time to latch the asserted DQ and complete the write operation to the PDA Enumerate ID mode register (MR1:OP[3:0], prior to the next MPC PDA Enumerate ID command shown in Figure 76.
+P221-025 §4.16.1 The Exit PDA Enumerate Programming Mode MPC command is never qualified by the DQ settings and is applied to all DRAMs in the rank.
+P221-026 §4.16.1 10. During the PDA Enumerate ID Programming mode, only one enumerate command is allowed to a device.
+P221-027 §4.16.1 Once the PDA Enumerate ID is programmed, any change for the PDA Enumerate ID requires DRAM to enter into PDA Enumerate ID Programming mode.
+P221-028 §4.16.1 As an example, the following sequence to program the PDA Enumerate ID per device is as follows:
+P222-002 §4.16.1.1 In this case only one device is programmed prior to exiting PDA Enumerate Programming Mode, but many devices may be programmed prior to exiting PDA Enumerate Programming Mode.
+P222-003 §4.16.1.1 For a multi-device PDA Enumerate ID operation, host may choose either reiterate single device enumeration as plotted in Figure 76 and Figure 77, or follow suggested multi-device enumeration sequences as plotted in Figure 78 through Figure 80.
+P222-024 §4.16.1.1 Set PDA Enum ID
+P222-035 §4.16.1.1 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P224-001 §4.16.1.1 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMP- C_Delay (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY.
+P224-006 §4.16.1.1 5 - tPDA_DQS_DELAY and tPDA_DQS_STOP apply to all DQ states.
+P224-039 §4.16.1.1 Set PDA Enum ID=0
+P224-040 §4.16.1.1 Set PDA Enum ID=1
+P224-041 §4.16.1.1 Set PDA Enum ID=Last (3 or 7)
+P224-064 §4.16.1.1 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMP- C_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P224-069 §4.16.1.1 5 - tPDA_DQS_DELAY and tPDA_DQS_STOP apply to all DQ states.
+P225-030 §4.16.1.1 Set PDA Enum ID=0
+P225-031 §4.16.1.1 Set PDA Enum ID=1
+P225-032 §4.16.1.1 Set PDA Enum ID=Last (3 or 7)
+P225-053 §4.16.1.1 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_2.
+P226-019 §4.16.1.2 Set PDA Enum ID
+P226-027 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P227-034 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P228-032 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P229-027 §4.16.1.2 Exit PDA Enum Programming Mode Set PDA Enum ID=Last (3 or 7) Enter PDA Enum Programming Mode
+P229-028 §4.16.1.2 Set PDA Enum ID=0
+P229-029 §4.16.1.2 Set PDA Enum ID=1
+P229-037 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_2.
+P229-061 §4.16.1.2 Set PDA Enum ID=0
+P229-062 §4.16.1.2 Set PDA Enum ID=1
+P229-063 §4.16.1.2 Set PDA Enum ID=Last (3 or 7)
+P229-069 §4.16.1.2 DQ signals remain HIGH (driven or due to RTT_PARK)
+P229-074 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_2.
+P230-024 §4.16.1.2 Set PDA Enum ID=0
+P230-025 §4.16.1.2 Set PDA Enum ID=1
+P230-026 §4.16.1.2 Set PDA Enum ID=Last (3 or 7)
+P230-037 §4.16.1.2 NOTES: 1 - The figure assumes Multi-Cycle MPC commands, so the timings are adjusted to visually show separation between timings such as tMPC_DELAY (which start at the end of a command cycle and end at the beginning of the next) and other timings such as tPDA_DELAY_1.
+P231-001 §4.16.2 Once the PDA Enumerate ID’s have been programmed in all the DRAMs, the execution of future MPC/MRW/VrefCA/VrefCS commands depend on the value of the PDA Select ID and the type of MPC command.
+P231-002 §4.16.2 If the PDA Select ID is set to 1111B, all DRAMs will execute the command.
+P231-003 §4.16.2 For all MRW, VrefCA, and VrefCS commands, and some of the MPC commands (RTT_CA/CS/CK and RTT_PARK opcodes), the PDA Select ID will be compared to the PDA Enumerate ID to determine if the DRAM will execute the commands.
+P231-004 §4.16.2 For all other MPC commands (i.e. not the RTT_CA/CS/CK and RTT_PARK opcodes), the DRAM will execute the command regardless of the PDA Select ID value.
+P231-005 §4.16.2 As an example, the following sequence could be used to program unique MR fields per device:
+P231-006 §4.16.2 1. Send MPC with ‘PDA Select ID’ opcode, with encoding 0000 included in the opcode
+P231-008 §4.16.2 this can be any number of MRW’s
+P231-009 §4.16.2 3. Send MPC with ‘PDA Select ID’ opcode, with encoding 0001 included in the opcode
+P231-011 §4.16.2 this can be any number of MRW’s
+P231-013 §4.16.2 6. Send MPC with ‘PDA Select ID’ opcode, with encoding 1111 included in the opcode to enable all DRAMs to execute all MRW, VrefCA, VrefCS, and MPC commands.
+P231-014 §4.16.2 Timing diagram in Figure 89 shows an example sequencing of the programming of the PDA Select ID and MPC, VrefCA, VrefCS, or MRW commands.
+P231-038 §4.16.2 NOTES: 1 - Commands used such as MPC, VREFCA, VREFCS or MRW have different command spacing requirements.
+P231-039 §4.16.2 Please refer to those specific sections in the document for details.
+P231-040 §4.16.2 2 - ANY Multi-Cycle MPC, VREFCA, or VREFCS command spacing is measured from the last valid command cycle to the first following valid command cycle, while standard command spacing goes from last valid command cycle to last valid command cycle.
+P235-001 §4.17.1 Training of the Memory Interface requires the ability to read a known pattern from the DRAM, prior to enabling writes into the DRAM.
+P235-002 §4.17.1 Due to the increased frequencies supported by DDR5, a simple repeating pattern will not be sufficient for read training.
+P235-003 §4.17.1 A Linear-Feedback Shift Register (LFSR) for a pattern generator will also be required.
+P235-006 §4.17.1 The timing of the read data return is the same as for an MRR or Read command, including the operation of the strobes (DQSL_t, DQSL_c, DQSU_t, DQSU_c).
+P235-009 §4.17.1 Once this mode is configured, an MRR to MR31 on the target DRAM will start the pattern output and will automatically continue to output the appropriate pattern until it is stopped by either a system reset or issuing an MRW to MR25:OP[3]=0 command that reverts it to the “MRR command based (Default)” mode as shown in Figure 93.
+P235-020 §4.17.1 Therefore, the host is responsible to ensure that RTT_PARK (MR34:OP[2:0] is programmed to align with RTT_NOM_RD (MR35:OP[5:3]), if so desired.
+P235-027 §4.17.1 The Read Training Pattern has 2 primary supported modes of operation.
+P235-028 §4.17.1 One of the modes is referred to as the serial format.
+P235-029 §4.17.1 The second mode is LFSR mode.
+P235-030 §4.17.1 The LFSR mode is required due to the higher frequency bus operation for DDR5.
+P235-031 §4.17.1 There is a secondary mode associated with the LFSR mode, which enables the generation of a simple high frequency clock pattern instead of the LFSR pattern.
+P235-032 §4.17.1 The Read Training Pattern is a full BL16 pattern for each MRR command issued to the Read Training Pattern address.
+P235-033 §4.17.1 The Read Training Pattern has a command burst length 16 regardless of the MR0 setting, and it should not be disturbed by an ACT command until the completion of training.
+P236-008 §4.17.1 For Serial Read Training Pattern Format mode, the following Mode Registers are programmed with the data pattern.
+P236-009 §4.17.1 There are two 8-bit registers to provide a 16 UI pattern length and two 8-bit registers to provide up to x16 data width for per-DQ-lane inversion.
+P236-010 §4.17.1 The LFSR mode requires an 8-bit Mode Register to program the seed for the 8-bit LFSR.
+P236-011 §4.17.1 The details of the LFSR polynomial and outputs are explained in the following section.
+P236-012 §4.17.1 The Read Pattern Data0/LFSR0 and Read Pattern Data1/LFSR1 registers are re-purposed to program the LFSR seed when the Read Training Pattern Format is set to LFSR.
+P236-019 §4.17.1 The values for the Read Pattern Data0/LFSR0 and Read Pattern Data1/LFSR1 registers may be restored to the default values under the following conditions:
+P236-024 §4.17.1 The Read Pattern Invert - Lower DQ Bits register will apply to x4, x8, and x16 devices.
+P236-025 §4.17.1 The Read Pattern Invert - Upper DQ Bits register only applies to x16 devices, for the upper byte.
+P237-004 §4.17.1 The values for both Read Pattern Invert - Lower and Upper DQ Bit registers may be restored to the default values under the following conditions:
+P237-016 §4.17.2 These two instances will have unique seeds/states and supply patterns to any of the DQ outputs.
+P238-001 §4.17.2 The seed location in the figure clarifies the mapping for the Read Pattern Data0/LFRS0 and Read Pattern Data1/LFSR1 mode registers relative to the LFSR logic.
+P238-002 §4.17.2 The LFSR output is directed to any number of the DQ outputs, depending on the LFSR assignment programming.
+P238-003 §4.17.2 These assignments between LFSR0 and LFSR1 to each DQ output will create a unique pattern sequence for better coverage of DQ to DQ crosstalk interactions.
+P238-004 §4.17.2 The LFSR assignments are programmed according to Table 99.
+P238-015 §4.17.2 The values for the Read LFSR Assignments register may be restored to the default values under the following conditions:
+P238-019 §4.17.2 The LFSR output will change at the UI frequency, producing a new output value on every UI.
+P238-020 §4.17.2 The LFSR will only change state to support the read data after the MRR to the specific (MR31) Read Training Pattern address.
+P238-023 §4.17.2 The BL for the LFSR data will always be BL16.
+P238-024 §4.17.2 The state of the LFSR can also be changed by sending a new MRW command to reset the LFSR0 and LFSR1 seed mode registers (MR26 and MR27) or through the reset conditions listed for those registers.
+P238-027 §4.17.2 When the LFSR0 Pattern Option MR25:OP[1] is set to 1, the pattern that is supplied by the DRAM is a high frequency clock pattern, instead of the LFSR.
+P238-028 §4.17.2 This clock pattern is sent only to the DQ signals that have a setting of 0 in the corresponding DQ Opcode location in the Read LFSR Assignments register.
+P238-031 §4.17.2 When the LFSR1 Pattern Option MR25:OP[2] is set to 1, the pattern that is supplied by the DRAM is a high frequency clock pattern, instead of the LFSR.
+P238-032 §4.17.2 This clock pattern is sent only to the DQ signals that have a setting of 1 in the corresponding DQ Opcode location in the Read LFSR Assignments register.
+P238-037 §4.17.2 The Read LFSR Assignments settings have no impact on whether or not the LFSR state progresses with each MRR to MR31.
+P242-001 §4.17.4 The timing of the data return and strobe sequence should match that of a Read operation.
+P242-002 §4.17.4 The timing of the Read Training Pattern will be similar to the MRR operation, with the exception that the MRR to the address that invokes the Read Training Pattern will be a full BL16 pattern.
+P242-004 §4.17.4 This is faster than a normal MRR to MRR condition which is defined as tMRR.
+P242-005 §4.17.4 Figure 91 timing diagram shows the general timing sequence for an MRR that accesses the Read Training Pattern:
+P242-022 §4.17.4 Note - The Read Training Pattern shall align to the DDR5 preamble timings.
+P242-038 §4.17.4 (Read Pattern) (Read Pattern) (Any Other) MRR
+P242-047 §4.17.4 Note - The Read Training Pattern shall align to the DDR5 preamble timings.
+P243-016 §4.17.4 NOTE 2 Host responsible for proper setting of RTT_PARK of the non-target rank is programmed to align with RTT_NOM_RD, if
+P245-026 §4.19.1 The CA Training Mode is a method to facilitate the loopback of a logical combination of the sampled CA[13:0] signals.
+P245-027 §4.19.1 In this mode, the CK is running, and the CS_n qualifies when the CK samples the CA signals.
+P245-028 §4.19.1 A loopback equation that includes all the CA signals results in an output value that is sent asynchronously on the DQ signals back to the host memory controller.
+P245-029 §4.19.1 The host timings between CS_n, CK, and CA[13:0] signals can then be optimized for proper alignment.
+P245-031 §4.19.1 The functional command interface is restored only after exiting this mode, which requires a CS_n assertion of two or more consecutive tCK.
+P245-032 §4.19.1 Prior to entering the CA Training Mode, the CS_n signal must be aligned to the CK to meet the CS_n to CK timing specifications.
+P245-033 §4.19.1 This assumes that CS Training has been completed to determine the correct CS_n timings on the host, so the timing window for the CS to be met to ensure enought setup or hold timing margin prior to entering Command/Address training mode.
+P245-034 §4.19.1 Chip select training, through CSTM, can be used to accomplish this.
+P245-037 §4.19.2 Only the sampling of the CA signals, evaluation of the XOR result, and loop back to the DQ’s will occur.
+P245-038 §4.19.2 While in CA Training Mode, the CS_n signal will only assert for a single tCK at a time.
+P245-040 §4.19.2 When the CA Training Mode has completed successfully, the CA Training Mode is disabled by asserting CS_n for 2 or more cycles in a row, while sending a NOP command on the CA bus.
+P246-002 §4.19.3 Unlike functional operation, there is no concept of multiple cycle commands in CA Training Mode.
+P246-007 §4.19.3 During CA Training Mode the CA ODT is enabled as for functional operation.
+P246-008 §4.19.3 The VrefCA is Group According to the functional setting.
+P246-009 §4.19.3 The timing requirements for the CA bus, CK_t, CK_c, and CS_n are the same as for functional operation.
+P246-010 §4.19.3 The delay from when the CA signals are sampled during the CS_n assertion and when the output of the XOR computation is driven on the DQ pins is specified as tCATM_Valid, as shown in Figure 95.
+P246-013 §4.19.3 The DRAM will exit CA Training Mode when the CS_n is asserted for 2 or more consecutive cycles but limited to 8 cycles.
+P246-045 §4.19.3 NOTE 1 This timing parameter is applied to each DQ independently, not all-DQs valid window perspective.
+P247-001 §4.19.3.1 The CATM Output is computed based on the CS_n assertion and the values of the CA inputs.
+P247-006 §4.19.3.1 NOTE 1 The XOR function occurs after mirroring/inversion recovery, and only includes signals supported on the DRAM, i.e. may not include CA[13], depending on density (including stacking).
+P247-007 §4.19.3.1 If CA[13] is not needed for the DRAM's density, the logical value shall be considered 0 for the XOR computation, though as indicated in the pin description table for MIR, the ball location associated with CA13's logical input (which switches with CA12) shall be connected to VDDQ.
+P247-009 §4.19.3.2 These values are driven asynchronously as pseudo-static values, updating with a new output at a time tCATM_Valid after each CS_n assertion.
+P248-001 §4.20.1 The CS Training Mode is a method to facilitate the loopback of a sampled sequence of the CS_n signal.
+P248-002 §4.20.1 In this mode, the CK is running, and the CA signals are held in a NOP command encoding state.
+P248-003 §4.20.1 Once this mode is enabled and the DRAM devices are selected to actively sample and drive feedback, The DRAM will sample the CS_n signal on the rising edge of CK.
+P248-004 §4.20.1 Every set of four CK rising edge samples will be included in a logical computation to determine the CSTM Output result that is sent back to the host on the DQ bus.
+P248-005 §4.20.1 Once sampling begins, the DRAM must maintain the consecutive grouping of the samples every 4 tCK.
+P248-006 §4.20.1 When the CS_n Sample[0] and Sample[2] results in a logic 0 and the CS_n Sample[1] and Sample[3] results in a logic 1, the DRAM will drive a 0 on all the DQ signals.
+P248-007 §4.20.1 There is no requirement to drive any strobes, and the output signal could transition as often as every 4 tCK.
+P248-008 §4.20.2 The CS Training Mode is enabled when the host sends an MPC command with the opcode for CS Training Mode Entry.
+P248-009 §4.20.2 Since CS Training shall occur prior to establishing alignment between CK and CS_n signals, the MPC command extends beyond multiple tCK cycles, during which the CS_n signal is asserted.
+P248-010 §4.20.2 When the DRAM is in this mode, commands are still actively processed.
+P248-011 §4.20.2 The only commands that should be sent by the host memory controller while CS Training Mode is enabled are the NOP command and the MPC to exit CS Training Mode.
+P248-012 §4.20.2 Any other command may produce unreliable results.
+P248-013 §4.20.2 Once the DRAM has CS Training Mode enabled, the DRAM begins sampling on every rising CK edge, with the 4-sample groups looping consecutively.
+P248-014 §4.20.2 Depending on the value of the samples, the DQ signals are driven high or low.
+P248-015 §4.20.2 Prior to entering CS Training Mode, the DQ signals are not driven by the DRAM and are terminated according to the default RTT_PARK setting.
+P248-016 §4.20.2 After CS Training Mode is enabled, the DQ signal will begin driving the output values based on the CS Training Mode samples.
+P248-017 §4.20.2 Once the DQ signals are driven by the DRAM, RTT_PARK termination will no longer be applied, similar to a READ operation.
+P248-018 §4.20.2 To exit CS Training Mode, an MPC command shall be sent to disable CS Training Mode.
+P248-019 §4.20.2 Even though the timing relationship between CS_n and CK is understood when exiting CS Training Mode, the host is required to send a Multi-Cycle CS_n assertion during the MPC command or a single tCK assertion while MR2:OP[4]=0B.
+P248-020 §4.20.3 In CS Training Mode, the CS_n values are sampled on all CK rising edges.
+P248-021 §4.20.3 Each group of 4 consecutive samples is evaluated in pairs, and then the two pairs are combined with a logical OR prior to sending to the DQ output.
+P248-022 §4.20.3 The samples evaluation to determine the output is as follows:
+P248-038 §4.20.3 *When there is no change on the CSTM Output from previous evaluation, DQ shall continue to drive same value continuously with no switching on the bus.
+P249-001 §4.20.3 During CS Training Mode the CA ODT is enabled as for functional operation.
+P249-002 §4.20.3 The VrefCA is Group According to the functional setting (through the VrefCA Command).
+P249-003 §4.20.3 The delay from when the CS_n signals are sampled during the fourth CK rising edge (Sample[3]) to when the output of the sample evaluation is driven to a stable value on the DQ pins is specified as tCSTM_Valid, as shown in Figure 96.
+P249-004 §4.20.3 The details of the tCSTM_entry, tCSTM_exit, and tCSTM_DQ_Window are also illustrated.
+P249-065 §4.20.3 NOTE 2 The CA bus must meet setup and hold times on any clock where it is possible that CS_n might be sampled low while in CS training mode.
+P249-066 §4.20.3 When host trains CS_n timing for DDR5 by using CSTM, CS_n sampling timing for each DRAM could be different from each other because the variation of internal timing is different for each DRAM.
+P249-067 §4.20.3 Therefore, even though the CS setup/hold time is appropriate for each DRAM, 4-tCK CS_n sampling window which may have different starting points could appear differently as shown in Figure 98.
+P249-068 §4.20.3 Host should train CS_n timing based on asserting every edge of CS_n to cover multiple DRAMs without exiting CSTM.
+P250-030 §4.20.3 NOTE 1 This timing parameter is applied to each DQ independently, not all-DQs valid window perspective.
+P251-002 §4.20.3.1 These values are driven asynchronously, but may switch as often as every 4tCK.
+P252-002 §4.21.1 The fly-by topology has benefits from reducing number of stubs and their length, but it also causes flight time skew between clock and strobe at every DRAM on the DIMM.
+P252-003 §4.21.1 This makes it difficult for the memory controller to set the timings of the WRITE DQS signaling according to the Write Latency timing specification at the DRAM.
+P252-004 §4.21.1 Therefore, the DDR5 SDRAM supports a ‘write leveling’ feature to allow the controller to compensate for channel skew.
+P252-005 §4.21.1 The DDR5 Write Leveling Training also allows for an unmatched path between CK and DQS within the DRAM, and thus supports an internal Write Leveling Training flow to account for the difference in internal delays.
+P252-007 §4.21.1 The proper setting of this register shall be determined by the memory controller, either as described in the sections below, or by some other means.
+P252-008 §4.21.1 This delay setting is specific to each DRAM, its Write Preamble setting, and the operating frequency being used.
+P252-010 §4.21.1 The memory controller can use the ‘write leveling’ feature and feedback from the DDR5 DRAM to adjust the controller’s differential DQS (DQS_t - DQS_c) output delay to align to the phase and cycle that corresponds to the CAS Write Latency (CWL) delay after the WRITE command.
+P252-012 §4.21.1 The internal DRAM Write Latency timing point may be skewed from the pin-level Write Latency timing point.
+P252-013 §4.21.1 The host will minimize this skew (tDQSoffset) through the Write Leveling Training flow.
+P252-014 §4.21.1 Since the system and DIMM delays vary, the DRAM will support the ability for the host to align the DQS timings with a pin-level Write Latency differential CK (CK_t-CK_c) edge.
+P252-015 §4.21.1 This alignment is referred to as External Write Leveling.
+P252-016 §4.21.1 Once the DQS host timings are aligned at the DRAM Write Latency timing, the internal DRAM timings are optimized for lowest power and internal delay.
+P252-019 §4.21.1 During Write Leveling Training (both External and Internal), the DQS pattern shall include the full programmed write preamble and only the first toggle of the normal data burst sequence.
+P252-022 §4.21.1 The sampled feedback state will remain on the DQ bus until a subsequent Write Leveling sample changes the state, or until Write Leveling Training is exited.
+P252-025 §4.21.1 During Internal Write Leveling Training flows, the host will apply an offset to the starting point or the final setting of the DQS signals.
+P252-026 §4.21.1 The offsets are referred to as WL_ADJ_start and WL_ADJ_end.
+P252-027 §4.21.1 This will minimize the tDQSoffset variation across different DRAM devices.
+P252-029 §4.21.1 When External and Internal Write Leveling Training flows are complete and the final WL_ADJ_end offset has been applied to the DQS timings, the DQS is phase aligned and cycle aligned for write operations.
+P252-030 §4.21.1 During the training sequence the DRAM in Write Leveling training mode will apply ODT to the strobes in the same way as for functional operation.
+P252-031 §4.21.1 All non-target ranks (which will not be in Write Leveling Training Mode) will apply ODT as defined for functional operation.
+P252-032 §4.21.1 Prior to executing the DDR5 Write Leveling Training Flow, the DRAM tWPRE value must be configured to the functional operation setting.
+P252-033 §4.21.1 Note: DQS ODT is based on a DQS PARK Mode and is not enabled and disabled with DQ ODT timings.
+P253-004 §4.21.2 Write Leveling Internal Cycle Alignment offers two nibbles to control the upper and lower DQ bytes.
+P253-008 §4.21.2 Only BL16 Mode is supported in Write Leveling Training Mode.
+P253-011 §4.21.3 The differential DQS signals driven by the controller during leveling mode must be terminated by the DRAM based on ranks populated.
+P253-012 §4.21.3 Similarly, the DQ bus driven by the DRAM must also be terminated at the controller.
+P253-013 §4.21.3 All data bits shall carry the leveling feedback to the controller across the DRAM configurations x4, x8, and x16.
+P253-017 §4.21.3 When training a x16 device, the data bits of a byte will remain in the “don’t care” state until its applicable DQS signals are toggled.
+P253-018 §4.21.3 Once the DQS signals are toggled, the DQs will follow the behavior previously described.
+P253-020 §4.21.3 An MRW command is sent to enable Write Leveling Training Mode.
+P253-021 §4.21.3 Prior to sending the MRW command to enable Write Leveling Training Mode, the host memory controller must drive the DQS signals differentially low.
+P253-022 §4.21.3 After tWLPEN time, the controller can send a WRITE command, followed by strobe pulses.
+P253-023 §4.21.3 The DQS signals shall always drive differentially low, except during the WRITE preamble and burst strobe sequence .
+P253-024 §4.21.3 There is no restriction as to how early the strobe pulses are sent, so long as they are no earlier than CWL/2 after the WRITE command.
+P253-026 §4.21.3 While in Write Leveling Training mode, the host controller may send ACT and PRE commands.
+P253-027 §4.21.3 The DRAM will ignore these commands.
+P253-028 §4.21.3 The address associated with the ACT and the WRITE commands may be any value.
+P254-035 §4.21.3 CMD WRITE MRW DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES DES MRW DES DES
+P255-001 §4.21.3 The Memory controller initiates Write Leveling mode of all DRAMs in a rank by setting MR2:OP[1]=1.
+P255-002 §4.21.3 When entering write leveling mode, the DQ pins are in undefined driving mode.
+P255-003 §4.21.3 Since the controller levels one rank at a time, all non-target ranks will set Write Leveling Mode to disabled.
+P255-005 §4.21.3 DQS_RTT_PARK termination will apply to the DQS_t and DQS_c signals.
+P255-006 §4.21.3 The Controller shall drive DQS differentially LOW prior to sending the MRW command to enable Write Leveling Training Mode.
+P255-007 §4.21.3 The WRITE command must occur after a delay of tWLPEN relative to when the MRW enabled Write Leveling Training Mode.
+P255-009 §4.21.3 Once a 0 to 1 transition on the DQ bus is detected, the controller locks DQS delay setting and external write leveling is achieved for the device.
+P255-010 §4.21.3 Write Leveling Training may be executed by issuing consecutive Write commands after entering Write Leveling Mode has been enabled (no requirement to exit and reenter between each Write command).
+P255-011 §4.21.3 The minimum Write to Write command spacing during Write Leveling Mode is tWL_Write and is defined as “max(CWL, last DQS differential toggle) + tWLO(max)+ 2nCK”.
+P255-012 §4.21.3 An example of consecutive Write commands given during Write Leveling Training is shown in Figure 103:
+P256-001 §4.21.4 After the external Write Leveling Training step is completed, and after the host DQS signals have been aligned to the pin-level Write Latency timing, the host will apply a negative offset (WL_ADJ_start) to the DQS timing.
+P256-012 §4.21.4 NOTE 1 For tWPRE = 4 tCK, CL is required to be ≥ 30 during Write Leveling Training Mode operation.
+P256-013 §4.21.4 This is irrespective of the CL setting for tWPRE = 4 tCK during normal operation.
+P256-014 §4.21.4 Due to potential measurement errors that can occur during the internal Write Leveling Training, the DRAM may include an optional 0.5 tCK adjustment for optimizing the Internal Cycle Alignment.
+P256-025 §4.21.4 Apply negative DQS timing adjustment (tWL_ADJ_start)
+P256-038 §4.21.4 Apply positive DQS timing adjustment tWL_ADJ_end
+P257-008 §4.21.4 If the 0.5tCK training indicates that one byte requires the +0.5tCK offset but the other byte does not, this also indicates the two bytes are on a boundary between the two settings.
+P257-009 §4.21.4 In this case, the +0.5tCK shall be applied to both bytes, resulting inthe higher (smallest absolute) value being used.
+P259-016 §4.21.4 An example of Write Leveling Training internal Cycle Alignment executed by issuing consecutive Write commands after entering Write Leveling Mode has been enabled (no requirement to exit and reenter between each Write command) is shown in Figure 109:
+P260-002 §4.21.5 Once this is complete, the host will then add a positive offset of WL_ADJ_end (dependent upon tWPRE) to the DQS timings.
+P260-005 §4.21.5 After the WL_ADJ_end offset has been applied, the host will disable Write Leveling Training Mode (MR2:OP[1]=0).
+P260-007 §4.21.5 After every reset, the host must either restore these settings or execute the full Write Leveling Training flow.
+P260-008 §4.21.5 Figure 110 and Figure 111 show the timing relationships for the final placement of the host DQS timings relative to the Internal Write only for illustration.
+P261-007 §4.21.5 NOTE 1 There is no Max limit for the tWL_Pulse_Width, but the Write Leveling Internal Pulse must begin at zero for each WRITE command.
+P261-008 §4.21.6 When the DRAM is in Write Leveling Mode, the DQS_c/DQS_t termination (DQS_RTT_PARK) and the Command and Control termination (RTT_CA, RTT_CK, RTT_CS) will be the same as for functional operation.
+P261-009 §4.21.6 The DQ signals will not be terminated in the DRAM, but instead will be driving values to the controller.
+P261-010 §4.21.6 The host controller will apply termination for the DQ signals.
+P261-014 §4.21.6 NOTE Termination for TDQS/DM is not included since TDQS and DM are disabled during Write Leveling Training Mode.
+P264-001 §4.23.1 The MPC command is used to initiate ZQ Calibration, which calibrates the output driver and command/address termination impedance across process, temperature, and voltage.
+P264-005 §4.23.1 A ZQCal Start command may be issued anytime the DRAM is in a state in which it can receive valid commands.
+P264-006 §4.23.1 There are two timing parameters associated with ZQ Calibration.
+P264-014 §4.23.1 A ZQCal Latch command issued without rerunning the ZQ Calibration operation will relatch the results of the previous ZQ Calibration operation that completed.
+P264-015 §4.23.1 The appropriate interval between ZQCal Start commands can be determined from the ‘ODT Voltage and Temperature Sensitivity’ tables and other application-specific parameters.
+P264-017 §4.23.1 The interval could be defined by the following formula:
+P265-004 §4.23.1 NOTE Amount of changes might be design guaranteed, and actual numbers would be vendor specific.
+P265-008 §4.23.1 NOTE Amount of changes might be design guaranteed, and actual numbers would be vendor specific.
+P265-010 §4.23.2 If the system configuration has more than one rank, and if the ZQ pins of both ranks are attached to a single resistor, then the SDRAM controller must ensure that the ZQCals don’t overlap.
+P266-001 §4.24.1 The VrefCA setting must be set prior to training the CS_n and CA bus timings relative to CK.
+P266-002 §4.24.1 In order to accomplish this, DDR5-SDRAMs will support a single UI command specifically for setting the VrefCA setting.
+P266-003 §4.24.1 This avoids any timing and/or default VrefCA setting issues with sending a 2UI MRW command, by enabling the host to extend the setup and hold time for the CA signals.
+P266-004 §4.24.1 In addition, the VrefCA command will support multiple cycles of CS_n assertion.
+P266-005 §4.24.1 The multiple cycles of CS_n assertion ensures the DRAM will capture the VrefCA command during at least one rising CK_t/CK_c edge.
+P266-010 §4.24.2 The command is sampled on every rising edge of CK_t/CK_c.
+P266-011 §4.24.2 The host shall ensure that the CA signals are valid during the entire CS_n assertion time.
+P266-012 §4.24.2 The timing of the CS_n assertion may not satisfy the setup/hold requirements around all CK_t/CK_c transitions, but it will satisfy the setup/hold requirements relative to at least one CK_t/CK_c rising edge.
+P266-013 §4.24.2 Multi-cycle CS assertion is enabled or disabled by programming the mode register MR2:OP[4] bit.
+P266-014 §4.24.2 This timing relationship can always be used by the host to send the VrefCA commands even after training has been completed for the interface.
+P266-015 §4.24.2 For the DRAM to latch the VrefCA command in cases where the alignment between CS_n, CA, and CK may be unknown, the CA inputs shall reach the proper command state at least three cycles prior to CS_n transitioning from high to low, CS_n shall remain low for tVrefCA_CS, and CA shall remain in the proper command state for at least three cycles after CS_n transitions from low to high.
+P266-037 §4.24.2 NOTE 1 Multiple cycles are used to avoid possible metastability of CS_n.
+P266-038 §4.24.2 NOTE 2 At the end of CSTM and CATM, it is assumed that the host should be able to place the CS_n and the CA signals appropriately.
+P266-039 §4.24.2 This applies only to Multi-Cycle VREFCA commands when MR2:OP[4]=0B.
+P267-001 §4.25.1 The VrefCS setting should be set, if needed, prior to training the CS_n and CA bus timings relative to CK.
+P267-002 §4.25.1 In order to accomplish this, DDR5-SDRAMs will support a single UI command specifically for setting the VrefCS setting (similar to VrefCA).
+P267-003 §4.25.1 This avoids any timing and/or default VrefCS setting issues with sending a 2UI MRW command, by enabling the host to extend the setup and hold time for the CA signals.
+P267-004 §4.25.1 In addition, the VrefCS command will support multiple cycles of CS_n assertion.
+P267-005 §4.25.1 The multiple cycles of CS_n assertion ensures the DRAM will capture the VrefCS command during at least one rising CK_t/CK_c edge.
+P267-006 §4.25.1 NOTE: The operation, functionality and timings for VrefCS are effectively the same as VrefCA with the exception of a different explicit command noted below and the fact that it modifies the VREF of the chip select pin vs the CA pins.
+P267-011 §4.25.2 The command is sampled on every rising edge of CK_t/CK_c.
+P267-012 §4.25.2 The host shall ensure that the CA signals are valid during the entire CS_n assertion time.
+P267-013 §4.25.2 The timing of the CS_n assertion may not satisfy the setup/hold requirements around all CK_t/CK_c transitions, but it will satisfy the setup/hold requirements relative to at least one CK_t/CK_c rising edge.
+P267-014 §4.25.2 Multi-Cycle CS assertion is enabled or disabled by programming the mode register MR2:OP[4] bit.
+P267-015 §4.25.2 This timing relationship can always be used by the host to send the VrefCS commands even after training has been completed for the interface.
+P267-016 §4.25.2 For the DRAM to latch the VrefCS command in cases where the alignment between CS_n, CA, and CK may be unknown, the CA inputs shall reach the proper command state at least three cycles prior to CS_n transitioning from high to low, CS_n shall remain low for tVrefCS_CS, and CA shall remain in the proper command state for at least three cycles after CS_n transitions from low to high.
+P267-038 §4.25.2 NOTE 1 Multiple cycles are used to avoid possible metastability of CS_n.
+P267-039 §4.25.2 NOTE 2 At the end of CSTM and CATM, it is assumed that the host should be able to place the CS_n and the CA signals appropriately.
+P267-040 §4.25.2 This applies only to Multi-Cycle VREFCS commands when MR2:OP[4]=0B.
+P268-003 §4.26 The minimum range is
+P268-007 §4.26 The VrefCA stepsize is defined as the stepsize between adjacent steps.
+P268-008 §4.26 For a given design the DRAM VrefCA step size must be within the range specified.
+P268-011 §4.26 There are two ranges for VrefCA set tolerance uncertainty.
+P268-012 §4.26 The range of VrefCA set tolerance uncertainty is a function of number of steps n.
+P268-013 §4.26 The VrefCA set tolerance is measured with respect to the ideal line which is based on the two endpoints.
+P268-014 §4.26 Where the endpoints are at the min and max VrefCA values for a specified range.
+P268-015 §4.26 An illustration depicting an example of the stepsize and VrefCA set tolerance is below.
+P269-001 §4.26 The VrefCA increment/decrement step times are defined by VrefCA_time.
+P269-003 §4.26 The VrefCA valid level is defined by VrefCA_val tolerance to qualify the step time t1 as shown in Figure 116.
+P269-005 §4.26 This parameter is only applicable for DRAM component level validation/characterization.
+P269-006 §4.26 NOTE 1 t0 - is referenced to MPC Apply VREFCA and RTT_CA/CS/CK
+P269-007 §4.26 NOTE 2 t1 - is referenced to the VrefCA_val_tol
+P270-007 §4.26 The minimum time required between two Vref commands is VrefCA_time, shown as Vref_time in images above.
+P273-001 §4.26 Table 131 contains the CA internal Vref specifications that will be characterized at the component level for compliance.
+P273-022 §4.26 NOTE 6 Measured by recording the min and max values of the VrefCA output over the range, drawing a straight line between those points and comparing all other VrefCA output settings to that line
+P273-023 §4.26 NOTE 7 Measured by recording the min and max values of the VrefCA output across 4 consecutive steps(n=4), drawing a straight line between those points and comparing all other VrefCA output settings to that line
+P273-024 §4.26 NOTE 8 Time from MPC (Apply VREFCA, VREFCS, RTT_CK/CS/CA) command to increment or decrement
+P273-027 §4.26 VrefCA valid is to qualify the step times which will be characterized at the component level
+P274-003 §4.27 The minimum range is
+P274-006 §4.27 The VrefCS stepsize is defined as the stepsize between adjacent steps.
+P274-007 §4.27 For a given design the DRAM VrefCS step size must be within the range specified.
+P274-010 §4.27 There are two ranges for VrefCS set tolerance uncertainty.
+P274-011 §4.27 The range of VrefCS set tolerance uncertainty is a function of number of steps n.
+P274-012 §4.27 The VrefCS set tolerance is measured with respect to the ideal line which is based on the two endpoints.
+P274-013 §4.27 Where the endpoints are at the min and max VrefCS values for a specified range.
+P274-014 §4.27 An illustration depicting an example of the stepsize and VrefCS set tolerance is shown in Figure 122.
+P275-001 §4.27 The VrefCS increment/decrement step times are defined by VrefCS_time.
+P275-003 §4.27 The VrefCS valid level is defined by VrefCS_val tolerance to qualify the step time t1 as shown in Figure 116.
+P275-005 §4.27 This parameter is only applicable for DRAM component level validation/characterization.
+P275-006 §4.27 NOTE 1 t0 - is referenced to MPC Apply VREFCS and RTT_CA/CS/CK
+P275-007 §4.27 NOTE 2 t1 - is referenced to the VrefCS_val_tol
+P276-007 §4.27 The minimum time required between two Vref commands is VrefCS_time, shown as Vref_time in Figure 123.
+P279-001 §4.27 Table 133 contains the CS internal Vref specifications that will be characterized at the component level for compliance.
+P279-021 §4.27 NOTE 6 Measured by recording the min and max values of the VrefCS output over the range, drawing a straight line between those points and comparing all other VrefCS output settings to that line
+P279-022 §4.27 NOTE 7 Measured by recording the min and max values of the VrefCS output across 4 consecutive steps(n=4), drawing a straight line between those points and comparing all other VrefCS output settings to that line
+P279-023 §4.27 NOTE 8 Time from MPC (Apply VREFCA, VREFCS, RTT_CK/CS/CA) command to increment or decrement
+P279-026 §4.27 VrefCS valid is to qualify the step times which will be characterized at the component level
+P307-001 §4.33 As temperature and voltage change on the SDRAM die, the DQS clock tree will shift and may require retraining.
+P307-002 §4.33 The oscillator is usually used to measure the amount of delay over a given time interval (determined by the controller), allowing the controller to compare the trained delay value to the delay value seen at a later time.
+P307-011 §4.33 For tester measurement VDDQ=VDD is assumed Absolute value of DQS to DQ offset
+P307-020 §4.33 For tester measurement VDDQ=VDD is assumed Absolute value of DQS to DQ offset.
+P312-014 §4.36 In the case of a x8 and x16 DDR5, no internal read is required.
+P313-002 §4.37 The ECS mode allows the DRAM to internally read, correct single bit errors, and write back corrected data bits to the array (scrub errors) while providing transparency to error counts.
+P313-003 §4.37 It is recommended that a full error scrub of the DRAM is performed a minimum of once every 24 hours.
+P313-004 §4.37 There are two options for ECS mode, set via Mode Register.
+P313-005 §4.37 The Manual ECS mode (MR14:OP[7] = 1B) allows for ECS operations via the Multi-Purpose Command.
+P313-007 §4.37 The ECS feature is available on all device configurations.
+P313-009 §4.37 The EC defaults to counting rows with errors; however, it may also be configured to count code words with errors.
+P313-010 §4.37 In row mode (default), the EC tracks the number of rows that have at least one code word error detected subject to a threshold filter.
+P313-013 §4.37 EpRC error reporting is also subject to a separate threshold filter.
+P313-014 §4.37 A general functional block diagram example of the ECS Mode operation is shown in Figure 154 while the ECC Error Checking and Scrub mode, Mode Register (MR14), is shown in Table 153.
+P313-020 §4.37 ECS CMD* CAS Write*
+P314-001 §4.37.1 The ECC Transparency and Error Scrub counters are set to zero and the internal ECS Address Counters are initialized either by a RESET or by manually writing MR14 OP[6]=1B.
+P314-002 §4.37.1 While MR14:OP[6]=1B, ECS counters are reset and no additional ECS operations shall occur.
+P314-003 §4.37.1 If manual reset via mode register is utilized, mode register bit MR14 OP[6] shall be written back to a 0 before any subsequent ECS operations will continue or a subsequent reset can be applied.
+P314-005 §4.37.1 An ECS Reset Counters operation requires setting MR14:OP[6]=1B to reset MR16 - MR20.
+P314-007 §4.37.1 Manual ECS mode is enabled by MR14 OP[7] = 1B.
+P314-008 §4.37.1 A manual ECS operation requires an MPC command with OP[7:0]=0000 1100B.
+P314-009 §4.37.1 The DRAM must have all array bits written to prior to executing ECS operations to avoid generating false failures.
+P314-010 §4.37.2 All banks shall be precharged and in an idle state prior to executing a manual ECS operation.
+P314-011 §4.37.2 Executing a manual ECS operation, MPC command with OP[7:0]=0000 1100B, generates the following internally self-timed command sequence: ACTRDWRPRE.
+P314-012 §4.37.2 ECS operation timing is shown in Figure 155.
+P314-035 §4.37.2 The minimum time for the ECS operation to execute is tECSc (tMPC_Delay + tRCD + WL + tWR + tRP + ntCK).
+P314-036 §4.37.2 ntCK is required to satisfy tECSc.
+P314-040 §4.37.2 DQ’s will remain in RTT_PARK and DQS in DQS_RTT_PARK.
+P314-041 §4.37.2 The only commands allowed other than DES during tECSc for a manual ECS operation are ODT NT commands, which may change the DQ and DQS termination state.
+P314-042 §4.37.2 Any illegal usage of manual ECS mode (e.g. refresh or temperature violations) will result in operation not being guaranteed.
+P315-001 §4.37.2 Executing a manual ECS operation by an MPC command with OP[7:0]=0000 1100B will issue an internally timed ACT command row activation based on the internal ECS Address Counters' row address, tMPC_Delay after the MPC command.
+P315-002 §4.37.2 The ACT command is to be followed by a WR command tRCD later.
+P315-003 §4.37.2 The WR command will perform an internal Read-Modify-Write cycle on the code word determined by the internal ECS Address Counters' column address.
+P315-004 §4.37.2 The internal Read-Modify-Write cycle will: 1.Read the entire code word (128 data bits and 8 check bits) from the array 2.Correct a single bit error in the code word or check bits, if an error is detected 3.Write the resultant code word back to the DRAM array
+P315-005 §4.37.2 The WR command is followed by a PRE command WL + tWR later.
+P315-006 §4.37.2 The PRE command will automatically re-enable the DRAM's I/Os and address inputs, and it will return the DRAM to idle mode tRP + ntCK later, after tECSc is satisfied.
+P315-007 §4.37.2 For each ECS operation, ECS Address Counters increment the column address after each internal ECS WR command such that the next code word and check bits are selected.
+P315-008 §4.37.2 Once the column counter wraps (all code words and check bits on the row have been accessed), the row counter will increment until all code words on each of the rows within a bank are accessed.
+P315-009 §4.37.2 When the row counter wraps (all rows within the bank have been accessed), the bank counter will increment and the next bank within a bank group will repeat the process of accessing each code word.
+P315-010 §4.37.2 When the bank counter wraps, the bank group counter will increment and the next bank group will repeat the process of accessing each code word, until all bank groups within the DRAM have been accessed.
+P315-011 §4.37.2 After all the code words within the DRAM are read, corrected, and written once, the bank group counter will wrap and the process begins again with the next manual ECS operation.
+P315-012 §4.37.2 The total number of manual ECS operations required to complete one cycle of Error Check and Scrub is density and configuration dependent, as listed in Table 155.
+P315-013 §4.37.2 The DRAM controller shall track the number of manual ECS operations to complete a full scrub of that device.
+P315-016 §4.37.2 In order to complete a full Error Check and Scrub within the recommended 24 hours, the average periodic interval per ECS operation (tECSint) is 86,400 seconds divided by the total number of manual ECS operations to complete one full cycle of ECS.
+P315-017 §4.37.2 tECSint is included in Table 156.
+P315-026 §4.37.2 Issuing multiple REF commands shall not exceed the total number allowed within a 1 x tREFI window, as described in the Refresh Operation Scheduling Flexibility section of the spec.
+P315-030 §4.37.2 However, some variation in the DRAM scrubbing rate may be encountered while in Self Refresh since the DRAM will need to sync the internal operations to an internal oscillator fre-quency.
+P316-001 §4.37.2 The ECC Transparency and Error Scrub scheme incorporates a user programmable ECS Threshold Filter that masks error counts less than the programmed filter value.
+P316-002 §4.37.2 The value is set using MR15 as listed in Table 157.
+P316-006 §4.37.3 The type of error tracking provided by the ECC Transparency and Error Scrub is selectable using MR14 OP[5], which can track either the number of rows (default) or code words with errors using the Error Counter.
+P316-008 §4.37.3 MR14 OP[5] is programmed during DRAM initialization and should not be changed once the first ECS command has been issued, otherwise an unknown operation could result.
+P316-009 §4.37.3 If MR14 OP[5] is changed without powering down, a MR14 OP[6] reset shall be issued prior to subsequent ECS commands to reinitialize the counters.
+P316-010 §4.37.3 When the ECC row count mode is selected, the Error Counter (EC) increments each time a row with check bit errors is detected.
+P316-012 §4.37.3 The EC is reset after the value has been transferred to the mode register.
+P316-013 §4.37.3 MR20 is shown in Table 158.
+P316-022 §4.37.3 When the ECC code word error count mode is selected, the Error Counter (EC) increments each time a code word with check bit errors is detected.
+P316-024 §4.37.3 The EC is reset after the value has been transferred to the mode register.
+P316-025 §4.37.3 The ECC Errors per Row Counter increments the number of code words errors on a given row, after more than one error on a given row is detected.
+P316-026 §4.37.3 The EpRC counter is reset with each column address wrap.
+P316-027 §4.37.3 Each row's code word error count is compared to the previous code word error count to determine the row address with the highest error count within the DRAM die.
+P316-028 §4.37.3 After reading all code words on a row, the number of errors counted is compared to the number of errors from the previous row.
+P316-029 §4.37.3 If the previous row error count is less than the present row error count, the present larger error count is saved to the Previous High Error Count register, its associated address is saved to the Previous High Error Count Row/Bank Address/Bank Group register, and the present row error counter is cleared.
+P316-030 §4.37.3 If the previous row error count is greater than the present row error count, the previous row error count and register value remains unchanged, however the present row error counter is cleared.
+P317-002 §4.37.3 MR16:18 shown in Table 159 contains the information for the row with the highest number of code word errors and is allocated as A[17:0] Row Address, BA[1:0] Bank Address, BG[2:0] Bank Group Address.
+P317-003 §4.37.3 MR19 shown in Table 159 contains the information for the Errors per Row Count (EpRC) for the number of code word errors on the highest failing row.
+P317-018 §4.37.3 This process will occur on the ECS operation following the ECS operation that processed the last row in the last bank in the last bank group.
+P317-025 §4.37.4 Mode register configuration and readout of mode register data requires per DRAM addressing mode.
+P317-026 §4.37.4 Broadcasting the Manual ECS MPC command to all die in the stack is not supported.
+P317-027 §4.37.4 The Manual ECS MPC command to command spacing requires waiting tECSc, even to different die in the stack.
+P317-028 §4.37.4 The only commands allowed during tECSc for a manual ECS operation are ODT NT commands.
+P317-029 §4.37.5 Segments which are masked are not guaranteed to retain their data if Self Refresh is entered.
+P317-031 §4.37.5 ECS Transparency may not produce accurate results if any mak bit is set.
+P318-005 §4.38.1 A combinatorial logic block implementation of this 8-bit CRC for 64-bits of data contains TBD two-input XOR gates contained in eight 6 XOR gate deep trees.
+P321-001 §4.38.5 The controller generates the CRC checksum and forms the write data frames as shown in Clause 4.38.2 to Clause 4.38.4.
+P321-004 §4.38.5 When at least one of two write CRC enable bits is set to ‘1’ in x8, the timings of write CRC enable mode is applied to the entire device (i.e. both nibbles).
+P321-008 §4.38.5 The DRAM checks for an error in received code words per each write CRC enabled nibble by comparing the received checksum against the computed checksum and reports errors using the ALERT_n signal if there is a mismatch in any of nibbles.
+P321-010 §4.38.5 If bad data is written to the DRAM core then controller will retry the transaction and overwrite the bad data.
+P322-009 §4.38.8 When Write CRC is enabled, the CRC bits are calculated based on the sequential burst address order of the write data for the Write command.
+P322-010 §4.38.8 This sequential order is '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F' in BL16, and '0,1,2,3,4,5,6,7,T,T,T,T,T,T,T,T' or '8,9,A,B,C,D,E,F,T,T,T,T,T,T,T,T' in BC8 OTF.
+P322-011 §4.38.8 When Read CRC is enabled, the DDR5 SDRAM's CRC generator overrides the CA burst order bits C3 and C2 to '00', and CRC bits are calculated based on the sequential burst address order of the read data for the Read command.
+P322-012 §4.38.8 This sequential order is '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F' in BL16, and '0,1,2,3,4,5,6,7,T,T,T,T,T,T,T,T' or 'T,T,T,T,T,T,T,T,8,9,A,B,C,D,E,F' in BC8 OTF.
+P322-013 §4.38.8 The override values do not modify the actual data burst ordering, and are only used for the CRC calculations.
+P322-014 §4.38.8 Actual data burst follows the burst order as indicated by C3 and C2 in the Read command.
+P324-007 §4.38.11 In BL32 mode, CRC bits are separately calculated for the first half and the second half of the data.
+P324-008 §4.38.11 CRC bits for the first half of the data are transferred on 17th and 18th UI, and CRC bits for the second half of the data are transferred on 35th and 36th UI.
+P336-014 §4.42 Periods of high DDR5 DRAM activity may require additional refresh commands to protect the integrity of the DRAM data.
+P336-015 §4.42 The DRAM will indicate the requirement for additional Refresh Management (RFM) by setting read only MR58 opcode bit 0 (Table 173).
+P336-016 §4.42 OP[0]=0 indicates no additional refresh is needed beyond the refresh required in the Refresh Operation section of the specification.
+P336-017 §4.42 OP[0]=1 indicates additional DRAM refresh management is required.
+P336-021 §4.42 A suggested implementation of Refresh Management by the controller monitors ACT commands issued per bank to the DRAM.
+P336-022 §4.42 This activity can be monitored as a Rolling Accumulated ACT (RAA) count.
+P336-023 §4.42 Each ACT command will increment the RAA count by 1 for the individual bank receiving the ACT command.
+P336-024 §4.42 When the RAA counter reaches a DRAM vendor specified Initial Management Threshold (RAAIMT), which is set by the DRAM vendor in the read only MR58 opcode bits 4:1 (Table 174), additional DRAM refresh management is needed.
+P336-025 §4.42 Executing the Refresh Management (RFM) command allows additional time for the DRAM to manage refresh internally.
+P336-026 §4.42 The RFM operation can be initiated to all banks on the DRAM with the RFMab command, or to a single bank address (BA[1:0]) in all bank groups with the RFMsb command.
+P337-009 §4.42 The RFM command bits are the same as the REF command, except for CA9.
+P337-011 §4.42 If the Refresh Management Required bit is “1”, (MR58 OP[0]=1), CA9=”H” executes the REF command and CA9=”L” executes either an RFMab command if CA10=”L” or an RFMsb command if CA10=”H”.
+P337-012 §4.42 The duration of the RFMab and RFMsb commands is dependent upon the DRAM being in Normal or FGR refresh mode.
+P337-013 §4.42 tRFM,min is equivalent to tRFC,min. See Table 175.
+P337-021 §4.42 RFM commands are allowed to accumulate or “postpone”, but the RAA counter shall never exceed a vendor specified RAA Maximum Management Threshold (RAAMMT), which is set by the DRAM vendor in the read only MR58 opcode bits 7:5 (Table 176).
+P337-030 §4.42 RFM command scheduling shall meet the same minimum separation requirements as those for the REF command (see Table 71 in the Refresh Operation section).
+P338-002 §4.42 The RFM commands are bonus time for the DRAM to manage refresh internally.
+P338-003 §4.42 However, issuing a REF command also allows decrementing the RAA counter by the value set by MR59 OP[7:6], as shown in Table 177.
+P338-004 §4.42 Hence, any periodic REF command issued to the DRAM allows the RAA counter of the banks being refreshed to be decremented by the MR59 OP[7:6] setting.
+P338-005 §4.42 Issuing a REFab command allows the RAA count in all banks to be decremented.
+P338-006 §4.42 Issuing a REFsb command with BA[1:0] allows the RAA count only with that bank address in all bank groups to be decremented.
+P345-001 §4.45.1 The device outputs may be disabled by the Data Output Disable mode register, MR5:OP[0], as shown in the MR5 Register Definition table.
+P345-002 §4.45.1 For normal operation, set MR5:OP[0] = 0 (default).
+P345-004 §4.45.2 The DDR5 SDRAM x8 configuration has a package ball that is shared between TDQS_t and DM_n.
+P345-005 §4.45.2 The Write Data Mask (DM) function is dependent upon Termination Data Strobe (TDQS).
+P345-006 §4.45.2 If TDQS is enabled, DM is disabled.
+P345-007 §4.45.2 If TDQS is disabled, then DM may be enabled or disabled via mode register setting, as noted in Table 185.
+P345-008 §4.45.2.1 One pair of Termination Data Strobe (TDQS) pins, TDQS_t/TDQS_c, is supported for the x8 configuration DDR5 SDRAM.
+P345-009 §4.45.2.1 The TDQS function is programmable via Mode Register bit, MR5:OP[4].
+P345-010 §4.45.2.1 The x8 is the only configuration which supports the TDQS function.
+P345-011 §4.45.2.1 The x4 and x16 DDR5 SDRAMs do not support this function thus, for these configurations, the TDQS MR setting must be disabled, MR5:OP[4] = 0 (default).
+P345-012 §4.45.2.1 When TDQS is enabled, MR5:OP[4] = 1, the same termination resistance function is applied to the TDQS_t/TDQS_c pins that is applied to DQS_t/DQS_c pins., except during Read commands where TDQS does not output any data and will remain at RTT_DQS_PARK.
+P345-013 §4.45.2.2 (Reference Clause 4.8.1 “Write Data Mask” for data mask functionality.)
+P345-014 §4.45.2.3 When the TDQS is disabled, MR5:OP[4] = 0, the MR5:OP[5] bit may be used to enable or disable the DM_n pin function.
+P345-015 §4.45.2.3 When both TDQS and DM functions are disabled, termination will be turned off and the pins will drive Hi-Z.
+P345-016 §4.45.2.3 The DM_n pin input receiver will be turned-off and does not expect any valid logic level.
+P474-001 §13.2 Software algorithms for calculation of timing parameters are subject to rounding errors from many sources.
+P474-002 §13.2 For example, a system may use a memory clock with a nominal frequency of 2200 MHz (4400 MT/s) for the DDR5-4400 speed bin, which mathematically yields a nominal clock period tCK(AVG) of 0.454545...
+P474-004 §13.2 In most cases, it is impossible to express all digits after the decimal point exactly, and rounding must be used.
+P474-006 §13.2 Rules for rounding must be defined to allow optimization of device performance without violating device parameters.
+P474-007 §13.2 All timing parameters specified in the time domain (ns, ps, etc.) which must then be converted to the clock domain (nCK units) shall be defined to align with these rules.
+P474-008 §13.2 The key point is, minimum and maximum timing parameter values shall generally use the same rounding rules used to define tCK(AVG)min and tCK(AVG)max. The resulting rounding algorithms rely on results that are within correction factors of device testing and specification to avoid losing performance due to rounding errors.
+P474-010 §13.2 DEFINING TIMING PARAMETER VALUES: Minimum and maximum timing parameter values, including tCK(AVG)min and tCK(AVG)max, are rounded down and to be defined to 1 ps of accuracy in the DDR5 SDRAM specification based on the non-rounded nominal tCK(AVG) for a given speed bin.
+P474-011 §13.2 If the nominal timing parameter values require more than 1 ps of accuracy, they can be rounded down (faster) to the next 1 ps according to the rounding algorithms, and the DDR5 SDRAM is responsible for absorbing the resulting small parameter extensions.
+P474-013 §13.2 For example, this extends the DDR5-4400 tCK(AVG)min definition to be exactly 0.454 ns which is slightly smaller (faster) than the nominal memory clock period of 0.454545...
+P474-015 §13.2 CALCULATING THE REAL MINIMUM TIMING PARAMETER VALUES: For minimum timing parameters, other than tCK(AVG)min, to avoid losing performance due to additional erroneous nCKs and to calculate the true real minimum values, their nominal values listed in the DDR5 SDRAM specification must be reduced (faster) by the maximum %error (correction factor) used to define tCK(AVG)min. The DDR5 SDRAM is responsible for absorbing the resulting small parameter extensions.
+P474-016 §13.2 For example, tWRmin has a nominal value of 30.000ns, however, applying the 0.30% correction factor allows a more aggressive timing (for example, 29.910ns) to be supported, which allows the intended smaller (faster) nCK value to be maintained when rounding tCK(AVG)min down to the next 1 ps.
+P474-017 §13.2 Note, parameter values defined to be 0 ps do not need to be reduced by a correction factor, and therefore don’t require these rounding algorithms.
+P474-018 §13.2 CALCULATING THE REAL MAXIMUM TIMING PARAMETER VALUES: For maximum timing parameters, including tCK(AVG)max, to avoid losing performance due to excluding erroneous nCKs and to calculate the true real maximum values, their nominal values listed in the DDR5 SDRAM specification must be increased (slower) by the maximum %error caused by rounding tCK(AVG) down to the next 1 ps.
+P474-019 §13.2 The DDR5 SDRAM is responsible for absorbing the resulting small parameter extensions.
+P474-020 §13.2 For example, tREFImax has a nominal value of 3.9 us.
+P474-023 §13.2 So the true real tREFImax value is 3.916386...
+P474-025 §13.2 ROUNDING ALGORITHM FOR MINIMUM TIMING PARAMETER VALUES: Round down only integer number math is commonly used in the industry to calculate nCK values.
+P474-026 §13.2 This rounding algorithm for minimum timing parameters uses scaling by 1000 to allow use of integer math.
+P474-027 §13.2 Nominal minimum timing parameters like tWRmin, tRCDmin, etc. which are programmed in systems in numbers of clocks (nCK) but expressed in units of time(ps), are rounded down to the next 1ps, multiplied by the scaled inverse correction factor (1000-3=997) prior to division by the application memory clock period rounded down to the next 1ps, and adding 1 scaled by 1000 to that result effectively adds 1nCK.
+P474-028 §13.2 Division by 1000 undoes the scaling effects, resulting in a number of clocks as the final answer which has been effectively rounded up to the next 1 nCK by adding 1nCK in the previous step and then rounding down to the next 1 nCK.
+P474-029 §13.2 The caveat is, effectively adding 1 prior to rounding down is mostly equivalent to rounding up except when the result is equal to an integer in which case the result won’t be rounded down as intended, and therefore performance would be lost.
+P474-030 §13.2 To address this, the maximum 0.28% correction factor needed for 3600 MHz (0.277ns/ 0.2777777...ns-100%) operation has been increased slightly to 0.30% in this rounding algorithms.
+P474-031 §13.2 This accounts for all integer boundary conditions, except for the specific case when the nominal minimum timing parameter value is defined to be 0 ps.
+P474-032 §13.2 No rounding is required for parameter values equal to 0 ps.
+P474-033 §13.2 This rounding algorithm is not optimized for parameter values that are less than or equal to 0ps, and may result in unintended lost performance if used for parameter values that are less than or equal to 0ps.
+P475-004 §13.2 ROUNDING ALGORITHM FOR MAXIMUM TIMING PARAMETER VALUES: Round down only integer number math is commonly used in the industry to calculate nCK values.
+P475-005 §13.2 This rounding algorithm is used for maximum timing parameters.
+P475-006 §13.2 Nominal maximum timing parameters like tREFImax, etc. which programmed in systems in numbers of clocks (nCK) but expressed in units of time (ps), are rounded down to the next 1 ps prior to division by the application memory clock period rounded down to the next 1 ps, resulting in a number of clocks as the final answer which is rounded down to the next 1 nCK.
+P475-007 §13.2 No rounding is required for parameter values equal to 0 ps, but this rounding algorithm can still be used for parameter values equal to 0ps and no performance will be lost.
+P475-008 §13.2 This rounding algorithm is not optimized for parameter values that are less than 0 ps (negative parameter values), and may result in violating the parameter specification if used for parameter values that are less than 0 ps.
+P475-010 §13.2 CL ALGORITHM FOR STANDARD SPEED BINS: The math rounding algorithms shall be used for all timing parameters when converting from the time domain (ns, ps, etc.) to the clock domain (nCK units), except for when converting tAA to CL.
+P475-011 §13.2 If these rounding algorithms are used to convert tAA to CL, they’ll return invalid CL’s for some cases when down clocking (and the DIMM SPD CL Mask doesn’t protect against all of these cases).
+P475-012 §13.2 The proper setting of CL shall be determined by the memory controller, either by using the speed bin tables, or by using the CL algorithm, or by some other means.
+P475-015 §13.2 CL ALGORITHM FOR CUSTOM SPEED BINS: If the DDR5 SDRAM supports non-standard tCK, tAA, tRCD, and tRP speed bin timings, the CL algorithm will still only return valid CL’s as defined in the speed bin tables, which may not be the intended CL’s for non-standard speed bins.
+P475-016 §13.2 In these cases, the rounding algorithms may need to be used to convert tAA to CL, instead of the CL algorithm.
+P475-017 §13.2 The CL returned by the rounding algorithms shall be incremented up to the next supported CL according to the DIMM SPD CL Mask.
+P475-024 §13.2.1 ClockPeriod = ApplicationTck; // Clock period in ps is application specific
+P475-025 §13.2.1 TempTwr = TwrMin * (1000 - Correction); // Apply correction factor, scaled by 1000
+P477-001 §13.3 The analog timing parameters in this clause have been defined based on nominal tCA(avg)min according to the rounding rules which can be found in the Rounding Definitions and Algorithms section.
+P478-001 §13.3.2 The analog timing parameters in this clause have been defined based on nominal tCK(avg)min according to the rounding rules which can be found in the Rounding Definitions and Algorithms section.
+P479-001 §13.3.3 Analog timing parameters in this clause have been defined on nominal tCK(avg)min according to the rounding rules which can be found in the Rounding Definitions and Algorithms section.
+P480-001 §13.3.4 The analog timing parameters in this clause have been defined based on nominal tCK(avg)min according to the rounding rules which can be found in the Rounding Definitions and Algorithms section.
+P482-005 §13.3.5 NOTE 1 tCK(avg)min listed for reference only, refer to the Speed Bins and Operations section which lists all valid tCK(avg) values.
+P482-006 §13.3.5 NOTE 2 tCCD_WTRA(min) shall always be greater than or equal to CWL + WBL/2 + tWR(min) - tRTP(min), and when using the appropriate rounding algorithms, nCCD_WTRA(min) shall always be greater than or equal to CWL + WBL/2 + nWR(min) - nRTP(min).
+P482-007 §13.3.5 NOTE 3 RBL: Read burst length associated with Read command RBL = 32 (36 w/ RCRC on) for fixed BL32 and BL32 in BL32 OTF mode RBL = 16 (18 w/ RCRC on) for fixed BL16 and BL16 in BL32 OTF mode RBL = 16 (18 w/ RCRC on) for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+P482-008 §13.3.5 NOTE 4 WBL: Write burst length associated with Write command WBL = 32 (36 w/ WCRC on) for fixed BL32 and BL32 in BL32 OTF mode WBL = 16 (18 w/ WCRC on) for fixed BL16 and BL16 in BL32 OTF mode WBL = 16 (18 w/ WCRC on) for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+P482-011 §13.3.5 NOTE 7 tPPD applies to any combination of precharge commands (PREab, PREsb, PREpb).
+P482-013 §13.3.5 NOTE 8 This parameter only specifies minimum values (there is no maximum value).
+P482-014 §13.3.5 The maximum value cells have been merged in the table to improve legibility.
+P483-001 §13.3.6 Analog timing parameters defined in this clause are to be rounded to 1 ps of accuracy.
+P483-002 §13.3.6 Parameter min values which scale with tCKmin are to be defined using the tCKmin in the associated data rate
+P484-001 §13.3.7 Analog timing parameters defined in this clause are to be rounded to 1 ps of accuracy.
+P484-002 §13.3.7 Parameter min values which scale with tCKmin are to be defined using the tCKmin in the associated data rate
+P485-001 §13.3.8 Analog timing parameters defined in this clause are to be rounded to 1 ps of accuracy.
+P485-002 §13.3.8 Parameter min values which scale with tCKmin are to be defined using the tCKmin in the associated data rate
+P486-008 §13.3.8 NOTE 1 tCK(avg)min listed for reference only, refer to the Speed Bins and Operations section which lists all valid tCK(avg) values.
+P486-009 §13.3.8 NOTE 2 tCCD_WTRA_slr(min) shall always be greater than or equal to CWL + WBL/2 + tWR_slr(min) - tRTP_slr(min), and when using the appropriate rounding algorithms, nCCD_WTRA_slr(min) shall always be greater than or equal to CWL + WBL/2 + nWR_slr(min) - nRTP_slr(min).
+P486-010 §13.3.8 NOTE 3 RBL: Read burst length associated with Read command RBL = 32 for fixed BL32 and BL32 in BL32 OTF mode RBL = 16 for fixed BL16 and BL16 in BL32 OTF mode RBL = 16 for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+P486-011 §13.3.8 NOTE 4 WBL: Write burst length associated with Write command WBL = 32 for fixed BL32 and BL32 in BL32 OTF mode WBL = 16 for fixed BL16 and BL16 in BL32 OTF mode WBL = 16 for BL16 in BC8 OTF mode and BC8 in BC8 OTF mode
+P486-014 §13.3.8 NOTE 7 tPPD applies to any combination of precharge commands (PREab, PREsb, PREpb).
+P486-020 §13.3.8 NOTE 10 Activate commands to different channels on the same DIMM may be issued on the same cycle, not requiring any stagger.
+P486-021 §13.3.8 NOTE 11 Activate commands to the same channel on a DIMM are subject to tDCAW.
+P486-022 §13.3.8 No more than nDCAC activate commands may be issued to the same channel on a DIMM within tDCAW.
+P486-023 §13.3.8 tCCD_ WR_dlr and tCCD_ WR_dpr also apply to the WRITE PATTERN command.
+P486-026 §13.3.8 NOTE 14 Activate commands to a DIMM channel include all Activate commands to the same logical rank (SLR), all Activate commands to different logical ranks (DLR), and all Activate commands to different physical ranks (DPR)
+P487-002 §14.1 As well, since these modules are organized as two independent 36-bit or 40-bit channels (32 bits for non-ECC DIMMs), additional restrictions apply in order to limit localized power delivery noise on the module.
+P487-003 §14.1 To provide best performance, the different channels may initiate commands on the same cycle provided the rank to rank timings are met, the maximum number of DRAMs in a given activity is not exceeded, and the applicable component timings shown elsewhere in this specification are met.
+P487-004 §14.1 The timing and operational relationships for DDR5 DIMMs are shown in Table 326.
+P487-018 §14.1 NOTE 1 Any combination of commands with up to the maximum of die per channel and per DIMM, per condition is allowed.
+P487-019 §14.1 NOTE 2 Refresh commands to different channels do not require stagger.
+P487-020 §14.1 NOTE 3 tRFC_dlr must be met for refresh commands to different logical ranks within a package rank on the same channel.
+P487-021 §14.1 NOTE 4 Any DRAM is considered to be in Refresh mode until tRFC time has been met.
+P487-022 §14.1 NOTE 5 tCCD parameters must be met for Write and Write-Pattern commands to different logical ranks or physical ranks within the same channel; no overlapping write data bus activity is allowed on two physical or logical ranks within the same channel.
+P487-023 §14.1 NOTE 6 Write and Write-Pattern commands to different channels do not require stagger.
+P487-024 §14.1 NOTE 7 Each rank consists of one group of DRAMs making up a 36 or 40 bit channel (32 bits for non-ECC DIMMs).
+P487-025 §14.1 NOTE 8 These restrictions only apply to explicit all-banks refresh commands (REFab) and not to self-refresh entry or exit
+P487-026 §14.1 NOTE 9 Restrictions apply to DIMMs built with JEDEC PMICXXXX, but may not apply to DIMMs built with higher current capacity PMICs
+P488-002 §15.1.1 This limits the number of failure patterns seen by the memory controller such that correction of many failures can be reliably performed in DIMMs with one ECC device.
+P488-003 §15.1.1 Many internal DRAM failures may impact only a portion of the data from a fetch.
+P488-004 §15.1.1 The likelihood of a specific component failing may also vary between process generations and DRAM vendors.
+P488-005 §15.1.1 These guidelines can be used by DDR5 DRAM’s to bound failures from the components most likely to fail.
+P488-006 §15.1.1 These design guidelines can only address failures that impact a portion of the data from a 128-bit fetch.
+P488-007 §15.1.1 Failures that impact all the data in a 128-bit fetch from a device (e.g., device failure, bank failure) cannot be bounded as described here.
+P488-008 §15.1.2 In an x8 device bounded failures are defined by the following qualities:
+P488-009 §15.1.2 A bounded fault will not impact more than 32 bits of data in a 128-bit fetch
+P488-010 §15.1.2 The data bits impacted by a bounded failure will be confined to at most 2 DQs (i.e., the failures will be DQ aligned)
+P488-011 §15.1.2 The DQs transmitting data impacted by the failure will both be in either the first nibble or the second nibble of a burst.
+P488-012 §15.1.2 That is, the impacted DQs will both be in the set of the first 4 DQs (DQ0, DQ1, DQ2, DQ3) or both in the set of the last four DQs (DQ4, DQ5, DQ6, DQ7)
+P488-014 §15.1.2 Device on the left has a bounded fault in lanes DQ0 and DQ1 in the first nibble.
+P488-015 §15.1.2 Device on the right has a bounded fault in lanes DQ4 and DQ6 in the second nibble.
+P489-001 §15.1.2 An x4 device has similarly defined qualities for the failure boundaries, with the noted exception of the number of bits impacted by a bounded failure.
+P489-002 §15.1.2 In a DRAM device in a 9x4 configuration bounded failures should not impact more than 16 bits.
+P489-003 §15.1.2 However, in a 10x4 device the bounded failure may impact up to 32 bits.
+P489-004 §15.1.2 In x4 devices, bounded failures are defined by the following qualities:
+P489-005 §15.1.2 A bounded failure in a DRAM device in a 9x4 configuration shall not impact more than 16 bits of data in a 128-bit prefetch.
+P489-006 §15.1.2 A bounded failure in a DRAM device in a 10x4 configuration shall not impact more than 32 bits of data in a 128-bit prefetch.
+P489-007 §15.1.2 For a device in a 9x4 configuration, the data bits impacted by a bounded failure will be confined to one DQ.
+P489-008 §15.1.2 For a device in a 10x4 configuration, the data bits impacted by a bounded failure will be confined to at most two DQs.
+P490-001 §15.2 To maintain the bounded fault design guidelines, miscorrections by the on-die ECC must be restricted when a bounded fault causes a multi-bit error.
+P490-002 §15.2 In devices with bounded fault it is suggested that the DRAM vendor uses an on-die ECC code that maintains the fault boundaries.
+P490-003 §15.2 That is, if an error is contained in one boundary, then the on-die ECC should not spread the error into a second boundary by miscorrection.
+P490-004 §15.2 Note that if faults are not bounded in the device, then the on-die ECC does not need to have these properties.
+P490-005 §15.2 To restrict miscorrection in devices following bounded fault design guidelines, the data may be divided into blocks aligned with the bounded fault and miscorrection should be restricted in the case an error is contained in a single data block.
+P490-006 §15.2 The 128 data bits used to compute a set of 8 check bits may be divided into data blocks up to 32 bits in size.
+P490-007 §15.2 These data blocks are to be determined by the memory vendor to best align with internal DRAM faults.
+P490-008 §15.2 For example, a common component fault may impact 32 bits per 128 data bits, then the vendor may choose to divide the 128 data bits into four 32-bit blocks each of which correspond to the bits impacted by one of the components failing.
+P490-009 §15.2 If a multi-bit error occurs on a read and is limited to one data block, then the on-die ECC SEC code should do one of the following:
+P490-012 §15.2 Detect the error (a SEC code may detect some multi-bit errors, but detection of these errors is not guaranteed)
+P490-013 §15.2 The selection of block size and data blocks is determined by the vendor to best suit the device architecture and possible modes of fault.
+P491-001 §15.3 The DRAM device may optionally support the suppressing of writeback for x4 devices and ECS writebacks.
+P491-002 §15.3 DRAM may implement the feature in MR9 or MR15.
+P491-003 §15.3 DDR5 SPD Byte 14 Bits[2:1] indicates if feature is supported and will also indicate whether to use MR9 or MR15 for enabling the modes.
+P491-004 §15.3 If MR9 OP1=1 or MR15 OP7=1, then x4 DRAM’s on writes will perform an internal ‘read-modify-write’ operation for BL16.
+P491-005 §15.3 BL32 mode does not requires an internal ‘read modify write’ operation.
+P491-006 §15.3 The DRAM will correct any single bit errors that result from the internal read of 128 bit data before merging the incoming 64 bit data and then re-compute 8 ECC Check bits.
+P491-007 §15.3 Note that ECC check bits are computed after merging of the incoming data with the corrected data from the array.
+P491-008 §15.3 DRAM will then write the incoming 64b data to the array along with recomputed 8 ECC Check bits.
+P491-009 §15.3 DRAM will suppress the writeback of 64 bit data that was fetched from the array irrespective of whether the 64 bit data needed any correction or not.
+P491-010 §15.3 Suppression of writeback (where applicable due to BC8 or DM usage) is not supported on x8/x16 devices; MR9:OP[1] or MR15:OP[7] must be set to “0B”.
+P491-011 §15.3 Suppression of writeback may or may not
+P491-012 §15.3 occur when BC8 mode is used on x4 devices.
+P491-013 §15.3 If MR9 OP0=1 or MR15 OP6=1, then DRAM will suppress writeback of data and ECC Check bits during ECS operation for x4, x8, and x16 DDR5.
+P491-014 §15.3 DRAM will continue to count errors to provide transparency.
+P491-018 §15.3 NOTE 1 DDR5 SPD Byte 14 Bits[2:1] indicates if feature is supported and will also indicate whether to use MR9 or MR15 for enabling the modes.
+P491-019 §15.3 This byte defines support for SDRAM fault handling features and for wide on-die temperature sensing range (see MR4).

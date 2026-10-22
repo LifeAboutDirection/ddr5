@@ -1,0 +1,12 @@
+Consider using the pymupdf_layout package for a greatly improved page layout analysis.
+50/502 pages; 1599 units; 4.4s
+100/502 pages; 2558 units; 11.8s
+150/502 pages; 3295 units; 20.8s
+200/502 pages; 5125 units; 38.6s
+250/502 pages; 6831 units; 54.1s
+300/502 pages; 8405 units; 63.8s
+350/502 pages; 9829 units; 74.4s
+400/502 pages; 11332 units; 91.3s
+450/502 pages; 12721 units; 112.3s
+500/502 pages; 13965 units; 121.4s
+COUNTS {'fragment': 5260, 'sentence': 3544, 'table': 5181}
